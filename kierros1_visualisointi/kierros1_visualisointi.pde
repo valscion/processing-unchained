@@ -27,6 +27,7 @@ void setup() {
 void draw() {
   background(0);   // Set the background to black
   line(0, y, width, y);
+  line(0, y+50, width, y+50);
 
   y = y - 0.5;
   if (y < 0) {
