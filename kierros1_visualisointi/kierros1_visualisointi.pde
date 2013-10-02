@@ -28,7 +28,7 @@ void draw() {
   background(0);   // Set the background to black
   line(0, y, width, y);
 
-  y = y - 1;
+  y = y - 0.5;
   if (y < 0) {
     y = height;
   }
