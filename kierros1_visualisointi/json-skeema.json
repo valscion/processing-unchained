@@ -24,7 +24,8 @@
           // Onko palautus saanut jotain muuta sakkoa kuin
           // myöhästymissakkoa (esim. plagiointi)
           "has_penalty": "boolean"
-        }
+        },
+        {},{}//....
       ],
       // Teoriakierrokset kirjoitetaan samalla tapaa kuin
       // ohjelmointikierroksetkin

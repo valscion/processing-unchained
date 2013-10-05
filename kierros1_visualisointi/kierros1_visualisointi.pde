@@ -10,13 +10,19 @@ void setup() {
   menu = new Menu();
   box = new SelectionBox();
   menuOpen = false;
+
+  setupDebug();
 }
 
 void draw() {
   background(255);
   box.draw(700, 60);
   menu.draw(0, 0);
+
+  drawDebug();
 }
+
+
 
 class Menu {
   PGraphics p;
