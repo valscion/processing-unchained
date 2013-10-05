@@ -8,12 +8,18 @@ void setup() {
   walkway = loadFont("WalkwayBold-48.vlw");
   menu = new Menu();
   box = new SelectionBox();
+
+  setupDebug();
 }
 
 void draw() {
   menu.draw(0, 0);
   box.draw(700, 60);
+
+  drawDebug();
 }
+
+
 
 class Menu {
   void draw(int x, int y) {
@@ -61,3 +67,4 @@ class SelectionBox {
     popMatrix();
   }
 }
+
