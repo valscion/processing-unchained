@@ -1,0 +1,63 @@
+// Aloitetaan JSON-data objektilla, joka sisältää kaikkien
+// vuosien datan
+{
+  // Avaimena on aina ensin merkkijonona vuosiluku, jonka
+  // sisältä arvosanadata löytyy listasta.
+  "2009": [
+    // Jokaisella opiskelijalla on oma solunsa listassa,
+    // JSON-objektina.
+    {
+      // Opiskelijanumero on merkkijono ja se tallennetaan
+      // avaimella "studentnumber"
+      "studentnumber": "string",
+      // Koodauskierrosten arvosanat on tallennettu listaan,
+      // jonka nimi on "coding"
+      "coding": [
+        // Alkioita on kierrosten lukumäärän verran, eli siis
+        // 5 tai 6 kappaletta. Alkiot ovat JSON-objekteja
+        {
+          // Yksittäisen koodauskierroksen arvosana
+          "grade": "float",
+          // Kuinka monta päivää palautus oli myöhässä. Jos
+          // palautus oli ajoissa, tämä on 0.
+          "dates_late": "int",
+          // Onko palautus saanut jotain muuta sakkoa kuin
+          // myöhästymissakkoa (esim. plagiointi)
+          "has_penalty": "boolean"
+        }
+      ],
+      // Teoriakierrokset kirjoitetaan samalla tapaa kuin
+      // ohjelmointikierroksetkin
+      "theories": "...",
+      // Projektin arvosana erotellaan omaksi JSON-objektikseen
+      "project": {
+        // Arvosana arkkitehtuurista
+        "architecture": "float",
+        // Arvosana koodista
+        "code": "float",
+        // Arvosana käytettävyydestä
+        "ux": "float",
+        // Arvosana raporteista
+        "report": "float",
+        // Lopullinen projektin arvosana painotukset huomioon
+        // otettuna
+        "grade": "float"
+      },
+      // Tentin arvosanat omana JSON-objektinaan
+      "exam": {
+        // Parhaan arvosanan saaneen tentin arvosana
+        "grade": "float",
+        // Onko arvosana tullut uusitusta tentistä
+        "has_redone": "boolean"
+      },
+      // Koko kurssin painotetettu keskiarvo, ilman pyöristyksiä
+      "grade": "float"
+    },
+    // ...ja vuoden lista jatkuu toisilla opiskelijoilla.
+    {}, {} //....
+  ],
+  // Seuraavat vuodet samalla tapaa
+  "2010": ["..."],
+  "2011": ["..."],
+  "2012": ["..."]
+}
