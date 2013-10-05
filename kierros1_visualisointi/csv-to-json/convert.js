@@ -1,7 +1,7 @@
 var csv = require('csv');
 var fs = require('fs');
 
-var jsonFile = fs.openSync(__dirname+'/dataa.json', 'w');
+var jsonFile = fs.openSync(__dirname+'/../data/data.json', 'w');
 
 var output = {};
 var lastYear = null;
