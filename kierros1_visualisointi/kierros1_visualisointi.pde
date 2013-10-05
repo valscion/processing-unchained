@@ -9,7 +9,7 @@ void setup() {
   menu = new Menu(0, 0);
   box = new SelectionBox(700, 60);
 
-  //setupDebug();
+  setupDebug();
 }
 
 void draw() {
@@ -17,7 +17,7 @@ void draw() {
   box.draw();
   menu.draw();
 
-  //drawDebug();
+  drawDebug();
 }
 
 void mouseMoved() {
