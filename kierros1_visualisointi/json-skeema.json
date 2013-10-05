@@ -9,7 +9,7 @@
     {
       // Opiskelijanumero on merkkijono ja se tallennetaan
       // avaimella "studentnumber"
-      "studentnumber": "string",
+      "studentNumber": "string",
       // Koodauskierrosten arvosanat on tallennettu listaan,
       // jonka nimi on "coding"
       "coding": [
