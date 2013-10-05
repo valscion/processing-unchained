@@ -1,6 +1,7 @@
 PFont walkway;
 Menu menu;
 SelectionBox box;
+ArrayList<ReactsToMouse> clickables;
 
 void setup() {
   size(800, 600);
@@ -8,6 +9,8 @@ void setup() {
   walkway = loadFont("WalkwayBold-48.vlw");
   menu = new Menu(0, 0);
   box = new SelectionBox(700, 60);
+  clickables = new ArrayList<ReactsToMouse>();
+  clickables.add(menu);
 
   setupDebug();
 }
@@ -21,11 +24,22 @@ void draw() {
 }
 
 void mouseMoved() {
-
+  for (int i = 0; i < clickables.size(); i++) {
+    if (clickables.get(i).areCoordinatesInside(mouseX, mouseY)) {
+      clickables.get(i).mouseOver();
+    }
+  }
 }
 
 void mouseClicked() {
-  if (menu.menuOpen == false) {
+for (int i = 0; i < clickables.size(); i++) {
+    if (clickables.get(i).areCoordinatesInside(mouseX, mouseY)) {
+      clickables.get(i).mouseClicked();
+    }
+  }
+}
+
+  /*if (menu.menuOpen == false) {
     if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < 50) {
       menu.toggleMenu();
     }
@@ -33,5 +47,5 @@ void mouseClicked() {
     if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < 150) {
       menu.toggleMenu();
     }
-  }
-}
+  }*/
+

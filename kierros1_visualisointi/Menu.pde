@@ -1,5 +1,7 @@
-class Menu {
-  PGraphics p;
+class Menu implements ReactsToMouse {
+  PGraphics menuOpenImg;
+  PGraphics menuClosedImg;
+  PGraphics menuGlow;
   boolean menuOpen;
   float x, y;
   
@@ -7,44 +9,51 @@ class Menu {
     this.x = x;
     this.y = y;
     menuOpen = false;
-    p = createGraphics(width, 150);
-    p.beginDraw();
-    p.noStroke();
-    p.fill(199);
-    p.rect(0, 0, width, 150);
+    menuOpenImg = createGraphics(width, 150);
+    menuOpenImg.beginDraw();
+    menuOpenImg.noStroke();
+    menuOpenImg.fill(199);
+    menuOpenImg.rect(0, 0, width, 150);
 
-    p.fill(255);
-    p.textFont(walkway);
-    p.textSize(30);
-    p.text("MENU", 15, 135);
+    menuOpenImg.fill(255);
+    menuOpenImg.textFont(walkway);
+    menuOpenImg.textSize(30);
+    menuOpenImg.text("MENU", 15, 135);
 
-    p.ellipse(115, 125, 20, 20);
-    p.fill(127);
-    p.triangle(110, 129, 115, 119, 120, 129);
-    p.endDraw();
+    menuOpenImg.ellipse(115, 125, 20, 20);
+    menuOpenImg.fill(127);
+    menuOpenImg.triangle(110, 129, 115, 119, 120, 129);
+    menuOpenImg.endDraw();
+
+    menuClosedImg = createGraphics(width, 50);
+    menuClosedImg.beginDraw();
+    menuClosedImg.noStroke();
+    menuClosedImg.fill(199);
+    menuClosedImg.rect(0, 0, width, 50);
+      
+    menuClosedImg.fill(255);
+    menuClosedImg.textFont(walkway);
+    menuClosedImg.textSize(30);
+    menuClosedImg.text("MENU", 15, 35);
+    menuClosedImg.endDraw();
+    drawButton();
   }
  
   void draw() {
     if (menuOpen == false) {
-      noStroke();
-      fill(199);
-      rect(0, 0, width, 50);
-      
-      fill(255);
-      textFont(walkway);
-      textSize(30);
-      text("MENU", 15, 35);
-      drawButton();
+      image(menuClosedImg, this.x, this.y);
     } else {
-      image(p, 0, 0);
+      image(menuOpenImg, this.x, this.y);
     }
   }
   
   void drawButton() {
-    fill(255);
-    ellipse(115, 25, 20, 20);
-    fill(127);
-    triangle(110, 22, 115, 30, 120, 22);
+    menuClosedImg.beginDraw();
+    menuClosedImg.fill(255);
+    menuClosedImg.ellipse(115, 25, 20, 20);
+    menuClosedImg.fill(127);
+    menuClosedImg.triangle(110, 22, 115, 30, 120, 22);
+    menuClosedImg.endDraw();
   }
 
   void toggleMenu() {
@@ -54,4 +63,43 @@ class Menu {
       menuOpen = false;
     }
   }
+
+  boolean areCoordinatesInside(float x, float y) {
+    if (menuOpen == false) {
+        if (x > this.x && x < 135 && y > this.y && y < 40) {
+          println("koordinaatit pienen sisal");
+          return true;
+        }
+    } else {
+      if (x > this.x && x < 135 && y > 105 && y < 150) {
+        println("koordinaatit ison sisal");
+        return true;
+      }
+    }
+    return false;
+  }
+
+  void mouseOver() {
+      println("tanne pitais paatyy");
+      strokeWeight(5);
+      stroke(55, 155, 232);
+      noFill();
+      //filter(BLUR, 5);
+      if (menuOpen == false) {
+        println("ja tanne");
+        rect(0, 0, width, 50);
+      } else {
+        rect(0, 0, width, 150);
+      }
+  }
+
+  void mouseClicked() {
+    println("klikattiin");
+      println("klikkaus toimii");
+      toggleMenu();
+    
+  }
+
+
 }
+
