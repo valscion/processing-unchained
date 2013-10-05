@@ -20,7 +20,7 @@ class Menu {
     pushMatrix();
     translate(x, y);
     drawMenu();
-    drawButton(115, 25);
+    drawButton();
     popMatrix();
   }
  
@@ -35,13 +35,12 @@ class Menu {
     text("MENU", 15, 35);
   }
   
-  void drawButton(int x, int y) {
-    translate(x, y);
-    ellipse(0, 0, 20, 20);
+  void drawButton() {
+    ellipse(115, 25, 20, 20);
     fill(127);
-    triangle(-5, -3, 0, 5, 5, -3);
+    triangle(110, 22, 115, 30, 120, 22);
   }
-  }
+}
   
 class SelectionBox {
   void draw(int x, int y) {
