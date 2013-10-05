@@ -1,0 +1,78 @@
+{
+  "2009":[
+    {
+      "studentnumber": "12345FFF",
+      "coding": [
+        {
+          "grade": 2.0,
+          "dates_late": 1,
+          "has_penalty": false
+        },
+        {
+          "grade": 4.0,
+          "dates_late": 0,
+          "has_penalty": false
+        },
+        {
+          "grade": 3.0,
+          "dates_late": 0,
+          "has_penalty": false
+        },
+        {
+          "grade": 1.0,
+          "dates_late": 10,
+          "has_penalty": false
+        },
+        {
+          "grade": 5.0,
+          "dates_late": 0,
+          "has_penalty": false
+        },
+        {
+          "grade": 3.0,
+          "dates_late": 0,
+          "has_penalty": false
+        }
+      ],
+      "theories": [
+        {
+          "grade": 2.0,
+          "dates_late": 1,
+          "has_penalty": true
+        },
+        {
+          "grade": 4.0,
+          "dates_late": 0,
+          "has_penalty": true
+        },
+        {
+          "grade": 3.0,
+          "dates_late": 0,
+          "has_penalty": true
+        },
+        {
+          "grade": 1.0,
+          "dates_late": 10,
+          "has_penalty": true
+        },
+        {
+          "grade": 5.0,
+          "dates_late": 0,
+          "has_penalty": true
+        }
+      ],
+      "project": {
+        "architecture": 1.5,
+        "code": 4.5,
+        "ux": 3,
+        "report": 2.3,
+        "grade": 3.2
+      },
+      "exam": {
+        "grade": 2,
+        "has_redone": true
+      },
+      "grade": 3.4
+    }
+  ]
+}
