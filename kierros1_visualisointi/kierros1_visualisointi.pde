@@ -1,41 +1,63 @@
-/**
- * Loop.
- *
- * The loop() function causes draw() to execute
- * continuously. If noLoop is called in setup()
- * the draw() is only executed once. In this example
- * click the mouse to execute loop(), which will
- * cause the draw() the execute continuously.
- */
+PFont walkway;
+Menu menu;
+SelectionBox box;
 
-float y = 100;
-
-// The statements in the setup() function
-// run once when the program begins
 void setup() {
-  size(640, 360);  // Size should be the first statement
-  stroke(255);     // Set stroke color to white
-  noLoop();
-
-  y = height * 0.5;
+  size(800, 600);
+  background(255);
+  walkway = loadFont("WalkwayBold-48.vlw");
+  menu = new Menu();
+  box = new SelectionBox();
 }
 
-// The statements in draw() are run until the
-// program is stopped. Each statement is run in
-// sequence and after the last line is read, the first
-// line is run again.
 void draw() {
-  background(0);   // Set the background to black
-  line(0, y, width, y);
-  line(0, y+50, width, y+50);
+  menu.draw(0, 0);
+  box.draw(700, 60);
+}
 
-  y = y - 0.5;
-  if (y < 0) {
-    y = height;
+class Menu {
+  void draw(int x, int y) {
+    pushMatrix();
+    translate(x, y);
+    drawMenu();
+    drawButton(115, 25);
+    popMatrix();
+  }
+ 
+  void drawMenu() {
+    noStroke();
+    fill(199);
+    rect(0, 0, width, 50);
+    
+    fill(255);
+    textFont(walkway);
+    textSize(30);
+    text("MENU", 15, 35);
+  }
+  
+  void drawButton(int x, int y) {
+    translate(x, y);
+    ellipse(0, 0, 20, 20);
+    fill(127);
+    triangle(-5, -3, 0, 5, 5, -3);
+  }
+  }
+  
+class SelectionBox {
+  void draw(int x, int y) {
+    pushMatrix();
+    translate(x, y);
+    strokeWeight(1);
+    stroke(190);
+    fill(215);
+    rect(0, 0, 70, 50);
+    fill(190);
+    rect(50, 0, 20, 50);
+    noStroke();
+    fill(255);
+    ellipse(60, 35, 15, 15);
+    fill(127);
+    triangle(55, 32, 60, 40, 65, 32);
+    popMatrix();
   }
 }
-
-void mousePressed() {
-  loop();
-}
-
