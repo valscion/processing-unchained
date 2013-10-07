@@ -43,20 +43,20 @@ class Menu implements ReactsToMouse {
 
     menuGlowImg1 = createGraphics(width, 50);
     menuGlowImg1.beginDraw();
-    menuGlowImg1.strokeWeight(5);
+    menuGlowImg1.strokeWeight(4);
     menuGlowImg1.stroke(55, 155, 232);
     menuGlowImg1.noFill();
     menuGlowImg1.filter(BLUR, 5);
-    menuGlowImg1.rect(0, 0, width, 50);
+    menuGlowImg1.rect(0, 0, width-2, 48);
     menuGlowImg1.endDraw();
 
     menuGlowImg2 = createGraphics(width, 150);
     menuGlowImg2.beginDraw();
-    menuGlowImg2.strokeWeight(5);
+    menuGlowImg2.strokeWeight(4);
     menuGlowImg2.stroke(55, 155, 232);
     menuGlowImg2.noFill();
     menuGlowImg2.filter(BLUR, 5);
-    menuGlowImg2.rect(0, 0, width, 150);
+    menuGlowImg2.rect(0, 0, width-2, 148);
     menuGlowImg2.endDraw();
   }
  
