@@ -24,6 +24,7 @@ void setup() {
   checkBox2010 = new CheckBox(180, 20, "2010");
   checkBox2011 = new CheckBox(330, 20, "2011");
   checkBox2012 = new CheckBox(480, 20, "2012");
+  checkBox2012.isChecked = true;
   //ball = new DataBall(400, 300, 40);
   theoryColumn = new DataColumn("theory", 1);
   projectColumn = new DataColumn("project", 2);
@@ -140,7 +141,7 @@ void updateData(int totalCourseGrade) {
   //StudentContainer filtered = gradFiltered;
   int m = gradFiltered.size();
 
-  StudentContainer yearsFiltered = gradFiltered.filterByYears();
+  StudentContainer yearsFiltered = gradFiltered.filterBySelectedYears();
   StudentContainer filtered = yearsFiltered;
   //int m = filtered.size();
 
@@ -230,6 +231,15 @@ void drawDataBalls() {
     text(selite, marginiX/2, y);
     line(0, y, width, y);
   }
+}
+
+boolean isYearSelected(int year) {
+  IntList selectedYears = new IntList();
+  if (year == 2009 && checkBox2009.isChecked) return true;
+  if (year == 2010 && checkBox2010.isChecked) return true;
+  if (year == 2011 && checkBox2011.isChecked) return true;
+  if (year == 2012 && checkBox2012.isChecked) return true;
+  return false;
 }
 
 void mouseMoved() {

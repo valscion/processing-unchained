@@ -48,51 +48,13 @@ class StudentContainer {
     return new StudentContainer(newStudents);
   }
 
-  StudentContainer filterByYears(){
+  StudentContainer filterBySelectedYears(){
     LinkedList<Student> newStudents = new LinkedList<Student>();
     Iterator<Student> iter = students.iterator();
-    for(int year = 2009; year <= 2012; year++){
-      switch (year){
-        case 2009 : {
-          if(checkBox2009.isChecked){
-            while (iter.hasNext()) {
-              Student stud = iter.next();
-              if (stud.year == year) {
-                newStudents.add(stud);
-              }
-            }
-          }
-        }
-        case 2010 : {
-          if(checkBox2010.isChecked){
-            while (iter.hasNext()) {
-              Student stud = iter.next();
-              if (stud.year == year) {
-                newStudents.add(stud);
-              }
-            }
-          }
-        }
-        case 2011 : {
-          if(checkBox2011.isChecked){
-            while (iter.hasNext()) {
-              Student stud = iter.next();
-              if (stud.year == year) {
-                newStudents.add(stud);
-              }
-            }
-          }
-        }
-        case 2012 : {
-          if(checkBox2012.isChecked){
-            while (iter.hasNext()) {
-              Student stud = iter.next();
-              if (stud.year == year) {
-                newStudents.add(stud);
-              }
-            }
-          }
-        }
+    while (iter.hasNext()) {
+      Student stud = iter.next();
+      if (isYearSelected(stud.year)) {
+        newStudents.add(stud);
       }
     }
     return new StudentContainer(newStudents);
