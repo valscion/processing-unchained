@@ -38,6 +38,7 @@ void setup() {
   clickables.add(box3);
   clickables.add(box4);
   clickables.add(ball);
+  clickables.add(selection);
 
   studentContainer = new StudentContainer();
   StudentContainer year2009 = studentContainer.filterByYear(2009);
