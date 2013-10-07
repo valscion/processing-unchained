@@ -56,11 +56,11 @@ class DataColumn extends ReactsToMouse {
 
   @Override
   void mouseClicked() {
-    if (isOpen) {
-      isOpen = false;
-    }
-    else {
+    if (!isOpen) {
       isOpen = true;
+      if (this != theoryColumn) theoryColumn.isOpen = false;
+      if (this != projectColumn) projectColumn.isOpen = false;
+      if (this != codeColumn) codeColumn.isOpen = false;
     }
   }
 }
