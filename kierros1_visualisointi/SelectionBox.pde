@@ -32,7 +32,6 @@ class SelectionBox extends ReactsToMouse {
     triangle(x+55, y+32, x+60, y+40, x+65, y+32);
     }
     else{
-        println("tanne pitas paatyy");
       image(menuOpenImg, this.x, this.y);
     }
   }
