@@ -1,4 +1,4 @@
-class Menu implements ReactsToMouse {
+class Menu extends ReactsToMouse {
   // Kuvat eri menun tiloja varten
   PGraphics menuOpenImg;
   PGraphics menuClosedImg;
@@ -6,7 +6,6 @@ class Menu implements ReactsToMouse {
   PGraphics menuGlowImg2;
 
   boolean isMenuOpen;
-  boolean isMouseOver;
   float x, y;
 
   Menu(float x, float y) {
@@ -93,6 +92,7 @@ class Menu implements ReactsToMouse {
     }
   }
 
+  @Override
   boolean areCoordinatesInside(float x, float y) {
     float topYLimit, bottomYLimit;
     if (isMenuOpen) {
@@ -111,14 +111,7 @@ class Menu implements ReactsToMouse {
     }
   }
 
-  void mouseOver() {
-    isMouseOver = true;
-  }
-
-  void mouseNotOver() {
-    isMouseOver = false;
-  }
-
+  @Override
   void mouseClicked() {
     toggleMenu();
   }

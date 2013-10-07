@@ -1,10 +1,9 @@
-class CheckBox implements ReactsToMouse {
+class CheckBox extends ReactsToMouse {
   float x;
   float y;
   boolean isChecked;
   String year;
   PGraphics glow;
-  boolean isMouseOver;
 
   CheckBox(float x, float y, String year) {
     this.x = x;
@@ -35,23 +34,16 @@ class CheckBox implements ReactsToMouse {
     }
   }
 
+  @Override
   boolean areCoordinatesInside(float x, float y){
     if (x > this.x && x < this.x+30 && y > this.y && y < this.y+30) {
       println("CheckBox oikee paikka");
       return true;
-    } 
+    }
     return false;
   }
 
-  void mouseOver(){
-    println("ja täällä mouseOver");
-    isMouseOver = true;
-  }
-
-  void mouseNotOver(){
-    isMouseOver = false;
-  }
-
+  @Override
   void mouseClicked(){}
 
 

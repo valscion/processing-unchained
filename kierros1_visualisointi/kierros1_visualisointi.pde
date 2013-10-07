@@ -45,18 +45,20 @@ void draw() {
 
 void mouseMoved() {
   for (int i = 0; i < clickables.size(); i++) {
-    if (clickables.get(i).areCoordinatesInside(mouseX, mouseY)) {
-      clickables.get(i).mouseOver();
+    ReactsToMouse clickable = clickables.get(i);
+    if (clickable.areCoordinatesInside(mouseX, mouseY)) {
+      clickable.isMouseOver = true;
     } else {
-      clickables.get(i).mouseNotOver();
+      clickable.isMouseOver = false;
     }
   }
 }
 
 void mouseClicked() {
-for (int i = 0; i < clickables.size(); i++) {
-    if (clickables.get(i).areCoordinatesInside(mouseX, mouseY)) {
-      clickables.get(i).mouseClicked();
+  for (int i = 0; i < clickables.size(); i++) {
+    ReactsToMouse clickable = clickables.get(i);
+    if (clickable.areCoordinatesInside(mouseX, mouseY)) {
+      clickable.mouseClicked();
     }
   }
 }
