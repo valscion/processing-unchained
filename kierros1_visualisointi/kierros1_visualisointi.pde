@@ -6,7 +6,9 @@ CheckBox box2;
 CheckBox box3;
 CheckBox box4;
 DataBall ball;
-DataColumn[] dataColumns;
+DataColumn theoryColumn;
+DataColumn projectColumn;
+DataColumn codeColumn;
 ArrayList<ReactsToMouse> clickables;
 StudentContainer studentContainer;
 
@@ -21,23 +23,21 @@ void setup() {
   box3 = new CheckBox(330, 20, "2011");
   box4 = new CheckBox(480, 20, "2012");
   ball = new DataBall(400, 300, 40);
+  theoryColumn = new DataColumn("theory", 1);
+  projectColumn = new DataColumn("project", 2);
+  codeColumn = new DataColumn("code", 3);
+  codeColumn.isOpen = true;
+
   clickables = new ArrayList<ReactsToMouse>();
-  dataColumns = new DataColumn[8];
-  dataColumns[0] = new DataColumn("Teoria", 65);
-  dataColumns[1] = new DataColumn("Projekti", 65 + 120);
-  for (int i = 2; i < 8; i++) {
-    DataColumn column = new DataColumn(str(i - 1), 65 + 120 + 75*i);
-    dataColumns[i] = column;
-  }
-  for (int i = 0; i < dataColumns.length; i++) {
-    clickables.add(dataColumns[i]);
-  }
   clickables.add(menu);
   clickables.add(box1);
   clickables.add(box2);
   clickables.add(box3);
   clickables.add(box4);
   clickables.add(ball);
+  clickables.add(theoryColumn);
+  clickables.add(projectColumn);
+  clickables.add(codeColumn);
 
   studentContainer = new StudentContainer();
   StudentContainer year2009 = studentContainer.filterByYear(2009);
@@ -60,10 +60,9 @@ void draw() {
 }
 
 void drawDataColumns() {
-  for (int i = 0; i < dataColumns.length; i++) {
-    DataColumn column = dataColumns[i];
-    column.draw();
-  }
+  theoryColumn.draw();
+  projectColumn.draw();
+  codeColumn.draw();
 }
 
 void drawMenuParts() {
