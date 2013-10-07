@@ -28,7 +28,6 @@ void setup() {
   clickables.add(box4);
   clickables.add(ball);
 
-  //setupDebug();
   studentContainer = new StudentContainer();
   StudentContainer year2009 = studentContainer.filterByYear(2009);
   println(studentContainer.size());
@@ -46,8 +45,6 @@ void draw() {
     box3.draw();
     box4.draw();
   }
-
-  //drawDebug();
 }
 
 void mouseMoved() {
@@ -69,14 +66,3 @@ void mouseClicked() {
     }
   }
 }
-
-  /*if (menu.menuOpen == false) {
-    if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < 50) {
-      menu.toggleMenu();
-    }
-    } else {
-    if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < 150) {
-      menu.toggleMenu();
-    }
-  }*/
-
