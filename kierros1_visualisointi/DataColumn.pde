@@ -2,6 +2,7 @@ class DataColumn extends ReactsToMouse {
   String type;
   int columnOrdinal;
   boolean isOpen = false;
+  float START_LEFT_X = 110;
   float Y_POSITION = 560;
   float TEXT_HEIGHT = 34;
   float OPENED_WIDTH = 60;
@@ -21,14 +22,24 @@ class DataColumn extends ReactsToMouse {
       fill(196);
     }
     textSize(TEXT_HEIGHT);
+    textAlign(CENTER);
 
-    float textX = 65 + (columnOrdinal - 1) * CLOSED_WIDTH;
-    text(type, textX, Y_POSITION);
+    float textX = START_LEFT_X + (columnOrdinal - 1) * CLOSED_WIDTH;
+    String typeInFinnish = mapTypeToFinnish();
+    text(typeInFinnish, textX, Y_POSITION);
+  }
+
+  String mapTypeToFinnish() {
+    if (type == "code") return "Koodi";
+    if (type == "theory") return "Teoria";
+    if (type == "project") return "Projekti";
+    return "Kekkonen";
   }
 
   @Override
   boolean areCoordinatesInside(float x, float y) {
-    float textX = 65 + (columnOrdinal - 1) * CLOSED_WIDTH;
+    float textX = START_LEFT_X + (columnOrdinal - 1) * CLOSED_WIDTH;
+    x = x + CLOSED_WIDTH / 2;
     if (x < textX || x > textX + CLOSED_WIDTH) {
       return false;
     }
