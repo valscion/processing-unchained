@@ -29,6 +29,8 @@ void mouseMoved() {
   for (int i = 0; i < clickables.size(); i++) {
     if (clickables.get(i).areCoordinatesInside(mouseX, mouseY)) {
       clickables.get(i).mouseOver();
+    } else {
+      clickables.get(i).mouseNotOver();
     }
   }
 }

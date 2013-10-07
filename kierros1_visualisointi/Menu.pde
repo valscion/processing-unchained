@@ -1,14 +1,19 @@
 class Menu implements ReactsToMouse {
+  // Kuvat eri menun tiloja varten
   PGraphics menuOpenImg;
   PGraphics menuClosedImg;
-  PGraphics menuGlow;
-  boolean menuOpen;
+  PGraphics menuGlowImg1;
+  PGraphics menuGlowImg2;
+
+  boolean isMenuOpen;
+  boolean isMouseOver;
   float x, y;
-  
+
   Menu(float x, float y) {
     this.x = x;
     this.y = y;
-    menuOpen = false;
+    isMouseOver = false;
+    isMenuOpen = false;
     menuOpenImg = createGraphics(width, 150);
     menuOpenImg.beginDraw();
     menuOpenImg.noStroke();
@@ -30,23 +35,47 @@ class Menu implements ReactsToMouse {
     menuClosedImg.noStroke();
     menuClosedImg.fill(199);
     menuClosedImg.rect(0, 0, width, 50);
-      
+
     menuClosedImg.fill(255);
     menuClosedImg.textFont(walkway);
     menuClosedImg.textSize(30);
     menuClosedImg.text("MENU", 15, 35);
     menuClosedImg.endDraw();
     drawButton();
+
+    menuGlowImg1 = createGraphics(width, 50);
+    menuGlowImg1.beginDraw();
+    menuGlowImg1.strokeWeight(4);
+    menuGlowImg1.stroke(55, 155, 232);
+    menuGlowImg1.noFill();
+    menuGlowImg1.filter(BLUR, 5);
+    menuGlowImg1.rect(0, 0, width-2, 48);
+    menuGlowImg1.endDraw();
+
+    menuGlowImg2 = createGraphics(width, 150);
+    menuGlowImg2.beginDraw();
+    menuGlowImg2.strokeWeight(4);
+    menuGlowImg2.stroke(55, 155, 232);
+    menuGlowImg2.noFill();
+    menuGlowImg2.filter(BLUR, 5);
+    menuGlowImg2.rect(0, 0, width-2, 148);
+    menuGlowImg2.endDraw();
   }
- 
+
   void draw() {
-    if (menuOpen == false) {
+    if (isMenuOpen == false) {
       image(menuClosedImg, this.x, this.y);
+      if (isMouseOver) {
+        image(menuGlowImg1, this.x, this.y);
+      }
     } else {
       image(menuOpenImg, this.x, this.y);
+      if (isMouseOver) {
+        image(menuGlowImg2, this.x, this.y);
+      }
     }
   }
-  
+
   void drawButton() {
     menuClosedImg.beginDraw();
     menuClosedImg.fill(255);
@@ -57,49 +86,42 @@ class Menu implements ReactsToMouse {
   }
 
   void toggleMenu() {
-    if (menuOpen == false) {
-      menuOpen = true;
+    if (isMenuOpen) {
+      isMenuOpen = false;
     } else {
-      menuOpen = false;
+      isMenuOpen = true;
     }
   }
 
   boolean areCoordinatesInside(float x, float y) {
-    if (menuOpen == false) {
-        if (x > this.x && x < 135 && y > this.y && y < 40) {
-          println("koordinaatit pienen sisal");
-          return true;
-        }
-    } else {
-      if (x > this.x && x < 135 && y > 105 && y < 150) {
-        println("koordinaatit ison sisal");
-        return true;
-      }
+    float topYLimit, bottomYLimit;
+    if (isMenuOpen) {
+      topYLimit = 105;
+      bottomYLimit = 150;
     }
-    return false;
+    else {
+      topYLimit = this.y;
+      bottomYLimit = 40;
+    }
+    if (x > this.x && x < 135 && y > topYLimit && y < bottomYLimit) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
   void mouseOver() {
-      println("tanne pitais paatyy");
-      strokeWeight(5);
-      stroke(55, 155, 232);
-      noFill();
-      //filter(BLUR, 5);
-      if (menuOpen == false) {
-        println("ja tanne");
-        rect(0, 0, width, 50);
-      } else {
-        rect(0, 0, width, 150);
-      }
+    isMouseOver = true;
+  }
+
+  void mouseNotOver() {
+    isMouseOver = false;
   }
 
   void mouseClicked() {
-    println("klikattiin");
-      println("klikkaus toimii");
-      toggleMenu();
-    
+    toggleMenu();
   }
-
 
 }
 
