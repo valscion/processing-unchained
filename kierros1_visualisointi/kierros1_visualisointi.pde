@@ -33,7 +33,7 @@ void draw() {
   background(255);
   selection.draw();
   menu.draw();
-  if (menu.menuOpen) {
+  if (menu.isMenuOpen) {
     box1.draw();
     box2.draw();
     box3.draw();
