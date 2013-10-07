@@ -6,6 +6,7 @@ CheckBox box2;
 CheckBox box3;
 CheckBox box4;
 DataBall ball;
+DataColumn[] dataColumns;
 ArrayList<ReactsToMouse> clickables;
 StudentContainer studentContainer;
 
@@ -21,6 +22,16 @@ void setup() {
   box4 = new CheckBox(480, 20, "2012");
   ball = new DataBall(400, 300, 40);
   clickables = new ArrayList<ReactsToMouse>();
+  dataColumns = new DataColumn[8];
+  dataColumns[0] = new DataColumn("Teoria", 65);
+  dataColumns[1] = new DataColumn("Projekti", 65 + 120);
+  for (int i = 2; i < 8; i++) {
+    DataColumn column = new DataColumn(str(i - 1), 65 + 120 + 75*i);
+    dataColumns[i] = column;
+  }
+  for (int i = 0; i < dataColumns.length; i++) {
+    clickables.add(dataColumns[i]);
+  }
   clickables.add(menu);
   clickables.add(box1);
   clickables.add(box2);
@@ -41,9 +52,23 @@ void setup() {
 
 void draw() {
   background(255);
+
+  drawDataColumns();
+  ball.draw();
+
+  drawMenuParts();
+}
+
+void drawDataColumns() {
+  for (int i = 0; i < dataColumns.length; i++) {
+    DataColumn column = dataColumns[i];
+    column.draw();
+  }
+}
+
+void drawMenuParts() {
   selection.draw();
   menu.draw();
-  ball.draw();
   if (menu.isMenuOpen) {
     box1.draw();
     box2.draw();
