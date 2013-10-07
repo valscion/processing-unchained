@@ -6,7 +6,7 @@ class Menu implements ReactsToMouse {
   boolean menuOpen;
   boolean mouseIsOver;
   float x, y;
-  
+
   Menu(float x, float y) {
     this.x = x;
     this.y = y;
@@ -33,7 +33,7 @@ class Menu implements ReactsToMouse {
     menuClosedImg.noStroke();
     menuClosedImg.fill(199);
     menuClosedImg.rect(0, 0, width, 50);
-      
+
     menuClosedImg.fill(255);
     menuClosedImg.textFont(walkway);
     menuClosedImg.textSize(30);
@@ -59,7 +59,7 @@ class Menu implements ReactsToMouse {
     menuGlowImg2.rect(0, 0, width-2, 148);
     menuGlowImg2.endDraw();
   }
- 
+
   void draw() {
     if (menuOpen == false) {
       image(menuClosedImg, this.x, this.y);
@@ -73,7 +73,7 @@ class Menu implements ReactsToMouse {
       }
     }
   }
-  
+
   void drawButton() {
     menuClosedImg.beginDraw();
     menuClosedImg.fill(255);
@@ -109,7 +109,7 @@ class Menu implements ReactsToMouse {
   void mouseOver() {
     println("ja tanne");
     mouseIsOver = true;
-      
+
   }
 
   void mouseNotOver() {
@@ -120,7 +120,7 @@ class Menu implements ReactsToMouse {
     println("klikattiin");
       println("klikkaus toimii");
       toggleMenu();
-    
+
   }
 
 
