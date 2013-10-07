@@ -5,6 +5,7 @@ CheckBox box1;
 CheckBox box2;
 CheckBox box3;
 CheckBox box4;
+DataBall ball;
 ArrayList<ReactsToMouse> clickables;
 StudentContainer studentContainer;
 
@@ -18,12 +19,14 @@ void setup() {
   box2 = new CheckBox(180, 20, "2010");
   box3 = new CheckBox(330, 20, "2011");
   box4 = new CheckBox(480, 20, "2012");
+  ball = new DataBall(400, 300, 40);
   clickables = new ArrayList<ReactsToMouse>();
   clickables.add(menu);
   clickables.add(box1);
   clickables.add(box2);
   clickables.add(box3);
   clickables.add(box4);
+  clickables.add(ball);
 
   //setupDebug();
   studentContainer = new StudentContainer();
@@ -33,6 +36,7 @@ void draw() {
   background(255);
   selection.draw();
   menu.draw();
+  ball.draw();
   if (menu.isMenuOpen) {
     box1.draw();
     box2.draw();

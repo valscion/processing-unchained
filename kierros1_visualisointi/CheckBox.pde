@@ -26,9 +26,7 @@ class CheckBox extends ReactsToMouse {
     textFont(walkway);
     textSize(30);
     text(year, x+40, y+25);
-    println("jeejee tää toimii");
     if (isMouseOver) {
-      println("mutta tänne ei päädytty eihän");
       image(glow, this.x, this.y);
     }
     if (isChecked) {
@@ -42,7 +40,6 @@ class CheckBox extends ReactsToMouse {
   @Override
   boolean areCoordinatesInside(float x, float y){
     if (x > this.x && x < this.x+30 && y > this.y && y < this.y+30) {
-      println("CheckBox oikee paikka");
       return true;
     }
     return false;
