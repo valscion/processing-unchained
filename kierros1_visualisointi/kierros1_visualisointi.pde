@@ -38,6 +38,7 @@ void setup() {
   clickables.add(theoryColumn);
   clickables.add(projectColumn);
   clickables.add(codeColumn);
+  clickables.add(selection);
 
   studentContainer = new StudentContainer();
   StudentContainer year2009 = studentContainer.filterByYear(2009);
