@@ -30,6 +30,8 @@ class DataColumn extends ReactsToMouse {
       String typeInFinnish = mapTypeToFinnish();
       text(typeInFinnish, leftX, Y_POSITION);
     }
+
+    textAlign(LEFT);
   }
 
   String mapTypeToFinnish() {
