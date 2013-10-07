@@ -57,6 +57,8 @@ void draw() {
   drawDataColumns();
   ball.draw();
 
+  drawDataBalls(3);
+
   drawMenuParts();
 }
 
@@ -76,7 +78,7 @@ void drawMenuParts() {
     checkBox2012.draw();
   }
 
-  drawRawData(3);
+  //drawRawData(3);
 }
 
 void drawRawData(int totalCourseGrade) {
@@ -123,39 +125,24 @@ void drawDataBalls(int totalCourseGrade) {
   StudentContainer gradFiltered = studentContainer.filterByTotalGrade(totalCourseGrade);
   StudentContainer yearsFiltered = studentContainer.filterByYears();
   StudentContainer filtered = yearsFiltered;
+  int n = 0;
+  int m = filtered.size();
   for(int g = 6; g >= 0;g--){//arvosanat ylhäältä alas 6-0
-    for(int i = 0; i < 18; i++){
-
-      /*
-      if(i < 6){
-        printText += gradFiltered.filterByTypeRoundAndGrade("coding", i+1, g).size() + " | ";
-      }
-      else if(i < 11){
-        printText += gradFiltered.filterByTypeRoundAndGrade("theories", i-5, g).size() + " | ";
-      }
-      else if(i < 16){
-        switch (i){
-          case 11 : printText += gradFiltered.filterByProjectArchitecture(g).size() + " | ";
-                    break;
-          case 12 : printText += gradFiltered.filterByProjectCode(g).size() + " | ";
-                    break;
-          case 13 : printText += gradFiltered.filterByProjectUx(g).size() + " | ";
-                    break;
-          case 14 : printText += gradFiltered.filterByProjectReport(g).size() + " | ";
-                    break;
-          case 15 : printText += gradFiltered.filterByProjectGrade(g).size() + " | ";
-                    break;
-          default : //ei mitään
-                    break;
+    if(theoryColumn.isOpen){
+      for(int i = 1; i <= 5; i++){
+        n = filtered.filterByTypeRoundAndGrade("theories", i, g).size();
+        //float relationship = n/m;
+        float r = map(n, 0, m, 0, 100);
+        if(r>0){
+          DataBall dB = new DataBall(100, 100, r);
+          dB.draw();
+          println("tekstia"+r);
         }
       }
-      else if(i < 17){
-        printText += gradFiltered.filterByExamGrade(g).size() + " | ";
-      }
-      else{
-        printText += gradFiltered.filterByTotalGrade(g).size() + " | ";
-      }*/
     }
+    else{
+
+      }
   }
 }
 
