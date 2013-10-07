@@ -14,7 +14,7 @@ void drawDebug() {
 }
 
 void setupData() {
-  JSONObject json = loadJSONObject("testData.json");
+  JSONObject json = loadJSONObject("data.json");
   students2009 = json.getJSONArray("2009");
   testStud = new Student(students2009.getJSONObject(0));
 

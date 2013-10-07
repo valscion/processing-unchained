@@ -1,17 +1,19 @@
 class Menu implements ReactsToMouse {
+  // Kuvat eri menun tiloja varten
   PGraphics menuOpenImg;
   PGraphics menuClosedImg;
   PGraphics menuGlowImg1;
   PGraphics menuGlowImg2;
-  boolean menuOpen;
-  boolean mouseIsOver;
+
+  boolean isMenuOpen;
+  boolean isMouseOver;
   float x, y;
-  
+
   Menu(float x, float y) {
     this.x = x;
     this.y = y;
-    mouseIsOver = false;
-    menuOpen = false;
+    isMouseOver = false;
+    isMenuOpen = false;
     menuOpenImg = createGraphics(width, 150);
     menuOpenImg.beginDraw();
     menuOpenImg.noStroke();
@@ -33,7 +35,7 @@ class Menu implements ReactsToMouse {
     menuClosedImg.noStroke();
     menuClosedImg.fill(199);
     menuClosedImg.rect(0, 0, width, 50);
-      
+
     menuClosedImg.fill(255);
     menuClosedImg.textFont(walkway);
     menuClosedImg.textSize(30);
@@ -59,21 +61,21 @@ class Menu implements ReactsToMouse {
     menuGlowImg2.rect(0, 0, width-2, 148);
     menuGlowImg2.endDraw();
   }
- 
+
   void draw() {
-    if (menuOpen == false) {
+    if (isMenuOpen == false) {
       image(menuClosedImg, this.x, this.y);
-      if (mouseIsOver) {
+      if (isMouseOver) {
         image(menuGlowImg1, this.x, this.y);
       }
     } else {
       image(menuOpenImg, this.x, this.y);
-      if (mouseIsOver) {
+      if (isMouseOver) {
         image(menuGlowImg2, this.x, this.y);
       }
     }
   }
-  
+
   void drawButton() {
     menuClosedImg.beginDraw();
     menuClosedImg.fill(255);
@@ -84,45 +86,42 @@ class Menu implements ReactsToMouse {
   }
 
   void toggleMenu() {
-    if (menuOpen == false) {
-      menuOpen = true;
+    if (isMenuOpen) {
+      isMenuOpen = false;
     } else {
-      menuOpen = false;
+      isMenuOpen = true;
     }
   }
 
   boolean areCoordinatesInside(float x, float y) {
-    if (menuOpen == false) {
-        if (x > this.x && x < 135 && y > this.y && y < 40) {
-          println("koordinaatit pienen sisal");
-          return true;
-        }
-    } else {
-      if (x > this.x && x < 135 && y > 105 && y < 150) {
-        println("koordinaatit ison sisal");
-        return true;
-      }
+    float topYLimit, bottomYLimit;
+    if (isMenuOpen) {
+      topYLimit = 105;
+      bottomYLimit = 150;
     }
-    return false;
+    else {
+      topYLimit = this.y;
+      bottomYLimit = 40;
+    }
+    if (x > this.x && x < 135 && y > topYLimit && y < bottomYLimit) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
   void mouseOver() {
-    println("ja tanne");
-    mouseIsOver = true;
-      
+    isMouseOver = true;
   }
 
   void mouseNotOver() {
-    mouseIsOver = false;
+    isMouseOver = false;
   }
 
   void mouseClicked() {
-    println("klikattiin");
-      println("klikkaus toimii");
-      toggleMenu();
-    
+    toggleMenu();
   }
-
 
 }
 

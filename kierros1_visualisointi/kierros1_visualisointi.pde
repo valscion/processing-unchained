@@ -6,6 +6,7 @@ CheckBox box2;
 CheckBox box3;
 CheckBox box4;
 ArrayList<ReactsToMouse> clickables;
+StudentContainer studentContainer;
 
 void setup() {
   size(800, 600);
@@ -24,7 +25,8 @@ void setup() {
   clickables.add(box3);
   clickables.add(box4);
 
-  setupDebug();
+  //setupDebug();
+  studentContainer = new StudentContainer();
 }
 
 void draw() {
@@ -38,7 +40,7 @@ void draw() {
     box4.draw();
   }
 
-  drawDebug();
+  //drawDebug();
 }
 
 void mouseMoved() {
