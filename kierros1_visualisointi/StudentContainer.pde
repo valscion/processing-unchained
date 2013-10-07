@@ -71,6 +71,90 @@ class StudentContainer {
     return new StudentContainer(newStudents);
   }
 
+  StudentContainer filterByProjectArchitecture(int partGrade){
+    LinkedList<Student> newStudents = new LinkedList<Student>();
+    Iterator<Student> iter = students.iterator();
+    while (iter.hasNext()) {
+      Student stud = iter.next();
+      if (round(stud.project.architecture) == partGrade) {
+        newStudents.add(stud);
+      }
+    }
+    return new StudentContainer(newStudents);
+  }
+
+  StudentContainer filterByProjectCode(int partGrade){
+    LinkedList<Student> newStudents = new LinkedList<Student>();
+    Iterator<Student> iter = students.iterator();
+    while (iter.hasNext()) {
+      Student stud = iter.next();
+      if (round(stud.project.code) == partGrade) {
+        newStudents.add(stud);
+      }
+    }
+    return new StudentContainer(newStudents);
+  }
+
+    StudentContainer filterByProjectUx(int partGrade){
+    LinkedList<Student> newStudents = new LinkedList<Student>();
+    Iterator<Student> iter = students.iterator();
+    while (iter.hasNext()) {
+      Student stud = iter.next();
+      if (round(stud.project.ux) == partGrade) {
+        newStudents.add(stud);
+      }
+    }
+    return new StudentContainer(newStudents);
+  }
+
+  StudentContainer filterByProjectReport(int partGrade){
+    LinkedList<Student> newStudents = new LinkedList<Student>();
+    Iterator<Student> iter = students.iterator();
+    while (iter.hasNext()) {
+      Student stud = iter.next();
+      if (round(stud.project.report) == partGrade) {
+        newStudents.add(stud);
+      }
+    }
+    return new StudentContainer(newStudents);
+  }
+
+  StudentContainer filterByProjectGrade(int totalGrade){
+    LinkedList<Student> newStudents = new LinkedList<Student>();
+    Iterator<Student> iter = students.iterator();
+    while (iter.hasNext()) {
+      Student stud = iter.next();
+      if (round(stud.project.grade) == totalGrade) {
+        newStudents.add(stud);
+      }
+    }
+    return new StudentContainer(newStudents);
+  }
+
+  StudentContainer filterByExamGrade(int examGrade){
+    LinkedList<Student> newStudents = new LinkedList<Student>();
+    Iterator<Student> iter = students.iterator();
+    while (iter.hasNext()) {
+      Student stud = iter.next();
+      if (round(stud.exam.grade) == examGrade) {
+        newStudents.add(stud);
+      }
+    }
+    return new StudentContainer(newStudents);
+  }
+/*pohja muille filttereille
+  StudentContainer filterBy tyh(int partGrade){
+    LinkedList<Student> newStudents = new LinkedList<Student>();
+    Iterator<Student> iter = students.iterator();
+    while (iter.hasNext()) {
+      Student stud = iter.next();
+      if (round(stud. tyh) == partGrade) {
+        newStudents.add(stud);
+      }
+    }
+    return new StudentContainer(newStudents);
+  }
+*/
   int size() {
     return students.size();
   }
