@@ -1,6 +1,10 @@
 PFont walkway;
 Menu menu;
-SelectionBox box;
+SelectionBox selection;
+CheckBox box1;
+CheckBox box2;
+CheckBox box3;
+CheckBox box4;
 ArrayList<ReactsToMouse> clickables;
 
 void setup() {
@@ -8,17 +12,31 @@ void setup() {
   background(255);
   walkway = loadFont("WalkwayBold-48.vlw");
   menu = new Menu(0, 0);
-  box = new SelectionBox(700, 60);
+  selection = new SelectionBox(700, 60);
+  box1 = new CheckBox(20, 20, "2009");
+  box2 = new CheckBox(180, 20, "2010");
+  box3 = new CheckBox(330, 20, "2011");
+  box4 = new CheckBox(480, 20, "2012");
   clickables = new ArrayList<ReactsToMouse>();
   clickables.add(menu);
+  clickables.add(box1);
+  clickables.add(box2);
+  clickables.add(box3);
+  clickables.add(box4);
 
   setupDebug();
 }
 
 void draw() {
   background(255);
-  box.draw();
+  selection.draw();
   menu.draw();
+  if (menu.menuOpen) {
+    box1.draw();
+    box2.draw();
+    box3.draw();
+    box4.draw();
+  }
 
   drawDebug();
 }
