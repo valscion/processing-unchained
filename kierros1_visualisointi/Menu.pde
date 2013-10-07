@@ -1,13 +1,16 @@
 class Menu implements ReactsToMouse {
   PGraphics menuOpenImg;
   PGraphics menuClosedImg;
-  PGraphics menuGlow;
+  PGraphics menuGlowImg1;
+  PGraphics menuGlowImg2;
   boolean menuOpen;
+  boolean mouseIsOver;
   float x, y;
   
   Menu(float x, float y) {
     this.x = x;
     this.y = y;
+    mouseIsOver = false;
     menuOpen = false;
     menuOpenImg = createGraphics(width, 150);
     menuOpenImg.beginDraw();
@@ -37,13 +40,37 @@ class Menu implements ReactsToMouse {
     menuClosedImg.text("MENU", 15, 35);
     menuClosedImg.endDraw();
     drawButton();
+
+    menuGlowImg1 = createGraphics(width, 50);
+    menuGlowImg1.beginDraw();
+    menuGlowImg1.strokeWeight(5);
+    menuGlowImg1.stroke(55, 155, 232);
+    menuGlowImg1.noFill();
+    menuGlowImg1.filter(BLUR, 5);
+    menuGlowImg1.rect(0, 0, width, 50);
+    menuGlowImg1.endDraw();
+
+    menuGlowImg2 = createGraphics(width, 150);
+    menuGlowImg2.beginDraw();
+    menuGlowImg2.strokeWeight(5);
+    menuGlowImg2.stroke(55, 155, 232);
+    menuGlowImg2.noFill();
+    menuGlowImg2.filter(BLUR, 5);
+    menuGlowImg2.rect(0, 0, width, 150);
+    menuGlowImg2.endDraw();
   }
  
   void draw() {
     if (menuOpen == false) {
       image(menuClosedImg, this.x, this.y);
+      if (mouseIsOver) {
+        image(menuGlowImg1, this.x, this.y);
+      }
     } else {
       image(menuOpenImg, this.x, this.y);
+      if (mouseIsOver) {
+        image(menuGlowImg2, this.x, this.y);
+      }
     }
   }
   
@@ -80,17 +107,13 @@ class Menu implements ReactsToMouse {
   }
 
   void mouseOver() {
-      println("tanne pitais paatyy");
-      strokeWeight(5);
-      stroke(55, 155, 232);
-      noFill();
-      //filter(BLUR, 5);
-      if (menuOpen == false) {
-        println("ja tanne");
-        rect(0, 0, width, 50);
-      } else {
-        rect(0, 0, width, 150);
-      }
+    println("ja tanne");
+    mouseIsOver = true;
+      
+  }
+
+  void mouseNotOver() {
+    mouseIsOver = false;
   }
 
   void mouseClicked() {

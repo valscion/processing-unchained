@@ -4,6 +4,8 @@ interface ReactsToMouse {
 
   void mouseOver();
 
+  void mouseNotOver();
+
   void mouseClicked();
 
 }
