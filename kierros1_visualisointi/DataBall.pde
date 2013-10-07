@@ -8,7 +8,7 @@ class DataBall extends ReactsToMouse {
     this.x = x;
     this.y = y;
     this.radius = radius;
-    glow = createGraphics(round(radius*2)+5, round(radius*2)+5);
+    glow = createGraphics(round(radius*2)+4, round(radius*2)+4);
     glow.beginDraw();
     glow.strokeWeight(2);
     glow.stroke(55, 155, 232);
@@ -27,7 +27,8 @@ class DataBall extends ReactsToMouse {
 
   @Override
   boolean areCoordinatesInside(float x, float y) {
-    if (x > this.x-radius && x < this.x+radius && y > this.y-radius && y < this.y+radius) {
+    float dist_sqr = pow((this.x - x), 2) + pow((this.y - y), 2);
+    if (dist_sqr < radius * radius) {
       return true;
     }
     return false;
