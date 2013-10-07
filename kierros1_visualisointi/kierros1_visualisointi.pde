@@ -2,6 +2,7 @@ PFont walkway;
 Menu menu;
 SelectionBox box;
 ArrayList<ReactsToMouse> clickables;
+StudentContainer studentContainer;
 
 void setup() {
   size(800, 600);
@@ -12,7 +13,8 @@ void setup() {
   clickables = new ArrayList<ReactsToMouse>();
   clickables.add(menu);
 
-  setupDebug();
+  //setupDebug();
+  studentContainer = new StudentContainer();
 }
 
 void draw() {
@@ -20,7 +22,7 @@ void draw() {
   box.draw();
   menu.draw();
 
-  drawDebug();
+  //drawDebug();
 }
 
 void mouseMoved() {
