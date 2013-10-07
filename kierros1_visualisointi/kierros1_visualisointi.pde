@@ -120,8 +120,8 @@ void drawRawData(int totalCourseGrade) {
 
 void drawDataBalls(int totalCourseGrade) {
   StudentContainer gradFiltered = studentContainer.filterByTotalGrade(totalCourseGrade);
-  //StudentContainer yearsFiltered = studentContainer.filterByYears(gradFiltered);
-  //StudentContainer filtered = yearsFiltered;
+  StudentContainer yearsFiltered = studentContainer.filterByYears();
+  StudentContainer filtered = yearsFiltered;
   for(int g = 6; g >= 0;g--){//arvosanat ylhäältä alas 6-0
     for(int i = 0; i < 18; i++){
 
