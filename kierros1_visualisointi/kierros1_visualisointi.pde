@@ -31,8 +31,13 @@ void setup() {
   //setupDebug();
   studentContainer = new StudentContainer();
   StudentContainer year2009 = studentContainer.filterByYear(2009);
-  println(studentContainer.size());
-  println(year2009.size());
+  //println(studentContainer.size());
+  //println(year2009.size());
+  int kokArv = 5;
+  int kierros = 1;
+  println("henkilöitä joilla kurssista arvosana:"+5+" koodauksen kiekka:"+kierros+" arvosana:5 \n"+studentContainer.filterByTotalGrade(kokArv).filterByTypeRoundAndGrade("coding", kierros, 5).size());
+  println("yhteensä arvosanan "+kokArv+" saaneita: " +studentContainer.filterByTotalGrade(kokArv).size());
+
 }
 
 void draw() {

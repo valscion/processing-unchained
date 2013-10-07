@@ -48,6 +48,29 @@ class StudentContainer {
     return new StudentContainer(newStudents);
   }
 
+  //type String on "coding" tai mitä tahansa muuta -> theories, wantedRound on kokonaisluku 1-6 jos 6 ja theories niin kusee, int wantedGrade on haluttu arvosana millä rajataan
+  StudentContainer filterByTypeRoundAndGrade(String type, int wantedRound, int wantedGrade) {
+    LinkedList<Student> newStudents = new LinkedList<Student>();
+    Iterator<Student> iter = students.iterator();
+    if(type == "coding"){
+      while(iter.hasNext()){
+        Student stud = iter.next();
+        if(wantedGrade == stud.coding[wantedRound - 1].grade) {
+          newStudents.add(stud);
+        }
+      }
+    }
+    else {
+      while(iter.hasNext()){
+        Student stud = iter.next();
+        if(wantedGrade == stud.theories[wantedRound - 1].grade) {
+          newStudents.add(stud);
+        }
+      }
+    }
+    return new StudentContainer(newStudents);
+  }
+
   int size() {
     return students.size();
   }
