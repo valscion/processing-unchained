@@ -5,7 +5,14 @@ class Student{
     final int dates_late;
     final boolean has_penalty;
     Round(JSONObject oneRound){
-      grade = oneRound.getFloat("grade");
+      float grade1;
+      try{
+        grade1 = oneRound.getFloat("grade");
+      }
+      catch(RuntimeException e){
+        grade1 = -1000;
+      }
+      grade = grade1;
       dates_late = oneRound.getInt("dates_late");
       has_penalty = oneRound.getBoolean("has_penalty");
     }
@@ -18,11 +25,50 @@ class Student{
     final float report;
     final float grade;
     Project(JSONObject proj){
-      architecture = proj.getFloat("architecture");
-      code = proj.getFloat("code");
-      ux = proj.getFloat("ux");
-      report = proj.getFloat("report");
-      grade = proj.getFloat("grade");
+      float architecture1;
+      try{
+        architecture1 = proj.getFloat("architecture");
+      }
+      catch(RuntimeException e){
+        architecture1 = -1000;
+      }
+      architecture = architecture1;
+      
+      float code1;
+      try{
+        code1 = proj.getFloat("code");
+      }
+      catch(RuntimeException e){
+        code1 = -1000;
+      }
+      code = code1;
+      
+      float ux1;
+      try{
+        ux1 = proj.getFloat("ux");
+      }
+      catch(RuntimeException e){
+        ux1 = -1000;
+      }
+      ux = ux1;
+      
+      float report1;
+      try{
+        report1 = proj.getFloat("report");
+      }
+      catch(RuntimeException e){
+        report1 = -1000;
+      }
+      report = report1;
+      
+      float grade1;
+      try{
+        grade1 = proj.getFloat("grade");
+      }
+      catch(RuntimeException e){
+        grade1 = -1000;
+      }
+      grade = grade1;
     }
   }
 
@@ -30,7 +76,14 @@ class Student{
     final float grade;
     final boolean has_redone;
     Exam(JSONObject exam){
-      grade = exam.getFloat("grade");
+      float grade1;
+      try{
+        grade1 = exam.getFloat("grade");
+      }
+      catch(RuntimeException e){
+        grade1 = -1000;
+      }
+      grade = grade1;
       has_redone = exam.getBoolean("has_redone");
     }
   }
@@ -43,7 +96,7 @@ class Student{
   final Exam exam;
 
   Student(JSONObject student){
-    studentNumber = student.getString("studentnumber");
+    studentNumber = student.getString("studentNumber");
     grade = student.getFloat("grade");
     project = new Project(student.getJSONObject("project"));
     exam = new Exam(student.getJSONObject("exam"));
