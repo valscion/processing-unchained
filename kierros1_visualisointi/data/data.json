@@ -72,7 +72,8 @@
         "grade": 5,
         "has_redone": false
       },
-      "grade": 4.38
+      "grade": 4.38,
+      "year": 2009
     },
     {
       "studentNumber": "69462V",
@@ -146,7 +147,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 3.42
+      "grade": 3.42,
+      "year": 2009
     },
     {
       "studentNumber": "78495H",
@@ -220,7 +222,8 @@
         "grade": 5,
         "has_redone": false
       },
-      "grade": 4.73
+      "grade": 4.73,
+      "year": 2009
     },
     {
       "studentNumber": "78532F",
@@ -294,7 +297,8 @@
         "grade": 5,
         "has_redone": false
       },
-      "grade": 4.5
+      "grade": 4.5,
+      "year": 2009
     },
     {
       "studentNumber": "78972K",
@@ -368,7 +372,8 @@
         "grade": 0,
         "has_redone": false
       },
-      "grade": 3.82
+      "grade": 3.82,
+      "year": 2009
     },
     {
       "studentNumber": "79377S",
@@ -442,7 +447,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 3.38
+      "grade": 3.38,
+      "year": 2009
     },
     {
       "studentNumber": "79420A",
@@ -516,7 +522,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 3.45
+      "grade": 3.45,
+      "year": 2009
     },
     {
       "studentNumber": "79464H",
@@ -590,7 +597,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 3.89
+      "grade": 3.89,
+      "year": 2009
     },
     {
       "studentNumber": "79605S",
@@ -664,7 +672,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 3.45
+      "grade": 3.45,
+      "year": 2009
     },
     {
       "studentNumber": "79623R",
@@ -738,7 +747,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 3.93
+      "grade": 3.93,
+      "year": 2009
     },
     {
       "studentNumber": "79832R",
@@ -812,7 +822,8 @@
         "grade": 5,
         "has_redone": false
       },
-      "grade": 4.19
+      "grade": 4.19,
+      "year": 2009
     },
     {
       "studentNumber": "80381N",
@@ -886,7 +897,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 4.38
+      "grade": 4.38,
+      "year": 2009
     },
     {
       "studentNumber": "80488E",
@@ -960,7 +972,8 @@
         "grade": 0,
         "has_redone": false
       },
-      "grade": 2.62
+      "grade": 2.62,
+      "year": 2009
     },
     {
       "studentNumber": "81846R",
@@ -1034,7 +1047,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 3.81
+      "grade": 3.81,
+      "year": 2009
     },
     {
       "studentNumber": "81860K",
@@ -1108,7 +1122,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 3.85
+      "grade": 3.85,
+      "year": 2009
     },
     {
       "studentNumber": "82213A",
@@ -1182,7 +1197,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 2.87
+      "grade": 2.87,
+      "year": 2009
     },
     {
       "studentNumber": "83985F",
@@ -1256,7 +1272,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 3.42
+      "grade": 3.42,
+      "year": 2009
     },
     {
       "studentNumber": "83986H",
@@ -1330,7 +1347,8 @@
         "grade": 1,
         "has_redone": false
       },
-      "grade": 3.06
+      "grade": 3.06,
+      "year": 2009
     },
     {
       "studentNumber": "84025J",
@@ -1404,7 +1422,8 @@
         "grade": 5,
         "has_redone": false
       },
-      "grade": 3.88
+      "grade": 3.88,
+      "year": 2009
     },
     {
       "studentNumber": "84097D",
@@ -1478,7 +1497,8 @@
         "grade": 5,
         "has_redone": false
       },
-      "grade": 4.6
+      "grade": 4.6,
+      "year": 2009
     },
     {
       "studentNumber": "84103L",
@@ -1552,7 +1572,8 @@
         "grade": 5,
         "has_redone": false
       },
-      "grade": 3.52
+      "grade": 3.52,
+      "year": 2009
     },
     {
       "studentNumber": "84158J",
@@ -1626,7 +1647,8 @@
         "grade": 1,
         "has_redone": false
       },
-      "grade": 2.48
+      "grade": 2.48,
+      "year": 2009
     },
     {
       "studentNumber": "84220P",
@@ -1700,7 +1722,8 @@
         "grade": 1,
         "has_redone": false
       },
-      "grade": 2.55
+      "grade": 2.55,
+      "year": 2009
     },
     {
       "studentNumber": "84239P",
@@ -1774,7 +1797,8 @@
         "grade": 1,
         "has_redone": false
       },
-      "grade": 2.68
+      "grade": 2.68,
+      "year": 2009
     },
     {
       "studentNumber": "84251F",
@@ -1848,7 +1872,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 3.93
+      "grade": 3.93,
+      "year": 2009
     },
     {
       "studentNumber": "84280T",
@@ -1922,7 +1947,8 @@
         "grade": 0,
         "has_redone": false
       },
-      "grade": 3.3
+      "grade": 3.3,
+      "year": 2009
     },
     {
       "studentNumber": "84306D",
@@ -1996,7 +2022,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 3.05
+      "grade": 3.05,
+      "year": 2009
     },
     {
       "studentNumber": "84326E",
@@ -2070,7 +2097,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 3.79
+      "grade": 3.79,
+      "year": 2009
     },
     {
       "studentNumber": "84429P",
@@ -2144,7 +2172,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 3.25
+      "grade": 3.25,
+      "year": 2009
     },
     {
       "studentNumber": "84517F",
@@ -2218,7 +2247,8 @@
         "grade": 5,
         "has_redone": false
       },
-      "grade": 4.94
+      "grade": 4.94,
+      "year": 2009
     },
     {
       "studentNumber": "84826M",
@@ -2292,7 +2322,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 4.09
+      "grade": 4.09,
+      "year": 2009
     },
     {
       "studentNumber": "84851U",
@@ -2366,7 +2397,8 @@
         "grade": 1,
         "has_redone": false
       },
-      "grade": 3
+      "grade": 3,
+      "year": 2009
     },
     {
       "studentNumber": "84855B",
@@ -2440,7 +2472,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 4.17
+      "grade": 4.17,
+      "year": 2009
     }
   ],
   "2010": [
@@ -2516,7 +2549,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 3.05
+      "grade": 3.05,
+      "year": 2010
     },
     {
       "studentNumber": "217123",
@@ -2590,7 +2624,8 @@
         "grade": 3,
         "has_redone": true
       },
-      "grade": 4.02
+      "grade": 4.02,
+      "year": 2010
     },
     {
       "studentNumber": "217149",
@@ -2664,7 +2699,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 3.32
+      "grade": 3.32,
+      "year": 2010
     },
     {
       "studentNumber": "217165",
@@ -2738,7 +2774,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 3
+      "grade": 3,
+      "year": 2010
     },
     {
       "studentNumber": "217178",
@@ -2812,7 +2849,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 3.2
+      "grade": 3.2,
+      "year": 2010
     },
     {
       "studentNumber": "217194",
@@ -2886,7 +2924,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 4.1
+      "grade": 4.1,
+      "year": 2010
     },
     {
       "studentNumber": "217217",
@@ -2960,7 +2999,8 @@
         "grade": 4,
         "has_redone": true
       },
-      "grade": 3.94
+      "grade": 3.94,
+      "year": 2010
     },
     {
       "studentNumber": "217246",
@@ -3034,7 +3074,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 3.6
+      "grade": 3.6,
+      "year": 2010
     },
     {
       "studentNumber": "217259",
@@ -3108,7 +3149,8 @@
         "grade": 5,
         "has_redone": false
       },
-      "grade": 4.25
+      "grade": 4.25,
+      "year": 2010
     },
     {
       "studentNumber": "217275",
@@ -3182,7 +3224,8 @@
         "grade": 2,
         "has_redone": true
       },
-      "grade": 3.77
+      "grade": 3.77,
+      "year": 2010
     },
     {
       "studentNumber": "217288",
@@ -3256,7 +3299,8 @@
         "grade": 5,
         "has_redone": false
       },
-      "grade": 4.34
+      "grade": 4.34,
+      "year": 2010
     },
     {
       "studentNumber": "217301",
@@ -3330,7 +3374,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 4.56
+      "grade": 4.56,
+      "year": 2010
     },
     {
       "studentNumber": "38172B",
@@ -3404,7 +3449,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 3.23
+      "grade": 3.23,
+      "year": 2010
     },
     {
       "studentNumber": "78743J",
@@ -3478,7 +3524,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 4.04
+      "grade": 4.04,
+      "year": 2010
     },
     {
       "studentNumber": "79302T",
@@ -3552,7 +3599,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 2.68
+      "grade": 2.68,
+      "year": 2010
     },
     {
       "studentNumber": "79959J",
@@ -3626,7 +3674,8 @@
         "grade": 1,
         "has_redone": true
       },
-      "grade": 3.51
+      "grade": 3.51,
+      "year": 2010
     },
     {
       "studentNumber": "82045D",
@@ -3700,7 +3749,8 @@
         "grade": 5,
         "has_redone": false
       },
-      "grade": 4.56
+      "grade": 4.56,
+      "year": 2010
     },
     {
       "studentNumber": "82103E",
@@ -3774,7 +3824,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 4.11
+      "grade": 4.11,
+      "year": 2010
     },
     {
       "studentNumber": "82125J",
@@ -3848,7 +3899,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 4.25
+      "grade": 4.25,
+      "year": 2010
     },
     {
       "studentNumber": "83781M",
@@ -3922,7 +3974,8 @@
         "grade": 5,
         "has_redone": false
       },
-      "grade": 4.21
+      "grade": 4.21,
+      "year": 2010
     },
     {
       "studentNumber": "83837L",
@@ -3996,7 +4049,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 3.54
+      "grade": 3.54,
+      "year": 2010
     },
     {
       "studentNumber": "83903W",
@@ -4070,7 +4124,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 4.13
+      "grade": 4.13,
+      "year": 2010
     },
     {
       "studentNumber": "83997V",
@@ -4144,7 +4199,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 4.33
+      "grade": 4.33,
+      "year": 2010
     },
     {
       "studentNumber": "84126R",
@@ -4218,7 +4274,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 4.1
+      "grade": 4.1,
+      "year": 2010
     },
     {
       "studentNumber": "84200N",
@@ -4292,7 +4349,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 3.32
+      "grade": 3.32,
+      "year": 2010
     },
     {
       "studentNumber": "84225V",
@@ -4366,7 +4424,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 3.66
+      "grade": 3.66,
+      "year": 2010
     },
     {
       "studentNumber": "85083B",
@@ -4440,7 +4499,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 3.82
+      "grade": 3.82,
+      "year": 2010
     }
   ],
   "2011": [
@@ -4516,7 +4576,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 2.9
+      "grade": 2.9,
+      "year": 2011
     },
     {
       "studentNumber": "217136",
@@ -4590,7 +4651,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 3.6
+      "grade": 3.6,
+      "year": 2011
     },
     {
       "studentNumber": "217152",
@@ -4664,7 +4726,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 3.98
+      "grade": 3.98,
+      "year": 2011
     },
     {
       "studentNumber": "217204",
@@ -4738,7 +4801,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 3.55
+      "grade": 3.55,
+      "year": 2011
     },
     {
       "studentNumber": "217220",
@@ -4812,7 +4876,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 3.4
+      "grade": 3.4,
+      "year": 2011
     },
     {
       "studentNumber": "217262",
@@ -4886,7 +4951,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 4.73
+      "grade": 4.73,
+      "year": 2011
     },
     {
       "studentNumber": "217291",
@@ -4960,7 +5026,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 3.56
+      "grade": 3.56,
+      "year": 2011
     },
     {
       "studentNumber": "223939",
@@ -5034,7 +5101,8 @@
         "grade": 1,
         "has_redone": true
       },
-      "grade": 2.15
+      "grade": 2.15,
+      "year": 2011
     },
     {
       "studentNumber": "225490",
@@ -5108,7 +5176,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 4.47
+      "grade": 4.47,
+      "year": 2011
     },
     {
       "studentNumber": "265913",
@@ -5182,7 +5251,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 3.58
+      "grade": 3.58,
+      "year": 2011
     },
     {
       "studentNumber": "290195",
@@ -5256,7 +5326,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 4.31
+      "grade": 4.31,
+      "year": 2011
     },
     {
       "studentNumber": "290205",
@@ -5330,7 +5401,8 @@
         "grade": 0,
         "has_redone": false
       },
-      "grade": 2.3
+      "grade": 2.3,
+      "year": 2011
     },
     {
       "studentNumber": "290250",
@@ -5404,7 +5476,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 4.15
+      "grade": 4.15,
+      "year": 2011
     },
     {
       "studentNumber": "290263",
@@ -5478,7 +5551,8 @@
         "grade": 0,
         "has_redone": false
       },
-      "grade": 3.2
+      "grade": 3.2,
+      "year": 2011
     },
     {
       "studentNumber": "290289",
@@ -5552,7 +5626,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 4.57
+      "grade": 4.57,
+      "year": 2011
     },
     {
       "studentNumber": "290292",
@@ -5626,7 +5701,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 3.57
+      "grade": 3.57,
+      "year": 2011
     },
     {
       "studentNumber": "290344",
@@ -5700,7 +5776,8 @@
         "grade": 0,
         "has_redone": false
       },
-      "grade": 2.9
+      "grade": 2.9,
+      "year": 2011
     },
     {
       "studentNumber": "290357",
@@ -5774,7 +5851,8 @@
         "grade": 2,
         "has_redone": true
       },
-      "grade": 3.58
+      "grade": 3.58,
+      "year": 2011
     },
     {
       "studentNumber": "290360",
@@ -5848,7 +5926,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 3.38
+      "grade": 3.38,
+      "year": 2011
     },
     {
       "studentNumber": "290412",
@@ -5922,7 +6001,8 @@
         "grade": 0,
         "has_redone": false
       },
-      "grade": 2.3
+      "grade": 2.3,
+      "year": 2011
     },
     {
       "studentNumber": "290438",
@@ -5996,7 +6076,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 3.01
+      "grade": 3.01,
+      "year": 2011
     },
     {
       "studentNumber": "290454",
@@ -6070,7 +6151,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 3.29
+      "grade": 3.29,
+      "year": 2011
     },
     {
       "studentNumber": "290496",
@@ -6144,7 +6226,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 3.41
+      "grade": 3.41,
+      "year": 2011
     },
     {
       "studentNumber": "290506",
@@ -6218,7 +6301,8 @@
         "grade": 3,
         "has_redone": true
       },
-      "grade": 3.54
+      "grade": 3.54,
+      "year": 2011
     },
     {
       "studentNumber": "290674",
@@ -6292,7 +6376,8 @@
         "grade": 1,
         "has_redone": false
       },
-      "grade": 3.2
+      "grade": 3.2,
+      "year": 2011
     },
     {
       "studentNumber": "290768",
@@ -6366,7 +6451,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 4.66
+      "grade": 4.66,
+      "year": 2011
     },
     {
       "studentNumber": "69904D",
@@ -6440,7 +6526,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 3.12
+      "grade": 3.12,
+      "year": 2011
     },
     {
       "studentNumber": "81832W",
@@ -6514,7 +6601,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 3.37
+      "grade": 3.37,
+      "year": 2011
     },
     {
       "studentNumber": "82481C",
@@ -6588,7 +6676,8 @@
         "grade": 1,
         "has_redone": true
       },
-      "grade": 3.08
+      "grade": 3.08,
+      "year": 2011
     },
     {
       "studentNumber": "84143N",
@@ -6662,7 +6751,8 @@
         "grade": 1,
         "has_redone": false
       },
-      "grade": 2.82
+      "grade": 2.82,
+      "year": 2011
     },
     {
       "studentNumber": "84242T",
@@ -6736,7 +6826,8 @@
         "grade": 3,
         "has_redone": true
       },
-      "grade": 3.6
+      "grade": 3.6,
+      "year": 2011
     },
     {
       "studentNumber": "84279S",
@@ -6810,7 +6901,8 @@
         "grade": 3,
         "has_redone": true
       },
-      "grade": 3.9
+      "grade": 3.9,
+      "year": 2011
     },
     {
       "studentNumber": "85628S",
@@ -6884,7 +6976,8 @@
         "grade": 1,
         "has_redone": false
       },
-      "grade": 4.97
+      "grade": 4.97,
+      "year": 2011
     },
     {
       "studentNumber": "k37196",
@@ -6958,7 +7051,8 @@
         "grade": 2,
         "has_redone": true
       },
-      "grade": 3.27
+      "grade": 3.27,
+      "year": 2011
     }
   ],
   "2012": [
@@ -7034,7 +7128,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 2.54
+      "grade": 2.54,
+      "year": 2012
     },
     {
       "studentNumber": "220657",
@@ -7108,7 +7203,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 3.95
+      "grade": 3.95,
+      "year": 2012
     },
     {
       "studentNumber": "220806",
@@ -7182,7 +7278,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 3.72
+      "grade": 3.72,
+      "year": 2012
     },
     {
       "studentNumber": "220848",
@@ -7256,7 +7353,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 3.22
+      "grade": 3.22,
+      "year": 2012
     },
     {
       "studentNumber": "222079",
@@ -7330,7 +7428,8 @@
         "grade": 4,
         "has_redone": true
       },
-      "grade": 3.99
+      "grade": 3.99,
+      "year": 2012
     },
     {
       "studentNumber": "290315",
@@ -7404,7 +7503,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 4.15
+      "grade": 4.15,
+      "year": 2012
     },
     {
       "studentNumber": "290373",
@@ -7478,7 +7578,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 3.27
+      "grade": 3.27,
+      "year": 2012
     },
     {
       "studentNumber": "290386",
@@ -7552,7 +7653,8 @@
         "grade": 5,
         "has_redone": false
       },
-      "grade": 4.43
+      "grade": 4.43,
+      "year": 2012
     },
     {
       "studentNumber": "290399",
@@ -7626,7 +7728,8 @@
         "grade": 5,
         "has_redone": false
       },
-      "grade": 4.5
+      "grade": 4.5,
+      "year": 2012
     },
     {
       "studentNumber": "290441",
@@ -7700,7 +7803,8 @@
         "grade": 5,
         "has_redone": false
       },
-      "grade": 4.72
+      "grade": 4.72,
+      "year": 2012
     },
     {
       "studentNumber": "290470",
@@ -7774,7 +7878,8 @@
         "grade": 5,
         "has_redone": false
       },
-      "grade": 3.71
+      "grade": 3.71,
+      "year": 2012
     },
     {
       "studentNumber": "290519",
@@ -7848,7 +7953,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 3.59
+      "grade": 3.59,
+      "year": 2012
     },
     {
       "studentNumber": "290577",
@@ -7922,7 +8028,8 @@
         "grade": 5,
         "has_redone": false
       },
-      "grade": 4.25
+      "grade": 4.25,
+      "year": 2012
     },
     {
       "studentNumber": "290580",
@@ -7996,7 +8103,8 @@
         "grade": 1,
         "has_redone": false
       },
-      "grade": 2.73
+      "grade": 2.73,
+      "year": 2012
     },
     {
       "studentNumber": "290742",
@@ -8070,7 +8178,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 4.8
+      "grade": 4.8,
+      "year": 2012
     },
     {
       "studentNumber": "290771",
@@ -8144,7 +8253,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 4.23
+      "grade": 4.23,
+      "year": 2012
     },
     {
       "studentNumber": "290784",
@@ -8218,7 +8328,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 3.05
+      "grade": 3.05,
+      "year": 2012
     },
     {
       "studentNumber": "290836",
@@ -8292,7 +8403,8 @@
         "grade": 4,
         "has_redone": true
       },
-      "grade": 4.01
+      "grade": 4.01,
+      "year": 2012
     },
     {
       "studentNumber": "291220",
@@ -8366,7 +8478,8 @@
         "grade": 1,
         "has_redone": true
       },
-      "grade": 2.96
+      "grade": 2.96,
+      "year": 2012
     },
     {
       "studentNumber": "292656",
@@ -8440,7 +8553,8 @@
         "grade": 2,
         "has_redone": true
       },
-      "grade": 2.86
+      "grade": 2.86,
+      "year": 2012
     },
     {
       "studentNumber": "307855",
@@ -8514,7 +8628,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 3.89
+      "grade": 3.89,
+      "year": 2012
     },
     {
       "studentNumber": "320942",
@@ -8588,7 +8703,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 3.89
+      "grade": 3.89,
+      "year": 2012
     },
     {
       "studentNumber": "345273",
@@ -8662,7 +8778,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 2.54
+      "grade": 2.54,
+      "year": 2012
     },
     {
       "studentNumber": "345309",
@@ -8736,7 +8853,8 @@
         "grade": 4,
         "has_redone": true
       },
-      "grade": 2.52
+      "grade": 2.52,
+      "year": 2012
     },
     {
       "studentNumber": "345338",
@@ -8810,7 +8928,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 3.67
+      "grade": 3.67,
+      "year": 2012
     },
     {
       "studentNumber": "345341",
@@ -8884,7 +9003,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 3.58
+      "grade": 3.58,
+      "year": 2012
     },
     {
       "studentNumber": "345406",
@@ -8958,7 +9078,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 3.56
+      "grade": 3.56,
+      "year": 2012
     },
     {
       "studentNumber": "345435",
@@ -9032,7 +9153,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 2.96
+      "grade": 2.96,
+      "year": 2012
     },
     {
       "studentNumber": "345451",
@@ -9106,7 +9228,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 3.28
+      "grade": 3.28,
+      "year": 2012
     },
     {
       "studentNumber": "345480",
@@ -9180,7 +9303,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 3.93
+      "grade": 3.93,
+      "year": 2012
     },
     {
       "studentNumber": "345529",
@@ -9254,7 +9378,8 @@
         "grade": 5,
         "has_redone": false
       },
-      "grade": 4.13
+      "grade": 4.13,
+      "year": 2012
     },
     {
       "studentNumber": "345561",
@@ -9328,7 +9453,8 @@
         "grade": 5,
         "has_redone": false
       },
-      "grade": 3.91
+      "grade": 3.91,
+      "year": 2012
     },
     {
       "studentNumber": "345600",
@@ -9402,7 +9528,8 @@
         "grade": 4,
         "has_redone": true
       },
-      "grade": 3
+      "grade": 3,
+      "year": 2012
     },
     {
       "studentNumber": "345655",
@@ -9476,7 +9603,8 @@
         "grade": 5,
         "has_redone": true
       },
-      "grade": 3.88
+      "grade": 3.88,
+      "year": 2012
     },
     {
       "studentNumber": "345668",
@@ -9550,7 +9678,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 3.41
+      "grade": 3.41,
+      "year": 2012
     },
     {
       "studentNumber": "345671",
@@ -9624,7 +9753,8 @@
         "grade": 4,
         "has_redone": true
       },
-      "grade": 2.43
+      "grade": 2.43,
+      "year": 2012
     },
     {
       "studentNumber": "345697",
@@ -9698,7 +9828,8 @@
         "grade": 5,
         "has_redone": false
       },
-      "grade": 3.6
+      "grade": 3.6,
+      "year": 2012
     },
     {
       "studentNumber": "345707",
@@ -9772,7 +9903,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 3.87
+      "grade": 3.87,
+      "year": 2012
     },
     {
       "studentNumber": "345710",
@@ -9846,7 +9978,8 @@
         "grade": 3,
         "has_redone": false
       },
-      "grade": 3.85
+      "grade": 3.85,
+      "year": 2012
     },
     {
       "studentNumber": "345723",
@@ -9920,7 +10053,8 @@
         "grade": 1,
         "has_redone": false
       },
-      "grade": 2.25
+      "grade": 2.25,
+      "year": 2012
     },
     {
       "studentNumber": "345778",
@@ -9994,7 +10128,8 @@
         "grade": 1,
         "has_redone": false
       },
-      "grade": 2.44
+      "grade": 2.44,
+      "year": 2012
     },
     {
       "studentNumber": "345781",
@@ -10068,7 +10203,8 @@
         "grade": 4,
         "has_redone": true
       },
-      "grade": 3.8
+      "grade": 3.8,
+      "year": 2012
     },
     {
       "studentNumber": "345846",
@@ -10142,7 +10278,8 @@
         "grade": 2,
         "has_redone": false
       },
-      "grade": 3.2
+      "grade": 3.2,
+      "year": 2012
     },
     {
       "studentNumber": "345859",
@@ -10216,7 +10353,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 3.86
+      "grade": 3.86,
+      "year": 2012
     },
     {
       "studentNumber": "79393N",
@@ -10290,7 +10428,8 @@
         "grade": 2,
         "has_redone": true
       },
-      "grade": 2.48
+      "grade": 2.48,
+      "year": 2012
     },
     {
       "studentNumber": "81986B",
@@ -10364,7 +10503,8 @@
         "grade": 5,
         "has_redone": false
       },
-      "grade": 4.26
+      "grade": 4.26,
+      "year": 2012
     },
     {
       "studentNumber": "84586V",
@@ -10438,7 +10578,8 @@
         "grade": 5,
         "has_redone": false
       },
-      "grade": 3.98
+      "grade": 3.98,
+      "year": 2012
     },
     {
       "studentNumber": "84687E",
@@ -10512,7 +10653,8 @@
         "grade": 4,
         "has_redone": false
       },
-      "grade": 2.91
+      "grade": 2.91,
+      "year": 2012
     }
   ]
 }

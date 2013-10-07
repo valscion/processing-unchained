@@ -27,7 +27,8 @@ csv()
         theories: theories,
         project: project,
         exam: exam,
-        grade: grade
+        grade: grade,
+        year: Number(lastYear)
       }
       output[lastYear].push(student);
     }
