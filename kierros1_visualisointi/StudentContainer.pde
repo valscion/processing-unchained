@@ -20,6 +20,9 @@ LinkedList<Student> students;
     }
     filterByTotalGrade(4);
   }
+  StudentContainer(LinkedList<Student> givenList){
+    students = givenList;
+  }
 
   LinkedList<Student> filterByTotalGrade(int totalGrade){
     LinkedList<Student> newStudents = new LinkedList<Student>();
