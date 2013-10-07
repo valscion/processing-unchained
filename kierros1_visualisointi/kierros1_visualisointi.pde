@@ -32,10 +32,10 @@ void setup() {
   StudentContainer year2009 = studentContainer.filterByYear(2009);
   //println(studentContainer.size());
   //println(year2009.size());
-  int kokArv = 5;
-  int kierros = 1;
-  println("henkilöitä joilla kurssista arvosana:"+5+" koodauksen kiekka:"+kierros+" arvosana:5 \n"+studentContainer.filterByTotalGrade(kokArv).filterByTypeRoundAndGrade("coding", kierros, 5).size());
-  println("yhteensä arvosanan "+kokArv+" saaneita: " +studentContainer.filterByTotalGrade(kokArv).size());
+  //int kokArv = 5;
+  //int kierros = 1;
+  //println("henkilöitä joilla kurssista arvosana:"+5+" koodauksen kiekka:"+kierros+" arvosana:5 \n"+studentContainer.filterByTotalGrade(kokArv).filterByTypeRoundAndGrade("coding", kierros, 5).size());
+  //println("yhteensä arvosanan "+kokArv+" saaneita: " +studentContainer.filterByTotalGrade(kokArv).size());
 
 }
 
@@ -50,6 +50,48 @@ void draw() {
     box3.draw();
     box4.draw();
   }
+
+  drawRawData(3);
+}
+
+void drawRawData(int totalCourseGrade) {
+  StudentContainer gradFiltered = studentContainer.filterByTotalGrade(totalCourseGrade);
+  String printText = "";
+  for(int g = 6; g >= 0;g--){//arvosanat ylhäältä alas
+    printText += "Arvosana "+g+" ---";
+    for(int i = 0; i < 18; i++){
+      if(i < 6){
+        printText += gradFiltered.filterByTypeRoundAndGrade("coding", i+1, g).size() + " | ";
+      }
+      else if(i < 11){
+        printText += gradFiltered.filterByTypeRoundAndGrade("theories", i-5, g).size() + " | ";
+      }
+      else if(i < 16){
+        switch (i){
+          case 11 : printText += gradFiltered.filterByProjectArchitecture(g).size() + " | ";
+                    break;
+          case 12 : printText += gradFiltered.filterByProjectCode(g).size() + " | ";
+                    break;
+          case 13 : printText += gradFiltered.filterByProjectUx(g).size() + " | ";
+                    break;
+          case 14 : printText += gradFiltered.filterByProjectReport(g).size() + " | ";
+                    break;
+          case 15 : printText += gradFiltered.filterByProjectGrade(g).size() + " | ";
+                    break;
+          default : //ei mitään
+                    break;
+        }
+      }
+      else if(i < 17){
+        printText += gradFiltered.filterByExamGrade(g).size() + " | ";
+      }
+      else{
+        printText += gradFiltered.filterByTotalGrade(g).size() + " | ";
+      }
+    }
+    printText += "\n";
+  }
+  text(printText, 100, 100);
 }
 
 void mouseMoved() {
