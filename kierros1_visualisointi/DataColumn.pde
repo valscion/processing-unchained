@@ -17,10 +17,10 @@ class DataColumn extends ReactsToMouse {
     textFont(walkway);
     textSize(TEXT_HEIGHT);
     textAlign(CENTER);
-    float leftX = START_LEFT_X + CLOSED_WIDTH * (columnOrdinal - 1);
+    float leftX = calculateLeftX();
     if (isOpen) {
       fill(255, 0, 0);
-      for (int i = 1; i <= 6; i++) {
+      for (int i = 1; i <= columnsForDataType(); i++) {
         float x = leftX + (i - 1) * OPENED_WIDTH;
         text(str(i), x, Y_POSITION);
       }
@@ -34,6 +34,44 @@ class DataColumn extends ReactsToMouse {
     textAlign(LEFT);
   }
 
+  float calculateLeftX() {
+    float leftX = START_LEFT_X;
+    if (this == codeColumn) {
+      // Ainakin yksi edellisistä sarakkeista on kiinni, eli vasempaan reunaan
+      // lisää tilaa AINAKIN tämän verran
+      leftX += CLOSED_WIDTH;
+      if (projectColumn.isOpen) {
+        // Projektikolumnissa on 4 kappaletta auki olevia sarakkeita
+        leftX += 4 * OPENED_WIDTH + 20;
+      }
+      else if (theoryColumn.isOpen) {
+        // Teoriakolumnissa on 5 kappaletta auki olevia sarakkeita
+        leftX += 5 * OPENED_WIDTH + 20;
+      }
+      else {
+        // Kumpikaan edellisistä sarakkeista ei ollut auki, joten lisätään
+        // vasempaan X-koordinaattiin vielä yksi suljetun sarakkeen leveys lisää
+        leftX += CLOSED_WIDTH;
+      }
+    }
+    else if (this == projectColumn) {
+      if (theoryColumn.isOpen) {
+        leftX += 5 * OPENED_WIDTH + 30;
+      }
+      else {
+        leftX += CLOSED_WIDTH;
+      }
+    }
+    return leftX;
+  }
+
+  float columnsForDataType() {
+    if (type == "project") return 4;
+    if (type == "theory") return 5;
+    if (type == "code") return 6;
+    return 0;
+  }
+
   String mapTypeToFinnish() {
     if (type == "code") return "Koodi";
     if (type == "theory") return "Teoria";
@@ -43,7 +81,7 @@ class DataColumn extends ReactsToMouse {
 
   @Override
   boolean areCoordinatesInside(float x, float y) {
-    float textX = START_LEFT_X + (columnOrdinal - 1) * CLOSED_WIDTH;
+    float textX = calculateLeftX();
     x = x + CLOSED_WIDTH / 2;
     if (x < textX || x > textX + CLOSED_WIDTH) {
       return false;
