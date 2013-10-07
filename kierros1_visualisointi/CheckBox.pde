@@ -31,6 +31,12 @@ class CheckBox extends ReactsToMouse {
       println("mutta tänne ei päädytty eihän");
       image(glow, this.x, this.y);
     }
+    if (isChecked) {
+      stroke(0);
+      line(x+2, y+2, x+28, y+28);
+      line(x+28, y+2, x+2, y+28);
+      noStroke();
+    }
   }
 
   @Override
@@ -43,7 +49,14 @@ class CheckBox extends ReactsToMouse {
   }
 
   @Override
-  void mouseClicked(){}
+  void mouseClicked(){
+    if (isChecked) {
+      isChecked = false;
+    } else {
+      isChecked = true;
+    }
+
+  }
 
 
 }
