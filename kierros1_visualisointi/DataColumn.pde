@@ -32,7 +32,7 @@ class DataColumn extends ReactsToMouse {
     }
 
     float textX = calculateLeftX() - CLOSED_WIDTH / 2;
-
+    
     //drawHitBox(textX);
 
     textAlign(LEFT);
@@ -66,9 +66,6 @@ class DataColumn extends ReactsToMouse {
         leftX += CLOSED_WIDTH;
       }
     }
-    //else if (this == examColumn) {
-    //  return 400;
-    //}
     return leftX;
   }
 
@@ -76,7 +73,6 @@ class DataColumn extends ReactsToMouse {
     if (type == "project") return 4;
     if (type == "theory") return 5;
     if (type == "code") return 6;
-    //if (type == "exam") return 1;
     return 0;
   }
 
@@ -112,7 +108,6 @@ class DataColumn extends ReactsToMouse {
       if (this != theoryColumn) theoryColumn.isOpen = false;
       if (this != projectColumn) projectColumn.isOpen = false;
       if (this != codeColumn) codeColumn.isOpen = false;
-      //if (this != examColumn) examColumn.isOpen = false;
     }
   }
 }

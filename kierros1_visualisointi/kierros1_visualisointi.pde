@@ -9,7 +9,6 @@ DataBall ball;
 DataColumn theoryColumn;
 DataColumn projectColumn;
 DataColumn codeColumn;
-DataColumn examColumn;
 ArrayList<ReactsToMouse> clickables;
 StudentContainer studentContainer;
 
@@ -27,7 +26,6 @@ void setup() {
   theoryColumn = new DataColumn("theory", 1);
   projectColumn = new DataColumn("project", 2);
   codeColumn = new DataColumn("code", 3);
-  examColumn = new DataColumn("exam", 4);
   codeColumn.isOpen = true;
 
   clickables = new ArrayList<ReactsToMouse>();
@@ -40,7 +38,6 @@ void setup() {
   clickables.add(theoryColumn);
   clickables.add(projectColumn);
   clickables.add(codeColumn);
-  clickables.add(examColumn);
   clickables.add(selection);
 
   studentContainer = new StudentContainer();
@@ -67,7 +64,6 @@ void drawDataColumns() {
   theoryColumn.draw();
   projectColumn.draw();
   codeColumn.draw();
-  examColumn.draw();
 }
 
 void drawMenuParts() {
