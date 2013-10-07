@@ -33,7 +33,7 @@ class Student{
         architecture1 = -1000;
       }
       architecture = architecture1;
-      
+
       float code1;
       try{
         code1 = proj.getFloat("code");
@@ -42,7 +42,7 @@ class Student{
         code1 = -1000;
       }
       code = code1;
-      
+
       float ux1;
       try{
         ux1 = proj.getFloat("ux");
@@ -51,7 +51,7 @@ class Student{
         ux1 = -1000;
       }
       ux = ux1;
-      
+
       float report1;
       try{
         report1 = proj.getFloat("report");
@@ -60,7 +60,7 @@ class Student{
         report1 = -1000;
       }
       report = report1;
-      
+
       float grade1;
       try{
         grade1 = proj.getFloat("grade");
@@ -90,6 +90,7 @@ class Student{
 
   final String studentNumber;
   final float grade;
+  final int year;
   final Round[] coding;
   final Round[] theories;
   final Project project;
@@ -98,6 +99,7 @@ class Student{
   Student(JSONObject student){
     studentNumber = student.getString("studentNumber");
     grade = student.getFloat("grade");
+    year = student.getInt("year");
     project = new Project(student.getJSONObject("project"));
     exam = new Exam(student.getJSONObject("exam"));
     coding = new Round[6];

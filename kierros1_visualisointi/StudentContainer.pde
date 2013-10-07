@@ -1,10 +1,10 @@
 import java.util.LinkedList;
 import java.util.Iterator;
+
 class StudentContainer {
+  private LinkedList<Student> students;
 
-LinkedList<Student> students;
-
-  StudentContainer(){
+  StudentContainer() {
     JSONObject json = loadJSONObject("data.json");
     students = new LinkedList<Student>();
     //lataa students-listaan vuodesta y, vuoteen 2012 kaikki oppilaat
@@ -18,23 +18,37 @@ LinkedList<Student> students;
         //println("lisättiin uusi vuoden "+y+" oppilas (indeksi " +i +") op nro "+ stud.studentNumber);
       }
     }
-    filterByTotalGrade(4);
   }
 
-  LinkedList<Student> filterByTotalGrade(int totalGrade){
+  private StudentContainer(LinkedList<Student> givenList){
+    students = givenList;
+  }
+
+  StudentContainer filterByTotalGrade(int totalGrade){
     LinkedList<Student> newStudents = new LinkedList<Student>();
     Iterator<Student> iter = students.iterator();
-    while(iter.hasNext()){
+    while (iter.hasNext()) {
       Student stud = iter.next();
-      if(round(stud.grade) == totalGrade){
+      if (round(stud.grade) == totalGrade) {
         newStudents.add(stud);
-        //println(" op nro "+ stud.studentNumber);
       }
     }
-    return newStudents;
+    return new StudentContainer(newStudents);
   }
 
-  int size(){
+  StudentContainer filterByYear(int year){
+    LinkedList<Student> newStudents = new LinkedList<Student>();
+    Iterator<Student> iter = students.iterator();
+    while (iter.hasNext()) {
+      Student stud = iter.next();
+      if (stud.year == year) {
+        newStudents.add(stud);
+      }
+    }
+    return new StudentContainer(newStudents);
+  }
+
+  int size() {
     return students.size();
   }
 }

@@ -30,6 +30,9 @@ void setup() {
 
   //setupDebug();
   studentContainer = new StudentContainer();
+  StudentContainer year2009 = studentContainer.filterByYear(2009);
+  println(studentContainer.size());
+  println(year2009.size());
 }
 
 void draw() {
