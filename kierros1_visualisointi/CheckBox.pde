@@ -18,7 +18,6 @@ class CheckBox extends ReactsToMouse {
     glow.filter(BLUR, 4);
     glow.rect(2, 2, 26, 26);
     glow.endDraw();
-    isMouseOver = false;
   }
 
   void draw() {

@@ -11,7 +11,6 @@ class Menu extends ReactsToMouse {
   Menu(float x, float y) {
     this.x = x;
     this.y = y;
-    isMouseOver = false;
     isMenuOpen = false;
     menuOpenImg = createGraphics(width, 150);
     menuOpenImg.beginDraw();
