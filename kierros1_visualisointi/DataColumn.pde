@@ -31,6 +31,10 @@ class DataColumn extends ReactsToMouse {
       text(typeInFinnish, leftX, Y_POSITION);
     }
 
+    float textX = calculateLeftX() - CLOSED_WIDTH / 2;
+    
+    //drawHitBox(textX);
+
     textAlign(LEFT);
   }
 
@@ -46,7 +50,7 @@ class DataColumn extends ReactsToMouse {
       }
       else if (theoryColumn.isOpen) {
         // Teoriakolumnissa on 5 kappaletta auki olevia sarakkeita
-        leftX += 5 * OPENED_WIDTH + 20;
+        leftX += 5 * OPENED_WIDTH + 40;
       }
       else {
         // Kumpikaan edellisistä sarakkeista ei ollut auki, joten lisätään
@@ -79,10 +83,15 @@ class DataColumn extends ReactsToMouse {
     return "Kekkonen";
   }
 
+  void drawHitBox(float textX) {
+    noFill();
+    stroke(50);
+    rect(textX, Y_POSITION - TEXT_HEIGHT, CLOSED_WIDTH, TEXT_HEIGHT);
+  }
+
   @Override
   boolean areCoordinatesInside(float x, float y) {
-    float textX = calculateLeftX();
-    x = x + CLOSED_WIDTH / 2;
+    float textX = calculateLeftX() - CLOSED_WIDTH / 2;
     if (x < textX || x > textX + CLOSED_WIDTH) {
       return false;
     }
