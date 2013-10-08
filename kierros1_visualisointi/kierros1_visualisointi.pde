@@ -75,6 +75,28 @@ void draw() {
   drawDataBalls();
   //drawRawData();
   drawMenuParts();
+
+  updateDataRelatedToMouseY();
+}
+
+void updateDataRelatedToMouseY(){
+  int alkukohta = 480;
+  int delta = 45;
+  if(mouseY > alkukohta-delta*1.5){
+    updateData(1);
+  }
+  else if(mouseY > alkukohta-delta*2.5){
+    updateData(2);
+  }
+  else if(mouseY > alkukohta-delta*3.5){
+    updateData(3);
+  }
+  else if(mouseY > alkukohta-delta*4.5){
+    updateData(4);
+  }
+  else if(mouseY > alkukohta-delta*5.5){
+    updateData(5);
+  }
 }
 
 void drawDataColumns() {
