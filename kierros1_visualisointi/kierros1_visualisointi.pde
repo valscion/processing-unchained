@@ -5,7 +5,7 @@ CheckBox checkBox2009;
 CheckBox checkBox2010;
 CheckBox checkBox2011;
 CheckBox checkBox2012;
-DataBall ball;
+//DataBall ball;
 DataColumn theoryColumn;
 DataColumn projectColumn;
 DataColumn codeColumn;
@@ -23,7 +23,7 @@ void setup() {
   checkBox2010 = new CheckBox(180, 20, "2010");
   checkBox2011 = new CheckBox(330, 20, "2011");
   checkBox2012 = new CheckBox(480, 20, "2012");
-  ball = new DataBall(400, 300, 40);
+  //ball = new DataBall(400, 300, 40);
   theoryColumn = new DataColumn("theory", 1);
   projectColumn = new DataColumn("project", 2);
   codeColumn = new DataColumn("code", 3);
@@ -35,7 +35,7 @@ void setup() {
   clickables.add(checkBox2010);
   clickables.add(checkBox2011);
   clickables.add(checkBox2012);
-  clickables.add(ball);
+  //clickables.add(ball);
   clickables.add(theoryColumn);
   clickables.add(projectColumn);
   clickables.add(codeColumn);
@@ -71,9 +71,9 @@ void draw() {
   background(255);
 
   drawDataColumns();
-  ball.draw();
+  //ball.draw();
 
-  //drawDataBalls(3);
+  drawDataBalls();
   drawRawData();
   drawMenuParts();
 }
@@ -104,45 +104,6 @@ void drawRawData() {
     printti += "\n";
   }
   text(printti, 100, 100);
-  /*
-  StudentContainer gradFiltered = studentContainer.filterByTotalGrade(totalCourseGrade);
-  String printText = "";
-  for(int g = 6; g >= 0;g--){//arvosanat ylhäältä alas
-    printText += "Arvosana "+g+" ---";
-    for(int i = 0; i < 18; i++){
-      if(i < 6){
-        printText += gradFiltered.filterByTypeRoundAndGrade("coding", i+1, g).size() + " | ";
-      }
-      else if(i < 11){
-        printText += gradFiltered.filterByTypeRoundAndGrade("theories", i-5, g).size() + " | ";
-      }
-      else if(i < 16){
-        switch (i){
-          case 11 : printText += gradFiltered.filterByProjectArchitecture(g).size() + " | ";
-                    break;
-          case 12 : printText += gradFiltered.filterByProjectCode(g).size() + " | ";
-                    break;
-          case 13 : printText += gradFiltered.filterByProjectUx(g).size() + " | ";
-                    break;
-          case 14 : printText += gradFiltered.filterByProjectReport(g).size() + " | ";
-                    break;
-          case 15 : printText += gradFiltered.filterByProjectGrade(g).size() + " | ";
-                    break;
-          default : //ei mitään
-                    break;
-        }
-      }
-      else if(i < 17){
-        printText += gradFiltered.filterByExamGrade(g).size() + " | ";
-      }
-      else{
-        printText += gradFiltered.filterByTotalGrade(g).size() + " | ";
-      }
-    }
-    printText += "\n";
-  }
-  text(printText, 100, 100);
-  */
 }
 
 void updateData(int totalCourseGrade) {
@@ -197,6 +158,25 @@ void updateData(int totalCourseGrade) {
 
 void drawDataBalls() {
   //käyttää hyväksi dataTablen sisältöä
+  float vakioJokaPoistaaPurkanKusemisen = 5;
+  float marginiY = 500;
+  float marginiX = 30;
+  stroke(0);
+  strokeWeight(1);
+  for(int g = 6; g >= 0;g--){//arvosanat ylhäältä alas
+    float y = -g*50 + marginiY;
+    for(int i = 0; i < 18; i++){//kierrokset
+      float x = i*50 + marginiX;
+      float r = dataTable[i][g];
+      r += vakioJokaPoistaaPurkanKusemisen;
+      if(r > vakioJokaPoistaaPurkanKusemisen){
+        DataBall datBall = new DataBall(x, y, r);
+        datBall.draw();
+      }
+    }
+
+    line(0, y, width, y);
+  }
 }
 
 void mouseMoved() {
