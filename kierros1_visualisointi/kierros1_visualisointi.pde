@@ -175,6 +175,8 @@ void drawDataBalls() {
       r += vakioJokaPoistaaPurkanKusemisen;
       if(r > vakioJokaPoistaaPurkanKusemisen){
         DataBall datBall = new DataBall(x, y, r);
+        //välivaiheessa läpinäkyvyyttä
+        fill(255, 0, 0, 100);
         datBall.draw();
       }
       switch (i){
