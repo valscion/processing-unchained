@@ -57,7 +57,7 @@ dataTable rakenne on:
 */
   studentContainer = new StudentContainer();
   StudentContainer year2009 = studentContainer.filterByYear(2009);
-  updateData(3);
+  updateData(4);
   //println(studentContainer.size());
   //println(year2009.size());
   //int kokArv = 5;
@@ -158,23 +158,40 @@ void updateData(int totalCourseGrade) {
 
 void drawDataBalls() {
   //käyttää hyväksi dataTablen sisältöä
-  float vakioJokaPoistaaPurkanKusemisen = 5;
+  float vakioJokaPoistaaPurkanKusemisen = 5;//jos on 0 tai jotain pienempää niin joku BLUR ei toimi
   float marginiY = 500;
   float marginiX = 30;
+  float gapX = 35;
+  float gapY = 50;
   stroke(0);
   strokeWeight(1);
+  String kiekkaTieto = "";
   for(int g = 6; g >= 0;g--){//arvosanat ylhäältä alas
-    float y = -g*50 + marginiY;
+    float y = -g*gapY + marginiY;
     for(int i = 0; i < 18; i++){//kierrokset
-      float x = i*50 + marginiX;
+      fill(255,0,0);
+      float x = i*gapX + marginiX;
       float r = dataTable[i][g];
       r += vakioJokaPoistaaPurkanKusemisen;
       if(r > vakioJokaPoistaaPurkanKusemisen){
         DataBall datBall = new DataBall(x, y, r);
         datBall.draw();
       }
+      switch (i){
+        case 0 : {kiekkaTieto = "teoria"; break;}
+        case 5 : {kiekkaTieto = "projekti"; break;}
+        case 10 : {kiekkaTieto = "koodi"; break;}
+        case 16 : {kiekkaTieto = "tentti"; break;}
+        case 17 : {kiekkaTieto = "kurssi"; break;}
+      }
+      fill(100);
+      textSize(12);
+      text(kiekkaTieto, x, marginiY);
     }
-
+    fill(100);
+    textSize(12);
+    String selite = "Arvosana " +g;
+    text(selite, marginiX/2, y);
     line(0, y, width, y);
   }
 }
