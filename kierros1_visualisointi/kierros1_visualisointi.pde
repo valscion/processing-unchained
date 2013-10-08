@@ -137,10 +137,15 @@ float giveRadiusFromArea(float area){
 
 void updateData(int totalCourseGrade) {
   StudentContainer gradFiltered = studentContainer.filterByTotalGrade(totalCourseGrade);
-  //StudentContainer yearsFiltered = studentContainer.filterByYears();
-  StudentContainer filtered = gradFiltered;
+  //StudentContainer filtered = gradFiltered;
+  int m = gradFiltered.size();
+
+  StudentContainer yearsFiltered = gradFiltered.filterByYears();
+  StudentContainer filtered = yearsFiltered;
+  //int m = filtered.size();
+
   int n = 0;
-  int m = filtered.size();
+
   float maxR = 35;
   //println("m:n koko on"+m);
   for(int g = 6; g >= 0;g--){//arvosanat ylhäältä alas
