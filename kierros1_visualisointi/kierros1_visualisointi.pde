@@ -11,6 +11,7 @@ DataColumn projectColumn;
 DataColumn codeColumn;
 ArrayList<ReactsToMouse> clickables;
 StudentContainer studentContainer;
+int[][] dataTable;
 
 void setup() {
   size(800, 600);
@@ -40,6 +41,19 @@ void setup() {
   clickables.add(codeColumn);
   clickables.add(selection);
 
+  dataTable = new int[18][7];
+/*
+dataTable rakenne on:
+                  kierrokset->t=theories, p=project, c=coding, e=exam, g=grade
+          indeksit_0___1___2___3___4___5___6___7___8___9___10__11__12__13__14__15__16__17
+  6-arvosana   0 | t1  t2  t3  t4  t5  p1  p2  p3  p4  p5  c1  c2  c3  c4  c5  c6  e   g
+  5-arvosana   1 | t1  t2  t3  t4  t5  p1  p2  p3  p4  p5  c1  c2  c3  c4  c5  c6  e   g
+  4-arvosana   2 | t1  t2  t3  t4  t5  p1  p2  p3  p4  p5  c1  c2  c3  c4  c5  c6  e   g
+  3-arvosana   3 | t1  t2  t3  t4  t5  p1  p2  p3  p4  p5  c1  c2  c3  c4  c5  c6  e   g
+  2-arvosana   4 | t1  t2  t3  t4  t5  p1  p2  p3  p4  p5  c1  c2  c3  c4  c5  c6  e   g
+  1-arvosana   5 | t1  t2  t3  t4  t5  p1  p2  p3  p4  p5  c1  c2  c3  c4  c5  c6  e   g
+  0-arvosana   6 | t1  t2  t3  t4  t5  p1  p2  p3  p4  p5  c1  c2  c3  c4  c5  c6  e   g
+*/
   studentContainer = new StudentContainer();
   StudentContainer year2009 = studentContainer.filterByYear(2009);
   //println(studentContainer.size());
@@ -57,8 +71,8 @@ void draw() {
   drawDataColumns();
   ball.draw();
 
-  drawDataBalls(3);
-
+  //drawDataBalls(3);
+  drawRawData(3);
   drawMenuParts();
 }
 
@@ -77,8 +91,6 @@ void drawMenuParts() {
     checkBox2011.draw();
     checkBox2012.draw();
   }
-
-  //drawRawData(3);
 }
 
 void drawRawData(int totalCourseGrade) {
@@ -121,29 +133,17 @@ void drawRawData(int totalCourseGrade) {
   text(printText, 100, 100);
 }
 
-void drawDataBalls(int totalCourseGrade) {
+void updateData(int totalCourseGrade) {
   StudentContainer gradFiltered = studentContainer.filterByTotalGrade(totalCourseGrade);
   StudentContainer yearsFiltered = studentContainer.filterByYears();
   StudentContainer filtered = yearsFiltered;
   int n = 0;
   int m = filtered.size();
-  for(int g = 6; g >= 0;g--){//arvosanat ylhäältä alas 6-0
-    if(theoryColumn.isOpen){
-      for(int i = 1; i <= 5; i++){
-        n = filtered.filterByTypeRoundAndGrade("theories", i, g).size();
-        //float relationship = n/m;
-        float r = map(n, 0, m, 0, 100);
-        if(r>0){
-          DataBall dB = new DataBall(100, 100, r);
-          dB.draw();
-          println("tekstia"+r);
-        }
-      }
-    }
-    else{
+  //vaiheessa
+}
 
-      }
-  }
+void drawDataBalls() {
+  //käyttää hyväksi dataTablen sisältöä
 }
 
 void mouseMoved() {
