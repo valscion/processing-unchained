@@ -9,6 +9,7 @@ class NumberBox extends ReactsToMouse {
     this.y = y;
     this.number = number;
   }
+
   @Override
   boolean areCoordinatesInside(float x, float y){
     if(x > this.x && x < this.x +50 && y > this.y && y < this.y + 30){
@@ -16,8 +17,10 @@ class NumberBox extends ReactsToMouse {
     }
     return false;
   }
+
   @Override
   void mouseClicked(){
     isSelected = true;
 
+}
 }
