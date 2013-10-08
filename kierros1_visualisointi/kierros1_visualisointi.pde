@@ -5,7 +5,6 @@ CheckBox checkBox2009;
 CheckBox checkBox2010;
 CheckBox checkBox2011;
 CheckBox checkBox2012;
-//DataBall ball;
 DataColumn theoryColumn;
 DataColumn projectColumn;
 DataColumn codeColumn;
@@ -25,7 +24,6 @@ void setup() {
   checkBox2011 = new CheckBox(330, 20, "2011");
   checkBox2012 = new CheckBox(480, 20, "2012");
   checkBox2012.isChecked = true;
-  //ball = new DataBall(400, 300, 40);
   theoryColumn = new DataColumn("theory", 1);
   projectColumn = new DataColumn("project", 2);
   codeColumn = new DataColumn("code", 3);
@@ -42,7 +40,6 @@ void setup() {
   clickables.add(checkBox2010);
   clickables.add(checkBox2011);
   clickables.add(checkBox2012);
-  //clickables.add(ball);
   clickables.add(theoryColumn);
   clickables.add(projectColumn);
   clickables.add(codeColumn);
@@ -115,17 +112,6 @@ void drawMenuParts() {
     checkBox2011.draw();
     checkBox2012.draw();
   }
-}
-
-void drawRawData() {
-  String printti = "";
-  for(int g = 6; g >= 0;g--){
-    for(int i = 0; i < 18; i++){
-      printti += dataTable[i][g] +" | ";
-    }
-    printti += "\n";
-  }
-  text(printti, 100, 100);
 }
 
 float giveRadiusFromArea(float area){
