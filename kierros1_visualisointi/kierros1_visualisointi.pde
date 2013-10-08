@@ -11,7 +11,7 @@ DataColumn projectColumn;
 DataColumn codeColumn;
 ArrayList<ReactsToMouse> clickables;
 StudentContainer studentContainer;
-int[][] dataTable;
+float[][] dataTable;
 
 void setup() {
   size(800, 600);
@@ -41,7 +41,7 @@ void setup() {
   clickables.add(codeColumn);
   clickables.add(selection);
 
-  dataTable = new int[18][7];
+  dataTable = new float[18][7];
 /*
 dataTablen arvoja ovat pallojen säteet, 0-100 arvoja
 dataTable rakenne on:
@@ -57,6 +57,7 @@ dataTable rakenne on:
 */
   studentContainer = new StudentContainer();
   StudentContainer year2009 = studentContainer.filterByYear(2009);
+  updateData(3);
   //println(studentContainer.size());
   //println(year2009.size());
   //int kokArv = 5;
@@ -73,7 +74,7 @@ void draw() {
   ball.draw();
 
   //drawDataBalls(3);
-  drawRawData(3);
+  drawRawData();
   drawMenuParts();
 }
 
@@ -94,7 +95,16 @@ void drawMenuParts() {
   }
 }
 
-void drawRawData(int totalCourseGrade) {
+void drawRawData() {
+  String printti = "";
+  for(int g = 6; g >= 0;g--){
+    for(int i = 0; i < 18; i++){
+      printti += dataTable[i][g] +" | ";
+    }
+    printti += "\n";
+  }
+  text(printti, 100, 100);
+  /*
   StudentContainer gradFiltered = studentContainer.filterByTotalGrade(totalCourseGrade);
   String printText = "";
   for(int g = 6; g >= 0;g--){//arvosanat ylhäältä alas
@@ -132,15 +142,57 @@ void drawRawData(int totalCourseGrade) {
     printText += "\n";
   }
   text(printText, 100, 100);
+  */
 }
 
 void updateData(int totalCourseGrade) {
   StudentContainer gradFiltered = studentContainer.filterByTotalGrade(totalCourseGrade);
-  StudentContainer yearsFiltered = studentContainer.filterByYears();
-  StudentContainer filtered = yearsFiltered;
+  //StudentContainer yearsFiltered = studentContainer.filterByYears();
+  StudentContainer filtered = gradFiltered;
   int n = 0;
   int m = filtered.size();
-  //vaiheessa
+  //println("m:n koko on"+m);
+  for(int g = 6; g >= 0;g--){//arvosanat ylhäältä alas
+    for(int i = 0; i < 18; i++){//kierrokset
+      if(i < 6){
+        n = gradFiltered.filterByTypeRoundAndGrade("coding", i+1, g).size();
+        dataTable[i][g] = map(n, 0, m, 0, 100);
+      }
+      else if(i < 11){
+        n = gradFiltered.filterByTypeRoundAndGrade("theories", i-5, g).size();
+        dataTable[i][g] = map(n, 0, m, 0, 100);
+      }
+      else if(i < 16){
+        switch (i){
+          case 11 : {n = gradFiltered.filterByProjectArchitecture(g).size();
+                    dataTable[i][g] = map(n, 0, m, 0, 100);
+                    break;}
+          case 12 : {n = gradFiltered.filterByProjectCode(g).size();
+                    dataTable[i][g] = map(n, 0, m, 0, 100);
+                    break;}
+          case 13 : {n = gradFiltered.filterByProjectUx(g).size();
+                    dataTable[i][g] = map(n, 0, m, 0, 100);
+                    break;}
+          case 14 : {n = gradFiltered.filterByProjectReport(g).size();
+                    dataTable[i][g] = map(n, 0, m, 0, 100);
+                    break;}
+          case 15 : {n = gradFiltered.filterByProjectGrade(g).size();
+                    dataTable[i][g] = map(n, 0, m, 0, 100);
+                    break;}
+          default : //ei mitään
+                    break;
+        }
+      }
+      else if(i < 17){
+        n = gradFiltered.filterByExamGrade(g).size();
+        dataTable[i][g] = map(n, 0, m, 0, 100);
+      }
+      else{
+        n = gradFiltered.filterByTotalGrade(g).size();
+        dataTable[i][g] = map(n, 0, m, 0, 100);
+      }
+    }
+  }
 }
 
 void drawDataBalls() {
