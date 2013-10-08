@@ -12,6 +12,7 @@ DataColumn codeColumn;
 ArrayList<ReactsToMouse> clickables;
 StudentContainer studentContainer;
 float[][] dataTable;
+NumberBox[] boxes = new NumberBox[6];
 
 void setup() {
   size(800, 600);
@@ -30,6 +31,11 @@ void setup() {
   codeColumn.isOpen = true;
 
   clickables = new ArrayList<ReactsToMouse>();
+  for (int i = 1; i <= 5; i++) {
+    boxes[i] = new NumberBox(700, 60+(i*selection.TEXT_HEIGHT), str(i));
+    clickables.add(boxes[i]);
+   }
+
   clickables.add(menu);
   clickables.add(checkBox2009);
   clickables.add(checkBox2010);
