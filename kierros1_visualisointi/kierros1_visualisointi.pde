@@ -159,16 +159,16 @@ void updateData(int totalCourseGrade) {
 void drawDataBalls() {
   //käyttää hyväksi dataTablen sisältöä
   float vakioJokaPoistaaPurkanKusemisen = 5;//jos on 0 tai jotain pienempää niin joku BLUR ei toimi
-  float marginiY = 500;
+  float marginiY = 550;
   float marginiX = 30;
-  float gapX = 35;
-  float gapY = 50;
+  float gapX = 45;
+  float gapY = 75;
   stroke(0);
   strokeWeight(1);
   String kiekkaTieto = "";
   for(int g = 6; g >= 0;g--){//arvosanat ylhäältä alas
     float y = -g*gapY + marginiY;
-    for(int i = 0; i < 18; i++){//kierrokset
+    for(int i = 0; i < 17; i++){//kierrokset
       fill(255,0,0);
       float x = i*gapX + marginiX;
       float r = dataTable[i][g];
@@ -186,9 +186,11 @@ void drawDataBalls() {
         case 16 : {kiekkaTieto = "tentti"; break;}
         case 17 : {kiekkaTieto = "kurssi"; break;}
       }
+      String kiekkaNro = str(i+1);
       fill(100);
       textSize(12);
-      text(kiekkaTieto, x, marginiY);
+      text(kiekkaTieto + kiekkaNro, x, marginiY);
+      line(x, y, x, marginiY);
     }
     fill(100);
     textSize(12);
