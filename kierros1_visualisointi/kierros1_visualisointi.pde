@@ -43,7 +43,7 @@ void setup() {
 
   dataTable = new float[18][7];
 /*
-dataTablen arvoja ovat pallojen säteet, 0-100 arvoja
+dataTablen arvoja ovat pallojen säteet, 0-100 float arvoja
 dataTable rakenne on:
                   kierrokset->t=theories, p=project, c=coding, e=exam, g=grade
           indeksit_0___1___2___3___4___5___6___7___8___9___10__11__12__13__14__15__16__17
