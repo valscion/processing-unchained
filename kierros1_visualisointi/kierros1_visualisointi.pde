@@ -74,7 +74,7 @@ void draw() {
   //ball.draw();
 
   drawDataBalls();
-  drawRawData();
+  //drawRawData();
   drawMenuParts();
 }
 
