@@ -5,6 +5,7 @@ class SelectionBox extends ReactsToMouse {
     PGraphics glow;
     PGraphics glow2;
     int TEXT_HEIGHT = 30;
+    String currentNumber;
 
     SelectionBox(float x, float y) {
         this.x = x;
@@ -48,24 +49,40 @@ class SelectionBox extends ReactsToMouse {
     }
 
 
+
   void draw() {
     if(isMenuOpen == false){
-    strokeWeight(1);
-    stroke(190);
-    fill(215);
-    rect(x, y, 70, 50);
-    fill(190);
-    rect(x+50, y, 20, 50);
-    noStroke();
-    fill(255);
-    ellipse(x+60, y+35, 15, 15);
-    fill(127);
-    triangle(x+55, y+32, x+60, y+40, x+65, y+32);
+      for (int i = 1; i < boxes.length; i++){
+        boxes[i].draw();
+      }
+      strokeWeight(1);
+      stroke(190);
+      fill(215);
+      rect(x, y, 70, 50);
+      fill(190);
+      rect(x+50, y, 20, 50);
+      noStroke();
+      fill(255);
+      ellipse(x+60, y+35, 15, 15);
+      fill(127);
+      triangle(x+55, y+32, x+60, y+40, x+65, y+32);
+      textFont(walkway, 30);
+      fill(255);
+    if (currentNumber != null) {
+      text(currentNumber, 10, 10);
+    }
     if (isMouseOver) {
       image(glow, this.x+50, this.y);
     }
     }
     else{
+      for (int i = 1; i < boxes.length; i++){
+        if (boxes[i].isSelected){
+          toggleMenu();
+          currentNumber = boxes[i].number;
+        }
+
+      }
       image(menuOpenImg, this.x, this.y);
       if (isMouseOver) {
         image(glow2, this.x+50, this.y);
@@ -79,6 +96,8 @@ class SelectionBox extends ReactsToMouse {
       menuOpenImg.fill(255);
       menuOpenImg.textFont(walkway, TEXT_HEIGHT);
       menuOpenImg.text(str(i), 10, i*TEXT_HEIGHT);
+
+      //clickables.add(boxes[i]);
     }
   }
 
