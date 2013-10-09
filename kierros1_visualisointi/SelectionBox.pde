@@ -52,9 +52,6 @@ class SelectionBox extends ReactsToMouse {
 
   void draw() {
     if(isMenuOpen == false){
-      for (int i = 1; i < boxes.length; i++){
-        boxes[i].draw();
-      }
       strokeWeight(1);
       stroke(190);
       fill(215);
@@ -66,22 +63,23 @@ class SelectionBox extends ReactsToMouse {
       ellipse(x+60, y+35, 15, 15);
       fill(127);
       triangle(x+55, y+32, x+60, y+40, x+65, y+32);
-      textFont(walkway, 30);
-      fill(255);
-    if (currentNumber != null) {
-      text(currentNumber, 10, 10);
-    }
-    if (isMouseOver) {
-      image(glow, this.x+50, this.y);
-    }
-    }
-    else{
+      if (currentNumber != null) {
+        println(currentNumber);
+        textFont(walkway, 30);
+        fill(255);
+        text(currentNumber, this.x+15, this.y+35);
+      }
+      if (isMouseOver) {
+        image(glow, this.x+50, this.y);
+      }
+    } else{
       for (int i = 1; i < boxes.length; i++){
         if (boxes[i].isSelected){
           toggleMenu();
           currentNumber = boxes[i].number;
+          boxes[i].isSelected = false;
+          generateDataBalls(int(currentNumber));
         }
-
       }
       image(menuOpenImg, this.x, this.y);
       if (isMouseOver) {

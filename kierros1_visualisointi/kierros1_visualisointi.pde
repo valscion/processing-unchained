@@ -33,7 +33,7 @@ void setup() {
 
   clickables = new ArrayList<ReactsToMouse>();
   for (int i = 1; i <= 5; i++) {
-    boxes[i] = new NumberBox(700, 60+(i*selection.TEXT_HEIGHT), str(i));
+    boxes[i] = new NumberBox(700, 60+((i-1)*selection.TEXT_HEIGHT), str(i));
     clickables.add(boxes[i]);
    }
 

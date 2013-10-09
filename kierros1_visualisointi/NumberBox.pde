@@ -9,10 +9,6 @@ class NumberBox extends ReactsToMouse {
     this.y = y;
     this.number = number;
   }
-  void draw(){
-    stroke(0);
-    rect(x, y, 50, 30);
-  }
 
   @Override
   boolean areCoordinatesInside(float x, float y){
