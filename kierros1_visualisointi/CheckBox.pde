@@ -52,8 +52,7 @@ class CheckBox extends ReactsToMouse {
     } else {
       isChecked = true;
     }
-
+    onCheckboxClicked();
   }
-
 
 }

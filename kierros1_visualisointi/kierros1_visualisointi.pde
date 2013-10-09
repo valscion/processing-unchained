@@ -130,13 +130,9 @@ float giveRadiusFromArea(float area){
 
 void generateDataBalls(int totalCourseGrade) {
   StudentContainer gradFiltered = studentContainer.filterByTotalGrade(totalCourseGrade);
-  //StudentContainer filtered = gradFiltered;
-  int m = gradFiltered.size();
-
   StudentContainer yearsFiltered = gradFiltered.filterBySelectedYears();
   StudentContainer filtered = yearsFiltered;
-  //int m = filtered.size();
-
+  int m = filtered.size();
   int n = 0;
 
   // Datapallojen luomisen apuvälineet
@@ -155,43 +151,30 @@ void generateDataBalls(int totalCourseGrade) {
       float r = 0;
 
       if(i < 6){
-        n = gradFiltered.filterByTypeRoundAndGrade("coding", i+1, g).size();
+        n = filtered.filterByTypeRoundAndGrade("coding", i+1, g).size();
         r = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
       }
       else if(i < 11){
-        n = gradFiltered.filterByTypeRoundAndGrade("theories", i-5, g).size();
+        n = filtered.filterByTypeRoundAndGrade("theories", i-5, g).size();
         r = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
       }
       else if(i < 16){
         switch (i){
-          case 11 : {n = gradFiltered.filterByProjectArchitecture(g).size();
-                    r = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
-                    break;}
-          case 12 : {n = gradFiltered.filterByProjectCode(g).size();
-                    r = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
-                    break;}
-          case 13 : {n = gradFiltered.filterByProjectUx(g).size();
-                    r = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
-                    break;}
-          case 14 : {n = gradFiltered.filterByProjectReport(g).size();
-                    r = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
-                    break;}
-          case 15 : {n = gradFiltered.filterByProjectGrade(g).size();
-                    r = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
-                    break;}
-          default : //ei mitään
-                    break;
+          case 11 : { n = filtered.filterByProjectArchitecture(g).size(); break; }
+          case 12 : { n = filtered.filterByProjectCode(g).size(); break; }
+          case 13 : { n = filtered.filterByProjectUx(g).size(); break; }
+          case 14 : { n = filtered.filterByProjectReport(g).size(); break; }
+          case 15 : { n = filtered.filterByProjectGrade(g).size(); break; }
         }
       }
       else if(i < 17){
-        n = gradFiltered.filterByExamGrade(g).size();
-        r = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
+        n = filtered.filterByExamGrade(g).size();
       }
       else{
-        n = gradFiltered.filterByTotalGrade(g).size();
-        r = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
+        n = filtered.filterByTotalGrade(g).size();
       }
 
+      r = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
       DataBall datBall = new DataBall(x, y, r);
       dataBalls[i][g] = datBall;
     }
@@ -245,6 +228,10 @@ boolean isYearSelected(int year) {
   if (year == 2011 && checkBox2011.isChecked) return true;
   if (year == 2012 && checkBox2012.isChecked) return true;
   return false;
+}
+
+void onCheckboxClicked() {
+  generateDataBalls(selectedGrade);
 }
 
 void mouseMoved() {
