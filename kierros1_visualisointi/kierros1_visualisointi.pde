@@ -30,10 +30,6 @@ void setup() {
     }
     clickables.add(checkBoxes[i]);
   }
-  //checkBox2009 = new CheckBox(20, 20, "2009");
-  //checkBox2010 = new CheckBox(180, 20, "2010");
-  //checkBox2011 = new CheckBox(330, 20, "2011");
-  //checkBox2012 = new CheckBox(480, 20, "2012");
   checkBoxes[9].isChecked = true;
   theoryColumn = new DataColumn("theory", 1);
   projectColumn = new DataColumn("project", 2);
@@ -47,10 +43,6 @@ void setup() {
    }
 
   clickables.add(menu);
-  /*clickables.add(checkBox2009);
-  clickables.add(checkBox2010);
-  clickables.add(checkBox2011);
-  clickables.add(checkBox2012);*/
   clickables.add(theoryColumn);
   clickables.add(projectColumn);
   clickables.add(codeColumn);
@@ -141,12 +133,6 @@ void drawDataBalls() {
     projectBall.draw(marginX + gapX, y);
     codeBall.draw(marginX + gapX * 2, y);
     examBall.draw(marginX + gapX * 3, y);
-
-   //fill(100);
-   //textSize(12);
-   //String selite = "Arvosana " + grade;
-   //text(selite, 20, y);
-   //line(0, y, width, y);
 
     fill(196);
     textFont(walkway, 30);

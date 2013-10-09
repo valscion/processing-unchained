@@ -94,7 +94,6 @@ class SelectionBox extends ReactsToMouse {
       menuOpenImg.textFont(walkway, TEXT_HEIGHT);
       menuOpenImg.text(str(i), 10, i*TEXT_HEIGHT);
 
-      //clickables.add(boxes[i]);
     }
   }
 
