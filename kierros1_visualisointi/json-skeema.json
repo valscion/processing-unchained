@@ -44,6 +44,8 @@
         // otettuna
         "grade": "float"
       },
+      //portfolion arvosana
+      "portfolio" : "float",
       // Tentin arvosanat omana JSON-objektinaan
       "exam": {
         // Parhaan arvosanan saaneen tentin arvosana
