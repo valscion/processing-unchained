@@ -64,7 +64,6 @@ class SelectionBox extends ReactsToMouse {
       fill(127);
       triangle(x+55, y+32, x+60, y+40, x+65, y+32);
       if (currentNumber != null) {
-        println(currentNumber);
         textFont(walkway, 30);
         fill(255);
         text(currentNumber, this.x+15, this.y+35);
