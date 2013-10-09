@@ -1,13 +1,13 @@
 class Student{
 
   class Round{
-    final float grade;
+    final int grade;
     final int dates_late;
     final boolean has_penalty;
     Round(JSONObject oneRound){
-      float grade1;
+      int grade1;
       try{
-        grade1 = oneRound.getFloat("grade");
+        grade1 = oneRound.getInt("grade");
       }
       catch(RuntimeException e){
         grade1 = -1000;
