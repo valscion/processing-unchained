@@ -7,7 +7,7 @@ class Student{
     Round(JSONObject oneRound){
       int grade1;
       try{
-        grade1 = oneRound.getInt("grade");
+        grade1 = round(oneRound.getFloat("grade"));
       }
       catch(RuntimeException e){
         grade1 = -1000;

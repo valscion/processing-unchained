@@ -17,7 +17,7 @@
         // 5 tai 6 kappaletta. Alkiot ovat JSON-objekteja
         {
           // Yksittäisen koodauskierroksen arvosana
-          "grade": "int",
+          "grade": "float",
           // Kuinka monta päivää palautus oli myöhässä. Jos
           // palautus oli ajoissa, tämä on 0.
           "dates_late": "int",
