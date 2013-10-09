@@ -10,8 +10,9 @@ DataColumn projectColumn;
 DataColumn codeColumn;
 ArrayList<ReactsToMouse> clickables;
 StudentContainer studentContainer;
-float[][] dataTable;
+DataBall[][] dataBalls;
 NumberBox[] boxes = new NumberBox[6];
+int selectedGrade;
 
 void setup() {
   size(800, 600);
@@ -45,10 +46,9 @@ void setup() {
   clickables.add(codeColumn);
   clickables.add(selection);
 
-  dataTable = new float[18][7];
+  dataBalls = new DataBall[18][7];
 /*
-dataTablen arvoja ovat pallojen säteet, 0-100 float arvoja
-dataTable rakenne on:
+dataBalls sisältää luodut pallot seuraavanlaisen rakenteen omaavassa taulukossa:
                   kierrokset->t=theories, p=project, c=coding, e=exam, g=grade
           indeksit_0___1___2___3___4___5___6___7___8___9___10__11__12__13__14__15__16__17
   6-arvosana   0 | t1  t2  t3  t4  t5  p1  p2  p3  p4  p5  c1  c2  c3  c4  c5  c6  e   g
@@ -61,7 +61,8 @@ dataTable rakenne on:
 */
   studentContainer = new StudentContainer();
   StudentContainer year2009 = studentContainer.filterByYear(2009);
-  updateData(4);
+  selectedGrade = 4;
+  generateDataBalls(selectedGrade);
 }
 
 void draw() {
@@ -80,20 +81,25 @@ void draw() {
 void updateDataRelatedToMouseY(){
   int alkukohta = 480;
   int delta = 45;
+  int newGrade = 0;
   if(mouseY > alkukohta-delta*1.5){
-    updateData(1);
+    newGrade = 1;
   }
   else if(mouseY > alkukohta-delta*2.5){
-    updateData(2);
+    newGrade = 2;
   }
   else if(mouseY > alkukohta-delta*3.5){
-    updateData(3);
+    newGrade = 3;
   }
   else if(mouseY > alkukohta-delta*4.5){
-    updateData(4);
+    newGrade = 4;
   }
   else if(mouseY > alkukohta-delta*5.5){
-    updateData(5);
+    newGrade = 5;
+  }
+  if (newGrade > 0 && newGrade != selectedGrade) {
+    selectedGrade = newGrade;
+    generateDataBalls(selectedGrade);
   }
 }
 
@@ -122,7 +128,7 @@ float giveRadiusFromArea(float area){
   return r;
 }
 
-void updateData(int totalCourseGrade) {
+void generateDataBalls(int totalCourseGrade) {
   StudentContainer gradFiltered = studentContainer.filterByTotalGrade(totalCourseGrade);
   //StudentContainer filtered = gradFiltered;
   int m = gradFiltered.size();
@@ -133,34 +139,45 @@ void updateData(int totalCourseGrade) {
 
   int n = 0;
 
+  // Datapallojen luomisen apuvälineet
+  float marginY = 480;
+  float marginX = 30;
+  float gapX = 45;
+  float gapY = 45;
+  String kiekkaTieto = "";
   float maxR = 35;
   //println("m:n koko on"+m);
+
   for(int g = 6; g >= 0;g--){//arvosanat ylhäältä alas
+    float y = marginY - g * gapY;
     for(int i = 0; i < 18; i++){//kierrokset
+      float x = i*gapX + marginX;
+      float r = 0;
+
       if(i < 6){
         n = gradFiltered.filterByTypeRoundAndGrade("coding", i+1, g).size();
-        dataTable[i][g] = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
+        r = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
       }
       else if(i < 11){
         n = gradFiltered.filterByTypeRoundAndGrade("theories", i-5, g).size();
-        dataTable[i][g] = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
+        r = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
       }
       else if(i < 16){
         switch (i){
           case 11 : {n = gradFiltered.filterByProjectArchitecture(g).size();
-                    dataTable[i][g] = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
+                    r = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
                     break;}
           case 12 : {n = gradFiltered.filterByProjectCode(g).size();
-                    dataTable[i][g] = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
+                    r = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
                     break;}
           case 13 : {n = gradFiltered.filterByProjectUx(g).size();
-                    dataTable[i][g] = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
+                    r = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
                     break;}
           case 14 : {n = gradFiltered.filterByProjectReport(g).size();
-                    dataTable[i][g] = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
+                    r = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
                     break;}
           case 15 : {n = gradFiltered.filterByProjectGrade(g).size();
-                    dataTable[i][g] = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
+                    r = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
                     break;}
           default : //ei mitään
                     break;
@@ -168,33 +185,35 @@ void updateData(int totalCourseGrade) {
       }
       else if(i < 17){
         n = gradFiltered.filterByExamGrade(g).size();
-        dataTable[i][g] = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
+        r = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
       }
       else{
         n = gradFiltered.filterByTotalGrade(g).size();
-        dataTable[i][g] = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
+        r = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
       }
+
+      DataBall datBall = new DataBall(x, y, r);
+      dataBalls[i][g] = datBall;
     }
   }
 }
 
 void drawDataBalls() {
   //käyttää hyväksi dataTablen sisältöä
-  float marginiY = 480;
-  float marginiX = 30;
+  float marginY = 480;
+  float marginX = 30;
   float gapX = 45;
   float gapY = 45;
   stroke(0);
   strokeWeight(1);
   String kiekkaTieto = "";
   for(int g = 6; g >= 0;g--){//arvosanat ylhäältä alas
-    float y = -g*gapY + marginiY;
+    float y = -g*gapY + marginY;
     //välivaiheessa läpinäkyvyyttä
     fill(255, 0, 0, 100);
     for(int i = 0; i < 18; i++){//kierrokset
-      float x = i*gapX + marginiX;
-      float r = dataTable[i][g];
-      DataBall datBall = new DataBall(x, y, r);
+      float x = i*gapX + marginX;
+      DataBall datBall = dataBalls[i][g];
       datBall.draw();
 
       //tästä alaspäin on vain tarkentavia tietoja joita piirretään tässä vaiheessa avuksi
@@ -208,13 +227,13 @@ void drawDataBalls() {
       String kiekkaNro = str(i+1);
       //fill(100, 100);
       textSize(12);
-      text(kiekkaTieto + kiekkaNro, x, marginiY);
-      //line(x, y, x, marginiY);
+      text(kiekkaTieto + kiekkaNro, x, marginY);
+      //line(x, y, x, marginY);
     }
     fill(100);
     textSize(12);
     String selite = "Arvosana " +g;
-    text(selite, marginiX/2, y);
+    text(selite, marginX/2, y);
     line(0, y, width, y);
   }
 }
