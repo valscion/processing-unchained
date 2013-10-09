@@ -10,7 +10,7 @@ DataColumn projectColumn;
 DataColumn codeColumn;
 ArrayList<ReactsToMouse> clickables;
 StudentContainer studentContainer;
-DataBall[][] dataBalls;
+DataBallContainer dataBallContainer;
 NumberBox[] boxes = new NumberBox[6];
 int selectedGrade;
 
@@ -29,6 +29,7 @@ void setup() {
   projectColumn = new DataColumn("project", 2);
   codeColumn = new DataColumn("code", 3);
   codeColumn.isOpen = true;
+  studentContainer = new StudentContainer();
 
   clickables = new ArrayList<ReactsToMouse>();
   for (int i = 1; i <= 5; i++) {
@@ -46,21 +47,6 @@ void setup() {
   clickables.add(codeColumn);
   clickables.add(selection);
 
-  dataBalls = new DataBall[18][7];
-/*
-dataBalls sisältää luodut pallot seuraavanlaisen rakenteen omaavassa taulukossa:
-                  kierrokset->t=theories, p=project, c=coding, e=exam, g=grade
-          indeksit_0___1___2___3___4___5___6___7___8___9___10__11__12__13__14__15__16__17
-  6-arvosana   0 | t1  t2  t3  t4  t5  p1  p2  p3  p4  p5  c1  c2  c3  c4  c5  c6  e   g
-  5-arvosana   1 | t1  t2  t3  t4  t5  p1  p2  p3  p4  p5  c1  c2  c3  c4  c5  c6  e   g
-  4-arvosana   2 | t1  t2  t3  t4  t5  p1  p2  p3  p4  p5  c1  c2  c3  c4  c5  c6  e   g
-  3-arvosana   3 | t1  t2  t3  t4  t5  p1  p2  p3  p4  p5  c1  c2  c3  c4  c5  c6  e   g
-  2-arvosana   4 | t1  t2  t3  t4  t5  p1  p2  p3  p4  p5  c1  c2  c3  c4  c5  c6  e   g
-  1-arvosana   5 | t1  t2  t3  t4  t5  p1  p2  p3  p4  p5  c1  c2  c3  c4  c5  c6  e   g
-  0-arvosana   6 | t1  t2  t3  t4  t5  p1  p2  p3  p4  p5  c1  c2  c3  c4  c5  c6  e   g
-*/
-  studentContainer = new StudentContainer();
-  StudentContainer year2009 = studentContainer.filterByYear(2009);
   selectedGrade = 4;
   generateDataBalls(selectedGrade);
 }
@@ -120,103 +106,38 @@ void drawMenuParts() {
   }
 }
 
-float giveRadiusFromArea(float area){
-  //pi*r^2 = ympyrän pinta-ala
-  //=> r=sqrt(area/PI)
-  float inner = area/PI;
-  float r = sqrt(inner);
-  return r;
-}
-
 void generateDataBalls(int totalCourseGrade) {
   StudentContainer gradFiltered = studentContainer.filterByTotalGrade(totalCourseGrade);
-  StudentContainer yearsFiltered = gradFiltered.filterBySelectedYears();
-  StudentContainer filtered = yearsFiltered;
-  int m = filtered.size();
-  int n = 0;
-
-  // Datapallojen luomisen apuvälineet
-  float marginY = 480;
-  float marginX = 30;
-  float gapX = 45;
-  float gapY = 45;
-  String kiekkaTieto = "";
-  float maxR = 35;
-  //println("m:n koko on"+m);
-
-  for(int g = 6; g >= 0;g--){//arvosanat ylhäältä alas
-    float y = marginY - g * gapY;
-    for(int i = 0; i < 18; i++){//kierrokset
-      float x = i*gapX + marginX;
-      float r = 0;
-
-      if(i < 6){
-        n = filtered.filterByTypeRoundAndGrade("coding", i+1, g).size();
-        r = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
-      }
-      else if(i < 11){
-        n = filtered.filterByTypeRoundAndGrade("theories", i-5, g).size();
-        r = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
-      }
-      else if(i < 16){
-        switch (i){
-          case 11 : { n = filtered.filterByProjectArchitecture(g).size(); break; }
-          case 12 : { n = filtered.filterByProjectCode(g).size(); break; }
-          case 13 : { n = filtered.filterByProjectUx(g).size(); break; }
-          case 14 : { n = filtered.filterByProjectReport(g).size(); break; }
-          case 15 : { n = filtered.filterByProjectGrade(g).size(); break; }
-        }
-      }
-      else if(i < 17){
-        n = filtered.filterByExamGrade(g).size();
-      }
-      else{
-        n = filtered.filterByTotalGrade(g).size();
-      }
-
-      r = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(m), 0, maxR);
-      DataBall datBall = new DataBall(x, y, r);
-      dataBalls[i][g] = datBall;
-    }
-  }
+  dataBallContainer = new DataBallContainer(gradFiltered);
 }
 
 void drawDataBalls() {
   //käyttää hyväksi dataTablen sisältöä
   float marginY = 480;
-  float marginX = 30;
-  float gapX = 45;
-  float gapY = 45;
+  float marginX = 120;
+  float gapX = 100;
+  float gapY = 70;
   stroke(0);
   strokeWeight(1);
   String kiekkaTieto = "";
-  for(int g = 6; g >= 0;g--){//arvosanat ylhäältä alas
-    float y = -g*gapY + marginY;
-    //välivaiheessa läpinäkyvyyttä
+  for(int grade = 1; grade <= 6; grade++) {
+    float y = marginY - (grade - 1) * gapY;
+    // Pallot piirretään osittain läpinäkyviksi
     fill(255, 0, 0, 100);
-    for(int i = 0; i < 18; i++){//kierrokset
-      float x = i*gapX + marginX;
-      DataBall datBall = dataBalls[i][g];
-      datBall.draw();
+    DataBall theoryBall = dataBallContainer.theoryBallForGrade(grade);
+    DataBall projectBall = dataBallContainer.projectBallForGrade(grade);
+    DataBall codeBall = dataBallContainer.codeBallForGrade(grade);
+    DataBall examBall = dataBallContainer.examBallForGrade(grade);
 
-      //tästä alaspäin on vain tarkentavia tietoja joita piirretään tässä vaiheessa avuksi
-      switch (i){
-        case 0 : {kiekkaTieto = "teoria"; break;}
-        case 5 : {kiekkaTieto = "projekti"; break;}
-        case 10 : {kiekkaTieto = "koodi"; break;}
-        case 16 : {kiekkaTieto = "tentti"; break;}
-        case 17 : {kiekkaTieto = "kurssi"; break;}
-      }
-      String kiekkaNro = str(i+1);
-      //fill(100, 100);
-      textSize(12);
-      text(kiekkaTieto + kiekkaNro, x, marginY);
-      //line(x, y, x, marginY);
-    }
+    theoryBall.draw(marginX, y);
+    projectBall.draw(marginX + gapX, y);
+    codeBall.draw(marginX + gapX * 2, y);
+    examBall.draw(marginX + gapX * 3, y);
+
     fill(100);
     textSize(12);
-    String selite = "Arvosana " +g;
-    text(selite, marginX/2, y);
+    String selite = "Arvosana " + grade;
+    text(selite, 20, y);
     line(0, y, width, y);
   }
 }
