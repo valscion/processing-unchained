@@ -66,6 +66,7 @@ dataBalls sisältää luodut pallot seuraavanlaisen rakenteen omaavassa taulukos
 }
 
 void draw() {
+  updateDataRelatedToMouseY();
   background(255);
 
   drawDataColumns();
@@ -75,7 +76,6 @@ void draw() {
   //drawRawData();
   drawMenuParts();
 
-  updateDataRelatedToMouseY();
 }
 
 void updateDataRelatedToMouseY(){
