@@ -12,8 +12,8 @@ DataBallContainer dataBallContainer;
 NumberBox[] boxes = new NumberBox[6];
 CheckBox[] checkBoxes = new CheckBox[10];
 int selectedGrade;
-int globalGrey = 100;
-int globalLightGrey = 150;
+int globalGrey = 196;
+int globalLightGrey = 220;
 
 void setup() {
   size(1024, 768);
@@ -139,10 +139,10 @@ void drawDataBalls() {
 
   for(int grade = 0; grade <= 6; grade++) {
     float y = marginY - (grade - 1) * gapY;
-    // Pallot piirretään osittain läpinäkyviksi
-    stroke(255, 0, 0);
-    strokeWeight(1);  
-    fill(255, 0, 0, 120);
+    //stroke(255, 0, 0);
+    //strokeWeight(1);
+    //Pallot piirretään täysin punaisiksi
+    fill(255, 0, 0, 255);
 
     DataBall theoryBall = dataBallContainer.theoryBallForGrade(grade);
     DataBall projectBall = dataBallContainer.projectBallForGrade(grade);
