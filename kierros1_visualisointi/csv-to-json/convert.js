@@ -7,7 +7,7 @@ var output = {};
 var lastYear = null;
 
 csv()
-.from.path(__dirname+'/Studio1_dataa2012-2009.csv', { delimiter: ';' })
+.from.path(__dirname+'/Studio1_dataa2012-2003.csv', { delimiter: ';' })
 .on('record', function(row,index){
   var recordName = row.shift().trim()
   if (recordName.length === 4) {
