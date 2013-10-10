@@ -130,7 +130,7 @@ void drawDataBalls() {
       DataBall codeRoundBall = dataBallContainer.codeBallForGradeAndRound(grade, codeRound);
       if (codeRoundBall != null) {
         float drawX = marginX + gapX * 4;
-        drawX += (codeRound - 1) * gapX;
+        drawX += (codeRound - 1) * (gapX - 20);
         codeRoundBall.draw(drawX, y);
       }
     }
