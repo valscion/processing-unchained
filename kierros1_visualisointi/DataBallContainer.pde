@@ -128,10 +128,10 @@ class DataBallContainer {
   // Teoria
   // ---------------------------------------------------------------------------
   DataBall theoryBallForGradeAndRound(int grade, int thRound) {
-    if (thRound < THEORIES_FIRST || thRound > THEORIES_LAST) {
+    int index = THEORIES_FIRST + thRound;
+    if (index < THEORIES_FIRST || index > THEORIES_LAST) {
       throw new IndexOutOfBoundsException("round out of bounds (was " + thRound + ")");
     }
-    int index = THEORIES_FIRST + thRound;
     return getDataBall(grade, index);
   }
 
@@ -166,10 +166,10 @@ class DataBallContainer {
   // Koodi
   // ---------------------------------------------------------------------------
   DataBall codeBallForGradeAndRound(int grade, int codeRound) {
-    if (codeRound < CODES_FIRST || codeRound > CODES_LAST) {
+    int index = CODES_FIRST + codeRound;
+    if (index < CODES_FIRST || index > CODES_LAST) {
       throw new IndexOutOfBoundsException("round out of bounds (was " + codeRound + ")");
     }
-    int index = CODES_FIRST + codeRound;
     return getDataBall(grade, index);
   }
 
