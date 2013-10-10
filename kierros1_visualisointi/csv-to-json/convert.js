@@ -19,6 +19,7 @@ csv()
     var theories = parseTheories(row);
     var project = parseProject(row);
     var exam = parseExam(row);
+    var portfolio = parsePortfolio(row);
     var grade = parseGrade(row);
     if (grade !== null) {
       var student = {
@@ -27,6 +28,7 @@ csv()
         theories: theories,
         project: project,
         exam: exam,
+        portfolio: portfolio,
         grade: grade,
         year: Number(lastYear)
       }
@@ -109,8 +111,18 @@ function parseExam(row) {
   return result;
 }
 
-function parseGrade(row) {
+function parsePortfolio(row) {
   var grade = parseFloat(row[29]);
+  if (isNaN(grade)) {
+    return null;
+  }
+  else {
+    return grade;
+  }
+}
+
+function parseGrade(row) {
+  var grade = parseFloat(row[30]);
   if (isNaN(grade)) {
     return null;
   }
