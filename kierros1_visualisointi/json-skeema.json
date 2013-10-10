@@ -54,7 +54,9 @@
       //portfolion arvosana
       "portfolio" : "float",
       // Koko kurssin painotetettu keskiarvo, ilman pyöristyksiä
-      "grade": "float"
+      "grade": "float",
+      // Opiskelijan vuosi on tallessa myös täällä
+      "year": "int"
     },
     // ...ja vuoden lista jatkuu toisilla opiskelijoilla.
     {}, {} //....
