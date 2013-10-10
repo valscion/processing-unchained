@@ -68,6 +68,7 @@ void draw() {
 Tämä metodi pitää huolta hiirieleistä:
 Y-suuntaan arvosanasta jonka mukaan analysoidaan
 X-suuntaan vuosista, jotka otetaan mukaan, ylälaidasta lisää, alalaidasta vähentää
+Piirtää lisäksi hipaisualueet, valitut vuodet ja tarkastellun loppuarvosanan
 */
 void updateDataRelatedToMouseXYandDrawOtherAwesomenessOnTheScreen(){
   int alkukohta = 520;
@@ -94,13 +95,14 @@ void updateDataRelatedToMouseXYandDrawOtherAwesomenessOnTheScreen(){
   }
   //vuosien valinta ylälaidassa lisää
   int hipaisualueenKoko = 20;
+  strokeWeight(0);
   fill(0, 100);
   rect(0, 0, width, hipaisualueenKoko);
   for(int i = 0; i < checkBoxes.length; i++){
     if(checkBoxes[i].isChecked){
       fill(0);
       ellipse((i+0.1)*(width/checkBoxes.length),hipaisualueenKoko/2, hipaisualueenKoko ,hipaisualueenKoko);
-      text(checkBoxes[i].year, (i+0.1)*(width/checkBoxes.length)+hipaisualueenKoko/4, hipaisualueenKoko);
+      text(checkBoxes[i].year, (i+0.1)*(width/checkBoxes.length)+hipaisualueenKoko/2, hipaisualueenKoko);
     }
     if(mouseY < hipaisualueenKoko && mouseX > i*(width/checkBoxes.length)+5 && !checkBoxes[i].isChecked){
       checkBoxes[i].mouseClicked();
@@ -114,6 +116,10 @@ void updateDataRelatedToMouseXYandDrawOtherAwesomenessOnTheScreen(){
       checkBoxes[i].mouseClicked();
     }
   }
+  //ajanmukainen data Y-suunnasta
+  rect(930, 60,50, 50);
+  fill(0);
+  text(selectedGrade, 930+15, 60+35);
 }
 
 void drawDataColumns() {
