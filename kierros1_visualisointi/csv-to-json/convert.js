@@ -39,9 +39,11 @@ csv()
 .on('end', function(count){
   console.log('Number of lines: '+count);
   fs.writeSync(jsonFile, JSON.stringify(output, null, "  "))
+  fs.closeSync(jsonFile);
 })
 .on('error', function(error){
   console.log(error.message);
+  fs.closeSync(jsonFile);
 });
 
 
