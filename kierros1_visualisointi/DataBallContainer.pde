@@ -80,7 +80,7 @@ class DataBallContainer {
     int relative_max = studentContainer.size();
     int rounds_count = CODES_LAST - CODES_FIRST;
     int total_n = 0;
-    for (int roundNumber = 1; roundNumber < rounds_count; roundNumber++) {
+    for (int roundNumber = 1; roundNumber <= rounds_count; roundNumber++) {
       int index = roundNumber + CODES_FIRST;
       int n = studentContainer.filterByTypeRoundAndGrade("coding", roundNumber, grade).size();
       total_n += n;
