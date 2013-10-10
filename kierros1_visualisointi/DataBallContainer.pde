@@ -50,10 +50,10 @@ class DataBallContainer {
       int index = roundNumber + THEORIES_FIRST;
       int n = studentContainer.filterByTypeRoundAndGrade("theories", roundNumber, grade).size();
       total_n += n;
-      DataBall dataBall = createDataBall(n, relative_max);
+      DataBall dataBall = createDataBall(n, relative_max, "theory-" + grade);
       storeDataBallToGradeAndIndex(dataBall, grade, index);
     }
-    DataBall dataBall = createDataBall(total_n, relative_max);
+    DataBall dataBall = createDataBall(total_n, relative_max, "theory-total");
     storeDataBallToGradeAndIndex(dataBall, grade, THEORIES_TOTAL);
   }
 
@@ -64,11 +64,11 @@ class DataBallContainer {
     int ux_n = studentContainer.filterByProjectUx(grade).size();
     int report_n = studentContainer.filterByProjectReport(grade).size();
     int total_n = studentContainer.filterByProjectGrade(grade).size();
-    DataBall archBall = createDataBall(arch_n, relative_max);
-    DataBall codeBall = createDataBall(code_n, relative_max);
-    DataBall uxBall = createDataBall(ux_n, relative_max);
-    DataBall reportBall = createDataBall(report_n, relative_max);
-    DataBall totalBall = createDataBall(total_n, relative_max);
+    DataBall archBall = createDataBall(arch_n, relative_max, "proj-arch");
+    DataBall codeBall = createDataBall(code_n, relative_max, "proj-code");
+    DataBall uxBall = createDataBall(ux_n, relative_max, "proj-ux");
+    DataBall reportBall = createDataBall(report_n, relative_max, "proj-report");
+    DataBall totalBall = createDataBall(total_n, relative_max, "proj-total");
     storeDataBallToGradeAndIndex(archBall, grade, PROJECT_ARCHITECTURE);
     storeDataBallToGradeAndIndex(codeBall, grade, PROJECT_CODE);
     storeDataBallToGradeAndIndex(uxBall, grade, PROJECT_UX);
@@ -84,24 +84,24 @@ class DataBallContainer {
       int index = roundNumber + CODES_FIRST;
       int n = studentContainer.filterByTypeRoundAndGrade("coding", roundNumber, grade).size();
       total_n += n;
-      DataBall dataBall = createDataBall(n, relative_max);
+      DataBall dataBall = createDataBall(n, relative_max, "code-" + grade);
       storeDataBallToGradeAndIndex(dataBall, grade, index);
     }
-    DataBall dataBall = createDataBall(total_n, relative_max);
+    DataBall dataBall = createDataBall(total_n, relative_max, "code-total");
     storeDataBallToGradeAndIndex(dataBall, grade, CODES_TOTAL);
   }
 
   private void fillExam(StudentContainer studentContainer, int grade) {
     int relative_max = studentContainer.size();
     int n = studentContainer.filterByExamGrade(grade).size();
-    DataBall dataBall = createDataBall(n, relative_max);
+    DataBall dataBall = createDataBall(n, relative_max, "exam");
     storeDataBallToGradeAndIndex(dataBall, grade, EXAM);
   }
 
 
-  private DataBall createDataBall(int n, int relative_max) {
+  private DataBall createDataBall(int n, int relative_max, String infoTxt) {
     float r = map(giveRadiusFromArea(n), 0, giveRadiusFromArea(relative_max), 0, MAX_R);
-    DataBall dataBall = new DataBall(r);
+    DataBall dataBall = new DataBall(r, infoTxt);
     return dataBall;
   }
 

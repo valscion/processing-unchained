@@ -126,6 +126,15 @@ void drawDataBalls() {
     codeBall.draw(marginX + gapX * 2, y);
     examBall.draw(marginX + gapX * 3, y);
 
+    for (int codeRound = 1; codeRound <= 6; codeRound++) {
+      DataBall codeRoundBall = dataBallContainer.codeBallForGradeAndRound(grade, codeRound);
+      if (codeRoundBall != null) {
+        float drawX = marginX + gapX * 4;
+        drawX += (codeRound - 1) * gapX;
+        codeRoundBall.draw(drawX, y);
+      }
+    }
+
     fill(196);
     textFont(walkway, 30);
     text(str(grade), 20, y);
