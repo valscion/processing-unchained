@@ -4,6 +4,8 @@ SelectionBox selection;
 DataColumn theoryColumn;
 DataColumn projectColumn;
 DataColumn codeColumn;
+DataColumn examColumn;
+DataColumn portfolioColumn;
 ArrayList<ReactsToMouse> clickables;
 StudentContainer studentContainer;
 DataBallContainer dataBallContainer;
@@ -16,7 +18,7 @@ void setup() {
   background(255);
   walkway = loadFont("WalkwayBold-48.vlw");
   menu = new Menu(0, 0);
-  selection = new SelectionBox(700, 60);
+  selection = new SelectionBox(930, 60);
   clickables = new ArrayList<ReactsToMouse>();
   for(int i=0; i < 10; i++) {
     if (i < 5) {
@@ -30,11 +32,12 @@ void setup() {
   theoryColumn = new DataColumn("theory", 1);
   projectColumn = new DataColumn("project", 2);
   codeColumn = new DataColumn("code", 3);
-  codeColumn.isOpen = true;
+  examColumn = new DataColumn("exam", 4);
+  portfolioColumn = new DataColumn("portfolio", 5);
   studentContainer = new StudentContainer();
 
   for (int i = 1; i <= 5; i++) {
-    boxes[i] = new NumberBox(700, 60+((i-1)*selection.TEXT_HEIGHT), str(i));
+    boxes[i] = new NumberBox(930, 60+((i-1)*selection.TEXT_HEIGHT), str(i));
     clickables.add(boxes[i]);
    }
 
@@ -86,6 +89,8 @@ void drawDataColumns() {
   theoryColumn.draw();
   projectColumn.draw();
   codeColumn.draw();
+  examColumn.draw();
+  portfolioColumn.draw();
 }
 
 void drawMenuParts() {
@@ -106,13 +111,13 @@ void generateDataBalls(int totalCourseGrade) {
 }
 
 void drawDataBalls() {
-  float marginY = height - 150;
+  float marginY = height - 200;
   float marginX = 120;
   float gapX = 100;
-  float gapY = 100;
+  float gapY = 85;
   stroke(0);
   strokeWeight(1);
-  for(int grade = 1; grade <= 6; grade++) {
+  for(int grade = 0; grade <= 6; grade++) {
     float y = marginY - (grade - 1) * gapY;
     // Pallot piirretään osittain läpinäkyviksi
     fill(255, 0, 0, 100);
