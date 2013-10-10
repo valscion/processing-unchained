@@ -94,7 +94,7 @@ void drawMenuParts() {
   if (menu.isMenuOpen) {
     for(int i=0; i < 10; i++) {
       checkBoxes[i].draw();
-  }
+    }
   }
 }
 
@@ -102,6 +102,7 @@ void generateDataBalls(int totalCourseGrade) {
   StudentContainer gradFiltered = studentContainer.filterByTotalGrade(totalCourseGrade);
   StudentContainer yearsFiltered = gradFiltered.filterBySelectedYears();
   dataBallContainer = new DataBallContainer(yearsFiltered);
+  selection.updateGradeChanged(totalCourseGrade);
 }
 
 void drawDataBalls() {
