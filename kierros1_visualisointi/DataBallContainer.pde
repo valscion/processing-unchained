@@ -46,9 +46,9 @@ class DataBallContainer {
     int relative_max = studentContainer.size();
     int rounds_count = THEORIES_LAST - THEORIES_FIRST;
     int total_n = 0;
-    for (int roundNumber = 1; roundNumber < rounds_count; roundNumber++) {
+    for (int roundNumber = 0; roundNumber <= rounds_count; roundNumber++) {
       int index = roundNumber + THEORIES_FIRST;
-      int n = studentContainer.filterByTypeRoundAndGrade("theories", roundNumber, grade).size();
+      int n = studentContainer.filterByTypeRoundAndGrade("theories", roundNumber+1, grade).size();
       total_n += n;
       DataBall dataBall = createDataBall(n, relative_max, "theory-" + grade);
       storeDataBallToGradeAndIndex(dataBall, grade, index);
@@ -80,9 +80,9 @@ class DataBallContainer {
     int relative_max = studentContainer.size();
     int rounds_count = CODES_LAST - CODES_FIRST;
     int total_n = 0;
-    for (int roundNumber = 1; roundNumber <= rounds_count; roundNumber++) {
+    for (int roundNumber = 0; roundNumber <= rounds_count; roundNumber++) {
       int index = roundNumber + CODES_FIRST;
-      int n = studentContainer.filterByTypeRoundAndGrade("coding", roundNumber, grade).size();
+      int n = studentContainer.filterByTypeRoundAndGrade("coding", roundNumber+1, grade).size();
       total_n += n;
       DataBall dataBall = createDataBall(n, relative_max, "code-" + grade);
       storeDataBallToGradeAndIndex(dataBall, grade, index);
