@@ -13,9 +13,9 @@ class DataBall {
 
   void draw(float x, float y) {
     ellipse(x, y, radius * 2, radius * 2);
-    textSize(14);
-    textAlign(CENTER);
-    text(infoTxt, x, y);
-    textAlign(LEFT);
+    //textSize(14);
+    //textAlign(CENTER);
+    //text(infoTxt, x, y);
+    //textAlign(LEFT);
   }
 }
