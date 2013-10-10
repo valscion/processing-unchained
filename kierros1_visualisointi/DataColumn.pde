@@ -22,16 +22,28 @@ class DataColumn extends ReactsToMouse {
     String typeInFinnish = mapTypeToFinnish();
     text(typeInFinnish, calculateLeftX(), Y_POSITION);
     if (isOpen) {
-      fill(255, 0 , 0);
-      text(typeInFinnish, calculateLeftX(), Y_POSITION);
       leftX = 90+5*CLOSED_WIDTH;
-      for (int i = 1; i <= 6; i++) {
-        float x = leftX + (i - 1) * OPENED_WIDTH;
-        if (i <= columnsForDataType()) {
-        text(str(i), x, Y_POSITION);
-        } else {
-          fill(196);
+      fill(255, 0 , 0);
+      if (this == projectColumn) {
+        String grades[] = new String[4];
+        grades[0] = "Arch";
+        grades[1] = "Koodi";
+        grades[2] = "Ux";
+        grades[3] = "Raportti";
+        for (int i = 0; i <= 3; i++) {
+          float x = leftX + (i) * OPENED_WIDTH;
+          text(grades[i], x, Y_POSITION);
+        }
+      } else {
+        text(typeInFinnish, calculateLeftX(), Y_POSITION);
+        for (int i = 1; i <= 6; i++) {
+          float x = leftX + (i - 1) * OPENED_WIDTH;
+          if (i <= columnsForDataType()) {
           text(str(i), x, Y_POSITION);
+          } else {
+            fill(196);
+            text(str(i), x, Y_POSITION);
+          }
         }
       }
     }

@@ -22,9 +22,9 @@ void setup() {
   clickables = new ArrayList<ReactsToMouse>();
   for(int i=0; i < 10; i++) {
     if (i < 5) {
-      checkBoxes[i] = new CheckBox(20+i*150, 20, str(2003+i));
+      checkBoxes[i] = new CheckBox(170+i*150, 40, str(2003+i));
     } else {
-      checkBoxes[i] = new CheckBox(20+(i-5)*150, 70, str(2003+i));
+      checkBoxes[i] = new CheckBox(170+(i-5)*150, 90, str(2003+i));
     }
     clickables.add(checkBoxes[i]);
   }
@@ -113,7 +113,7 @@ void generateDataBalls(int totalCourseGrade) {
 void drawDataBalls() {
   float marginY = height - 200;
   float marginX = 120;
-  float gapX = 100;
+  float gapX = 95;
   float gapY = 85;
   stroke(0);
   strokeWeight(1);
@@ -131,13 +131,40 @@ void drawDataBalls() {
     codeBall.draw(marginX + gapX * 2, y);
     examBall.draw(marginX + gapX * 3, y);
 
-    for (int codeRound = 1; codeRound <= 6; codeRound++) {
-      DataBall codeRoundBall = dataBallContainer.codeBallForGradeAndRound(grade, codeRound);
-      if (codeRoundBall != null) {
-        float drawX = marginX + gapX * 4;
-        drawX += (codeRound - 1) * (gapX - 20);
-        codeRoundBall.draw(drawX, y);
+
+    if (codeColumn.isOpen) {
+      for (int codeRound = 1; codeRound <= 6; codeRound++) {
+        DataBall codeRoundBall = dataBallContainer.codeBallForGradeAndRound(grade, codeRound);
+        if (codeRoundBall != null) {
+          float drawX = marginX + gapX * 5;
+          drawX += (codeRound - 1) * (gapX - 20);
+          codeRoundBall.draw(drawX, y);
+        }
       }
+    } else if (projectColumn.isOpen) {
+      DataBall architectureBall = dataBallContainer.projectBallForGradeAndArchitecture(grade);
+      float drawX = marginX + gapX * 5;
+      architectureBall.draw(drawX, y);
+      DataBall projectCodeBall = dataBallContainer.projectBallForGradeAndCode(grade);
+      drawX += gapX -20;
+      projectCodeBall.draw(drawX, y);
+      DataBall uxBall = dataBallContainer.projectBallForGradeAndUx(grade);
+      drawX += (gapX-20);
+      uxBall.draw(drawX, y);
+      DataBall reportBall = dataBallContainer.projectBallForGradeAndReport(grade);
+      drawX += (gapX-20);
+      reportBall.draw(drawX, y);
+
+    } else if(theoryColumn.isOpen){
+      for (int theoryRound = 1; theoryRound <= 5; theoryRound++) {
+        DataBall theoryRoundBall = dataBallContainer.theoryBallForGradeAndRound(grade, theoryRound);
+        if (theoryRoundBall != null) {
+          float drawX = marginX + gapX * 5;
+          drawX += (theoryRound - 1) * (gapX - 20);
+          theoryRoundBall.draw(drawX, y);
+        }
+      }
+
     }
 
     fill(196);
