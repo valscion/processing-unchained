@@ -125,12 +125,13 @@ void drawDataBalls() {
     DataBall projectBall = dataBallContainer.projectBallForGrade(grade);
     DataBall codeBall = dataBallContainer.codeBallForGrade(grade);
     DataBall examBall = dataBallContainer.examBallForGrade(grade);
+    DataBall portfolioBall = dataBallContainer.examBallForGrade(grade);
 
     theoryBall.draw(marginX, y);
     projectBall.draw(marginX + gapX, y);
     codeBall.draw(marginX + gapX * 2, y);
     examBall.draw(marginX + gapX * 3, y);
-
+    portfolioBall.draw(marginX + gapX * 4, y);
 
     if (codeColumn.isOpen) {
       for (int codeRound = 1; codeRound <= 6; codeRound++) {
