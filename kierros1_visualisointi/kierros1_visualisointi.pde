@@ -1,10 +1,6 @@
 PFont walkway;
 Menu menu;
 SelectionBox selection;
-CheckBox checkBox2009;
-CheckBox checkBox2010;
-CheckBox checkBox2011;
-CheckBox checkBox2012;
 DataColumn theoryColumn;
 DataColumn projectColumn;
 DataColumn codeColumn;
@@ -57,12 +53,8 @@ void draw() {
   background(255);
 
   drawDataColumns();
-  //ball.draw();
-
   drawDataBalls();
-  //drawRawData();
   drawMenuParts();
-
 }
 
 void updateDataRelatedToMouseY(){
@@ -108,18 +100,17 @@ void drawMenuParts() {
 
 void generateDataBalls(int totalCourseGrade) {
   StudentContainer gradFiltered = studentContainer.filterByTotalGrade(totalCourseGrade);
-  dataBallContainer = new DataBallContainer(gradFiltered);
+  StudentContainer yearsFiltered = gradFiltered.filterBySelectedYears();
+  dataBallContainer = new DataBallContainer(yearsFiltered);
 }
 
 void drawDataBalls() {
-  //käyttää hyväksi dataTablen sisältöä
   float marginY = 480;
   float marginX = 120;
   float gapX = 100;
   float gapY = 70;
   stroke(0);
   strokeWeight(1);
-  String kiekkaTieto = "";
   for(int grade = 1; grade <= 6; grade++) {
     float y = marginY - (grade - 1) * gapY;
     // Pallot piirretään osittain läpinäkyviksi
@@ -143,10 +134,10 @@ void drawDataBalls() {
 
 boolean isYearSelected(int year) {
   IntList selectedYears = new IntList();
-  if (year == 2009 && checkBox2009.isChecked) return true;
-  if (year == 2010 && checkBox2010.isChecked) return true;
-  if (year == 2011 && checkBox2011.isChecked) return true;
-  if (year == 2012 && checkBox2012.isChecked) return true;
+  for(int i = 0; i < checkBoxes.length; i++){
+    int loopYear = 2003+i;
+    if (year == loopYear && checkBoxes[i].isChecked) return true;
+  }
   return false;
 }
 
