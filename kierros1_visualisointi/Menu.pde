@@ -15,7 +15,7 @@ class Menu extends ReactsToMouse {
     menuOpenImg = createGraphics(width, 150);
     menuOpenImg.beginDraw();
     menuOpenImg.noStroke();
-    menuOpenImg.fill(199);
+    menuOpenImg.fill(globalGrey);
     menuOpenImg.rect(0, 0, width, 150);
 
     menuOpenImg.fill(255);
@@ -31,7 +31,7 @@ class Menu extends ReactsToMouse {
     menuClosedImg = createGraphics(width, 50);
     menuClosedImg.beginDraw();
     menuClosedImg.noStroke();
-    menuClosedImg.fill(199);
+    menuClosedImg.fill(globalGrey);
     menuClosedImg.rect(0, 0, width, 50);
 
     menuClosedImg.fill(255);

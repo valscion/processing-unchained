@@ -16,10 +16,10 @@ class SelectionBox extends ReactsToMouse {
         menuOpenImg = createGraphics(70, openH);
         menuOpenImg.beginDraw();
         menuOpenImg.strokeWeight(1);
-        menuOpenImg.stroke(190);
-        menuOpenImg.fill(215);
+        menuOpenImg.stroke(globalGrey);
+        menuOpenImg.fill(globalLightGrey);
         menuOpenImg.rect(0,0,70,openH-1);
-        menuOpenImg.fill(190);
+        menuOpenImg.fill(globalGrey);
         menuOpenImg.rect(50, 0, 20, openH);
         menuOpenImg.fill(255);
         menuOpenImg.ellipse(60, openH - 15, 15, 15);
@@ -53,10 +53,10 @@ class SelectionBox extends ReactsToMouse {
   void draw() {
     if(isMenuOpen == false){
       strokeWeight(1);
-      stroke(190);
-      fill(215);
+      stroke(globalGrey);
+      fill(globalLightGrey);
       rect(x, y, 70, 50);
-      fill(190);
+      fill(globalGrey);
       rect(x+50, y, 20, 50);
       noStroke();
       fill(255);

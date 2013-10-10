@@ -18,7 +18,7 @@ class DataColumn extends ReactsToMouse {
     textSize(TEXT_HEIGHT);
     textAlign(CENTER);
     float leftX = START_LEFT_X;
-    fill(196);
+    fill(globalGrey);
     String typeInFinnish = mapTypeToFinnish();
     text(typeInFinnish, calculateLeftX(), Y_POSITION);
     if (isOpen) {
@@ -41,7 +41,7 @@ class DataColumn extends ReactsToMouse {
           if (i <= columnsForDataType()) {
           text(str(i), x, Y_POSITION);
           } else {
-            fill(196);
+            fill(globalGrey);
             text(str(i), x, Y_POSITION);
           }
         }

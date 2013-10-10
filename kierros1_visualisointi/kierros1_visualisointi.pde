@@ -12,6 +12,8 @@ DataBallContainer dataBallContainer;
 NumberBox[] boxes = new NumberBox[6];
 CheckBox[] checkBoxes = new CheckBox[10];
 int selectedGrade;
+int globalGrey = 100;
+int globalLightGrey = 150;
 
 void setup() {
   size(1024, 768);
@@ -52,7 +54,8 @@ void setup() {
 }
 
 void draw() {
-  updateDataRelatedToMouseY();
+  //Hyvä Vesa, tämä on poiskommentoitu, jotta sitä voin käyttää aina, joka hetki, aina kun koen tarvetta, millä tahansa tulevalla versiolla, kenen tahansa tietokoneella, poistamalla vain seuraavan rivin kommentoinnin. -Aarne
+  //updateDataRelatedToMouseXY();
   background(255);
 
   drawDataColumns();
@@ -60,29 +63,47 @@ void draw() {
   drawMenuParts();
 }
 
-void updateDataRelatedToMouseY(){
-  int alkukohta = 480;
-  int delta = 45;
+/*
+Tämä metodi pitää huolta hiirieleistä:
+Y-suuntaan arvosanasta jonka mukaan analysoidaan
+X-suuntaan vuosista, jotka otetaan mukaan, ylälaidasta lisää, alalaidasta vähentää
+*/
+void updateDataRelatedToMouseXY(){
+  int alkukohta = 520;
+  int delta = 88;
   int newGrade = 0;
-  if(mouseY > alkukohta-delta*1.5){
+  if(mouseY > alkukohta-delta*0){
     newGrade = 1;
   }
-  else if(mouseY > alkukohta-delta*2.5){
+  else if(mouseY > alkukohta-delta*1){
     newGrade = 2;
   }
-  else if(mouseY > alkukohta-delta*3.5){
+  else if(mouseY > alkukohta-delta*2){
     newGrade = 3;
   }
-  else if(mouseY > alkukohta-delta*4.5){
+  else if(mouseY > alkukohta-delta*3){
     newGrade = 4;
   }
-  else if(mouseY > alkukohta-delta*5.5){
+  else if(mouseY > alkukohta-delta*4){
     newGrade = 5;
   }
   if (newGrade > 0 && newGrade != selectedGrade) {
     selectedGrade = newGrade;
     generateDataBalls(selectedGrade);
   }
+  //vuosien valinta ylälaidassa lisää
+  for(int i = 0; i < checkBoxes.length; i++){
+    if(mouseY < 100 && mouseX > i*(width/checkBoxes.length)+5 && !checkBoxes[i].isChecked){
+      checkBoxes[i].mouseClicked();
+    }
+  }
+  //alalaidasta pois
+  for(int i = 0; i < checkBoxes.length; i++){
+    if(mouseY > height-100 && mouseX < i*(width/checkBoxes.length)+5 && checkBoxes[i].isChecked){
+      checkBoxes[i].mouseClicked();
+    }
+  }
+
 }
 
 void drawDataColumns() {
@@ -115,12 +136,14 @@ void drawDataBalls() {
   float marginX = 120;
   float gapX = 95;
   float gapY = 85;
-  stroke(0);
-  strokeWeight(1);
+
   for(int grade = 0; grade <= 6; grade++) {
     float y = marginY - (grade - 1) * gapY;
     // Pallot piirretään osittain läpinäkyviksi
-    fill(255, 0, 0, 100);
+    stroke(255, 0, 0);
+    strokeWeight(1);  
+    fill(255, 0, 0, 120);
+
     DataBall theoryBall = dataBallContainer.theoryBallForGrade(grade);
     DataBall projectBall = dataBallContainer.projectBallForGrade(grade);
     DataBall codeBall = dataBallContainer.codeBallForGrade(grade);
@@ -168,7 +191,7 @@ void drawDataBalls() {
 
     }
 
-    fill(196);
+    fill(globalGrey);
     textFont(walkway, 30);
     text(str(grade), 20, y);
 
