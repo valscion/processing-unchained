@@ -44,8 +44,6 @@
         // otettuna
         "grade": "float"
       },
-      //portfolion arvosana
-      "portfolio" : "float",
       // Tentin arvosanat omana JSON-objektinaan
       "exam": {
         // Parhaan arvosanan saaneen tentin arvosana
@@ -53,6 +51,8 @@
         // Onko arvosana tullut uusitusta tentistä
         "has_redone": "boolean"
       },
+      //portfolion arvosana
+      "portfolio" : "float",
       // Koko kurssin painotetettu keskiarvo, ilman pyöristyksiä
       "grade": "float"
     },
