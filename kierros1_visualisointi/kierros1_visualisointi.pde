@@ -12,7 +12,7 @@ CheckBox[] checkBoxes = new CheckBox[10];
 int selectedGrade;
 
 void setup() {
-  size(800, 600);
+  size(1024, 768);
   background(255);
   walkway = loadFont("WalkwayBold-48.vlw");
   menu = new Menu(0, 0);
@@ -106,10 +106,10 @@ void generateDataBalls(int totalCourseGrade) {
 }
 
 void drawDataBalls() {
-  float marginY = 480;
+  float marginY = height - 150;
   float marginX = 120;
   float gapX = 100;
-  float gapY = 70;
+  float gapY = 100;
   stroke(0);
   strokeWeight(1);
   for(int grade = 1; grade <= 6; grade++) {

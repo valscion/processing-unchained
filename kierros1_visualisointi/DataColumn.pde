@@ -3,7 +3,7 @@ class DataColumn extends ReactsToMouse {
   int columnOrdinal;
   boolean isOpen = false;
   float START_LEFT_X = 110;
-  float Y_POSITION = 560;
+  float Y_POSITION = height - 40;
   float TEXT_HEIGHT = 34;
   float OPENED_WIDTH = 75;
   float CLOSED_WIDTH = 120;
@@ -32,7 +32,7 @@ class DataColumn extends ReactsToMouse {
     }
 
     float textX = calculateLeftX() - CLOSED_WIDTH / 2;
-    
+
     //drawHitBox(textX);
 
     textAlign(LEFT);
