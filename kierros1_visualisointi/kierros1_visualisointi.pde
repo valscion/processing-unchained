@@ -8,7 +8,7 @@ DataColumn examColumn;
 DataColumn portfolioColumn;
 ArrayList<ReactsToMouse> clickables;
 StudentContainer studentContainer;
-DataBallContainer dataBallContainer;
+DataBallVisualizer visualizer;
 NumberBox[] boxes = new NumberBox[6];
 CheckBox[] checkBoxes = new CheckBox[10];
 int selectedGrade;
@@ -51,6 +51,7 @@ void setup() {
   clickables.add(codeColumn);
   clickables.add(selection);
 
+  visualizer = new DataBallVisualizer();
   generateDataBalls(selectedGrade);
 }
 
@@ -83,74 +84,11 @@ void drawMenuParts() {
 void generateDataBalls(int totalCourseGrade) {
   StudentContainer gradFiltered = studentContainer.filterByTotalGrade(totalCourseGrade);
   StudentContainer yearsFiltered = gradFiltered.filterBySelectedYears();
-  dataBallContainer = new DataBallContainer(yearsFiltered);
+  visualizer.changeDataBalls(new DataBallContainer(yearsFiltered));
 }
 
 void drawDataBalls() {
-  float marginY = height - 200;
-  float marginX = 120;
-  float gapX = 95;
-  float gapY = 85;
-
-  for(int grade = 0; grade <= 6; grade++) {
-    float y = marginY - (grade - 1) * gapY;
-    //stroke(255, 0, 0);
-    //strokeWeight(1);
-    //Pallot piirretään täysin punaisiksi
-    fill(255, 0, 0, 120);
-
-    DataBall theoryBall = dataBallContainer.theoryBallForGrade(grade);
-    DataBall projectBall = dataBallContainer.projectBallForGrade(grade);
-    DataBall codeBall = dataBallContainer.codeBallForGrade(grade);
-    DataBall examBall = dataBallContainer.examBallForGrade(grade);
-    DataBall portfolioBall = dataBallContainer.portfolioBallForGrade(grade);
-
-    theoryBall.draw(marginX, y);
-    projectBall.draw(marginX + gapX, y);
-    codeBall.draw(marginX + gapX * 2, y);
-    examBall.draw(marginX + gapX * 3, y);
-    portfolioBall.draw(marginX + gapX * 4, y);
-
-    if (codeColumn.isOpen) {
-      for (int codeRound = 1; codeRound <= 6; codeRound++) {
-        DataBall codeRoundBall = dataBallContainer.codeBallForGradeAndRound(grade, codeRound);
-        if (codeRoundBall != null) {
-          float drawX = marginX + gapX * 5;
-          drawX += (codeRound - 1) * (gapX - 20);
-          codeRoundBall.draw(drawX, y);
-        }
-      }
-    } else if (projectColumn.isOpen) {
-      DataBall architectureBall = dataBallContainer.projectBallForGradeAndArchitecture(grade);
-      float drawX = marginX + gapX * 5;
-      architectureBall.draw(drawX, y);
-      DataBall projectCodeBall = dataBallContainer.projectBallForGradeAndCode(grade);
-      drawX += gapX -20;
-      projectCodeBall.draw(drawX, y);
-      DataBall uxBall = dataBallContainer.projectBallForGradeAndUx(grade);
-      drawX += (gapX-20);
-      uxBall.draw(drawX, y);
-      DataBall reportBall = dataBallContainer.projectBallForGradeAndReport(grade);
-      drawX += (gapX-20);
-      reportBall.draw(drawX, y);
-
-    } else if(theoryColumn.isOpen){
-      for (int theoryRound = 1; theoryRound <= 5; theoryRound++) {
-        DataBall theoryRoundBall = dataBallContainer.theoryBallForGradeAndRound(grade, theoryRound);
-        if (theoryRoundBall != null) {
-          float drawX = marginX + gapX * 5;
-          drawX += (theoryRound - 1) * (gapX - 20);
-          theoryRoundBall.draw(drawX, y);
-        }
-      }
-
-    }
-
-    fill(globalGrey);
-    textFont(walkway, 30);
-    text(str(grade), 20, y);
-
-  }
+  visualizer.draw();
 }
 
 boolean isYearSelected(int year) {

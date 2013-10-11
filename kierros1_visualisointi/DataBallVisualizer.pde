@@ -4,6 +4,7 @@ class DataBallVisualizer {
   private int lastChangeTime;
   private DataBallContainer currentDataBalls;
   private DataBallContainer lastDataBalls;
+  private int TRANSITION_TIME = 400; // ms
 
   DataBallVisualizer() {
     currentDataBalls = null;
@@ -16,6 +17,7 @@ class DataBallVisualizer {
     // palloja vaihdetaan.
     lastDataBalls = (currentDataBalls != null) ? currentDataBalls : newDataBalls;
     currentDataBalls = newDataBalls;
+    lastChangeTime = millis();
   }
 
   void draw() {
@@ -23,13 +25,17 @@ class DataBallVisualizer {
     float marginX = 120;
     float gapX = 95;
     float gapY = 85;
+    // Väliaikainen taulu kaikkien piirrettävien pallojen kokoa varten. Niitä on
+    // aina maksimissaan 11 sarakkeellista, joten tämän avulla pallot saadaan
+    // piirrettyä kivasti ja animoidusti tarpeen mukaan.
+    // Rivejä puolestaan on 7 kappaletta, luvut 0-6
+    float[][] ballRadii = new float[11][7];
 
     for(int grade = 0; grade <= 6; grade++) {
       float y = marginY - (grade - 1) * gapY;
       //stroke(255, 0, 0);
       //strokeWeight(1);
-      //Pallot piirretään täysin punaisiksi
-      fill(255, 0, 0, 120);
+
 
       DataBall theoryBall = currentDataBalls.theoryBallForGrade(grade);
       DataBall projectBall = currentDataBalls.projectBallForGrade(grade);
@@ -37,11 +43,17 @@ class DataBallVisualizer {
       DataBall examBall = currentDataBalls.examBallForGrade(grade);
       DataBall portfolioBall = currentDataBalls.portfolioBallForGrade(grade);
 
-      theoryBall.draw(marginX, y);
-      projectBall.draw(marginX + gapX, y);
-      codeBall.draw(marginX + gapX * 2, y);
-      examBall.draw(marginX + gapX * 3, y);
-      portfolioBall.draw(marginX + gapX * 4, y);
+      ballRadii[0][grade] = theoryBall.radius;
+      ballRadii[1][grade] = projectBall.radius;
+      ballRadii[2][grade] = codeBall.radius;
+      ballRadii[3][grade] = examBall.radius;
+      ballRadii[4][grade] = portfolioBall.radius;
+
+      //theoryBall.draw(marginX, y);
+      //projectBall.draw(marginX + gapX, y);
+      //codeBall.draw(marginX + gapX * 2, y);
+      //examBall.draw(marginX + gapX * 3, y);
+      //portfolioBall.draw(marginX + gapX * 4, y);
 
       if (codeColumn.isOpen) {
         for (int codeRound = 1; codeRound <= 6; codeRound++) {
@@ -82,6 +94,21 @@ class DataBallVisualizer {
       textFont(walkway, 30);
       text(str(grade), 20, y);
 
+    }
+
+    // Piirretään kaikki pallot custom-radiuksilla
+    for (int column = 0; column < 5; column++) {
+      // X:ää piirretään isosti jaoteltuna vain ensimmäisten viiden sarakkeen
+      // osalta, muille väli on 20 pikseliä vähemmän
+      float x = marginX + min(column, 5) * gapX + max(column - 5, 0) * (gapX - 20);
+      for (int grade = 0; grade <= 6; grade++) {
+        float y = marginY - (grade - 1) * gapY;
+        //Pallot piirretään täysin punaisiksi
+        fill(255, 0, 0, 120);
+
+        float r = ballRadii[column][grade];
+        ellipse(x, y, r * 2, r * 2);
+      }
     }
   }
 }
