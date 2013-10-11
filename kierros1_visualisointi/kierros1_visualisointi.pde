@@ -116,10 +116,18 @@ void mouseMoved() {
 }
 
 void mouseClicked() {
+  boolean someoneReacted = false;
   for (int i = 0; i < clickables.size(); i++) {
     ReactsToMouse clickable = clickables.get(i);
     if (clickable.areCoordinatesInside(mouseX, mouseY)) {
       clickable.mouseClicked();
+      someoneReacted = true;
     }
+  }
+
+  // Jos kuka tahansa vastasi hiiren klikkaukseen, oletetaan että piirrettävien
+  // pallojen säteet pitää päivittää.
+  if (someoneReacted) {
+    visualizer.updateBallRadii();
   }
 }
