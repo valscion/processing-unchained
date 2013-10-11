@@ -51,6 +51,10 @@ class SelectionBox extends ReactsToMouse {
 
 
   void draw() {
+    textFont(walkway, 14);
+    textAlign(RIGHT);
+    text ("Loppuarvosana: ", x, y + 30);
+    textAlign(LEFT);
     if(isMenuOpen == false){
       strokeWeight(1);
       stroke(globalGrey);

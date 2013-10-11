@@ -21,6 +21,7 @@ class DataBallVisualizer {
   DataBallVisualizer() {
     currentDataBalls = null;
     lastDataBalls = null;
+    // Damn, en ihan kerennyt toteuttaa tätä transitiota.
     lastChangeTime = 0;
   }
 
