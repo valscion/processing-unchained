@@ -77,7 +77,11 @@ class SelectionBox extends ReactsToMouse {
           toggleMenu();
           currentNumber = boxes[i].number;
           boxes[i].isSelected = false;
-          generateDataBalls(int(currentNumber));
+          // Muutetaan globaalia selectedGrade arvoa, joka pitää yllä valittua
+          // kokonaisarvosanaa
+          selectedGrade = int(currentNumber);
+          // Generoidaan kaikki datapallot uusiksi (määritelty pääsorsafilussa)
+          generateDataBalls(selectedGrade);
         }
       }
       image(menuOpenImg, this.x, this.y);

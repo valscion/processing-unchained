@@ -18,9 +18,11 @@ int globalLightGrey = 220;
 void setup() {
   size(1024, 768);
   background(255);
+  selectedGrade = 5;
   walkway = loadFont("WalkwayBold-48.vlw");
   menu = new Menu(0, 0);
   selection = new SelectionBox(930, 60);
+  selection.currentNumber = str(selectedGrade);
   clickables = new ArrayList<ReactsToMouse>();
   for(int i=0; i < 10; i++) {
     if (i < 5) {
