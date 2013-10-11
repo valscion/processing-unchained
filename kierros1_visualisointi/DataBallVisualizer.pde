@@ -6,11 +6,17 @@ class DataBallVisualizer {
   private DataBallContainer lastDataBalls;
   private int TRANSITION_TIME = 400; // ms
 
-  // Väliaikainen taulu kaikkien piirrettävien pallojen kokoa varten. Niitä on
-  // aina maksimissaan 11 sarakkeellista, joten tämän avulla pallot saadaan
+  // Väliaikainen taulu kaikkien piirrettävien pallojen oikeaa kokoa varten.
+  // Aina maksimissaan 11 sarakkeellista, joten tämän avulla pallot saadaan
   // piirrettyä kivasti ja animoidusti tarpeen mukaan.
   // Rivejä puolestaan on 7 kappaletta, luvut 0-6
   float[][] ballRadii = new float[11][7];
+
+  // Vanhat pallojen säteet otettuna talteen tässä taulukossa
+  float[][] oldBallRadii = new float[11][7];
+
+  // Tämän avulla piirretään koot
+  float[][] drawBallRadii = new float[11][7];
 
   DataBallVisualizer() {
     currentDataBalls = null;
@@ -75,6 +81,16 @@ class DataBallVisualizer {
         }
       }
     }
+
+    transitionBallSizes();
+  }
+
+  private void transitionBallSizes() {
+    for (int i = 0; i < 11; i++) {
+      for (int j = 0; j <= 6; j++) {
+        drawBallRadii[i][j] = ballRadii[i][j];
+      }
+    }
   }
 
   void draw() {
@@ -98,7 +114,7 @@ class DataBallVisualizer {
       float x = marginX + min(column, 5) * gapX + max(column - 5, 0) * (gapX - 20);
       for (int grade = 0; grade <= 6; grade++) {
         float y = marginY - (grade - 1) * gapY;
-        float r = ballRadii[column][grade];
+        float r = drawBallRadii[column][grade];
         ellipse(x, y, r * 2, r * 2);
       }
     }
