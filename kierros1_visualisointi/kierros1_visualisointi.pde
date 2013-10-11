@@ -49,7 +49,6 @@ void setup() {
   clickables.add(codeColumn);
   clickables.add(selection);
 
-  selectedGrade = 4;
   generateDataBalls(selectedGrade);
 }
 
