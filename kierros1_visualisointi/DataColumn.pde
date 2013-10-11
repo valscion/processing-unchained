@@ -25,6 +25,7 @@ class DataColumn extends ReactsToMouse {
       leftX = 90+5*CLOSED_WIDTH;
       fill(255, 0 , 0);
       if (this == projectColumn) {
+        text(typeInFinnish, calculateLeftX(), Y_POSITION);
         String grades[] = new String[4];
         grades[0] = "Arch";
         grades[1] = "Koodi";
