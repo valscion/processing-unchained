@@ -97,10 +97,6 @@ class SelectionBox extends ReactsToMouse {
     }
   }
 
-  void updateGradeChanged(int newGrade) {
-    // Emmi ja Justus, teiän homma täyttää tää
-  }
-
    @Override
   boolean areCoordinatesInside(float x, float y){
     if (isMenuOpen) {

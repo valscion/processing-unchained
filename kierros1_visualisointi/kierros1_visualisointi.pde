@@ -158,7 +158,7 @@ void drawDataBalls() {
     //stroke(255, 0, 0);
     //strokeWeight(1);
     //Pallot piirretään täysin punaisiksi
-    fill(255, 0, 0, 255);
+    fill(255, 0, 0, 120);
 
     DataBall theoryBall = dataBallContainer.theoryBallForGrade(grade);
     DataBall projectBall = dataBallContainer.projectBallForGrade(grade);
