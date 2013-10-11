@@ -144,7 +144,6 @@ void generateDataBalls(int totalCourseGrade) {
   StudentContainer gradFiltered = studentContainer.filterByTotalGrade(totalCourseGrade);
   StudentContainer yearsFiltered = gradFiltered.filterBySelectedYears();
   dataBallContainer = new DataBallContainer(yearsFiltered);
-  selection.updateGradeChanged(totalCourseGrade);
 }
 
 void drawDataBalls() {
