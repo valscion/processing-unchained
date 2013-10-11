@@ -21,6 +21,6 @@ class NumberBox extends ReactsToMouse {
   @Override
   void mouseClicked(){
     isSelected = true;
-    selectedGrade = int(number);
+
 }
 }
