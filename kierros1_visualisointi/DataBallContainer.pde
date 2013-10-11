@@ -2,14 +2,14 @@ class DataBallContainer {
   /*
   dataBalls sisältää luodut pallot seuraavanlaisen rakenteen omaavassa taulukossa:
   kierrokset->t=theories, p=project, c=coding, e=exam, g=grade (ja esim. tt = theory total)
-            indeksit_0___1___2___3___4___5___6___7___8___9___10__11__12__13__14__15__16__17__18__19
-    0-arvosana   0 | t1  t2  t3  t4  t5  tt  p1  p2  p3  p4  p5  pt  c1  c2  c3  c4  c5  c6  ct  e
-    1-arvosana   1 | t1  t2  t3  t4  t5  tt  p1  p2  p3  p4  p5  pt  c1  c2  c3  c4  c5  c6  ct  e
-    2-arvosana   2 | t1  t2  t3  t4  t5  tt  p1  p2  p3  p4  p5  pt  c1  c2  c3  c4  c5  c6  ct  e
-    3-arvosana   3 | t1  t2  t3  t4  t5  tt  p1  p2  p3  p4  p5  pt  c1  c2  c3  c4  c5  c6  ct  e
-    4-arvosana   4 | t1  t2  t3  t4  t5  tt  p1  p2  p3  p4  p5  pt  c1  c2  c3  c4  c5  c6  ct  e
-    5-arvosana   5 | t1  t2  t3  t4  t5  tt  p1  p2  p3  p4  p5  pt  c1  c2  c3  c4  c5  c6  ct  e
-    6-arvosana   6 | t1  t2  t3  t4  t5  tt  p1  p2  p3  p4  p5  pt  c1  c2  c3  c4  c5  c6  ct  e
+            indeksit_0___1___2___3___4___5___6___7___8___9___10__11__12__13__14__15__16__17__18__19__20
+    0-arvosana   0 | t1  t2  t3  t4  t5  tt  p1  p2  p3  p4  p5  pt  c1  c2  c3  c4  c5  c6  ct  e   port
+    1-arvosana   1 | t1  t2  t3  t4  t5  tt  p1  p2  p3  p4  p5  pt  c1  c2  c3  c4  c5  c6  ct  e   port
+    2-arvosana   2 | t1  t2  t3  t4  t5  tt  p1  p2  p3  p4  p5  pt  c1  c2  c3  c4  c5  c6  ct  e   port
+    3-arvosana   3 | t1  t2  t3  t4  t5  tt  p1  p2  p3  p4  p5  pt  c1  c2  c3  c4  c5  c6  ct  e   port
+    4-arvosana   4 | t1  t2  t3  t4  t5  tt  p1  p2  p3  p4  p5  pt  c1  c2  c3  c4  c5  c6  ct  e   port
+    5-arvosana   5 | t1  t2  t3  t4  t5  tt  p1  p2  p3  p4  p5  pt  c1  c2  c3  c4  c5  c6  ct  e   port
+    6-arvosana   6 | t1  t2  t3  t4  t5  tt  p1  p2  p3  p4  p5  pt  c1  c2  c3  c4  c5  c6  ct  e   port
   */
   DataBall[][] dataBalls;
 
@@ -27,7 +27,8 @@ class DataBallContainer {
   private final int CODES_LAST = 17;
   private final int CODES_TOTAL = 18;
   private final int EXAM = 19;
-  private final int LAST_INDEX = EXAM;
+  private final int PORTFOLIO = 20;
+  private final int LAST_INDEX = PORTFOLIO;
 
   // Yksittäisen datapallon maksimisäde
   private final float MAX_R = 35;
@@ -39,6 +40,7 @@ class DataBallContainer {
       fillProject(studentContainer, grade);
       fillCodes(studentContainer, grade);
       fillExam(studentContainer, grade);
+      fillPortfolio(studentContainer, grade);
     }
   }
 
@@ -96,6 +98,13 @@ class DataBallContainer {
     int n = studentContainer.filterByExamGrade(grade).size();
     DataBall dataBall = createDataBall(n, relative_max, "exam");
     storeDataBallToGradeAndIndex(dataBall, grade, EXAM);
+  }
+
+  private void fillPortfolio(StudentContainer studentContainer, int grade) {
+    int relative_max = studentContainer.size();
+    int n = studentContainer.filterByPortfolioGrade(grade).size();
+    DataBall dataBall = createDataBall(n, relative_max, "portfolio");
+    storeDataBallToGradeAndIndex(dataBall, grade, PORTFOLIO);
   }
 
 
@@ -183,6 +192,13 @@ class DataBallContainer {
   // ---------------------------------------------------------------------------
   DataBall examBallForGrade(int grade) {
     return getDataBall(grade, EXAM);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Portfolio
+  // ---------------------------------------------------------------------------
+  DataBall portfolioBallForGrade(int grade) {
+    return getDataBall(grade, PORTFOLIO);
   }
 
 }

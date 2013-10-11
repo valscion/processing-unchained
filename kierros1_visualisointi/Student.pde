@@ -83,6 +83,7 @@ class Student{
       catch(RuntimeException e){
         grade1 = -1000;
       }
+
       grade = grade1;
       has_redone = exam.getBoolean("has_redone");
     }
@@ -95,11 +96,22 @@ class Student{
   final Round[] theories;
   final Project project;
   final Exam exam;
+  final float portfolio;  
 
   Student(JSONObject student){
     studentNumber = student.getString("studentNumber");
     grade = student.getFloat("grade");
     year = student.getInt("year");
+
+    float gradeTemp;
+    try{
+      gradeTemp = student.getFloat("portfolio");
+    }
+    catch(RuntimeException e){
+      gradeTemp = -1000;
+    }
+    portfolio = gradeTemp;
+
     project = new Project(student.getJSONObject("project"));
     exam = new Exam(student.getJSONObject("exam"));
     coding = new Round[6];

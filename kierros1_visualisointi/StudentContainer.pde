@@ -154,19 +154,19 @@ class StudentContainer {
     }
     return new StudentContainer(newStudents);
   }
-/*pohja muille filttereille
-  StudentContainer filterBy tyh(int partGrade){
+
+  StudentContainer filterByPortfolioGrade(int portfolioGrade){
     LinkedList<Student> newStudents = new LinkedList<Student>();
     Iterator<Student> iter = students.iterator();
     while (iter.hasNext()) {
       Student stud = iter.next();
-      if (round(stud. tyh) == partGrade) {
+      if (round(stud.portfolio) == portfolioGrade) {
         newStudents.add(stud);
       }
     }
     return new StudentContainer(newStudents);
   }
-*/
+
   int size() {
     return students.size();
   }

@@ -164,7 +164,7 @@ void drawDataBalls() {
     DataBall projectBall = dataBallContainer.projectBallForGrade(grade);
     DataBall codeBall = dataBallContainer.codeBallForGrade(grade);
     DataBall examBall = dataBallContainer.examBallForGrade(grade);
-    DataBall portfolioBall = dataBallContainer.examBallForGrade(grade);
+    DataBall portfolioBall = dataBallContainer.portfolioBallForGrade(grade);
 
     theoryBall.draw(marginX, y);
     projectBall.draw(marginX + gapX, y);
