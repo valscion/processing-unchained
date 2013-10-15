@@ -8,7 +8,7 @@ DataColumn examColumn;
 DataColumn portfolioColumn;
 ArrayList<ReactsToMouse> clickables;
 StudentContainer studentContainer;
-DataBallContainer dataBallContainer;
+DataBallVisualizer visualizer;
 NumberBox[] boxes = new NumberBox[6];
 CheckBox[] checkBoxes = new CheckBox[10];
 int selectedGrade;
@@ -18,9 +18,11 @@ int globalLightGrey = 220;
 void setup() {
   size(1024, 768);
   background(255);
+  selectedGrade = 5;
   walkway = loadFont("WalkwayBold-48.vlw");
   menu = new Menu(0, 0);
   selection = new SelectionBox(930, 60);
+  selection.currentNumber = str(selectedGrade);
   clickables = new ArrayList<ReactsToMouse>();
   for(int i=0; i < 10; i++) {
     if (i < 5) {
@@ -49,6 +51,7 @@ void setup() {
   clickables.add(codeColumn);
   clickables.add(selection);
 
+  visualizer = new DataBallVisualizer();
   generateDataBalls(selectedGrade);
 }
 
@@ -58,67 +61,6 @@ void draw() {
   drawDataColumns();
   drawDataBalls();
   drawMenuParts();
-
-  //Hyvä Vesa, tämä on poiskommentoitu, jotta sitä voin käyttää aina, joka hetki, aina kun koen tarvetta, millä tahansa tulevalla versiolla, kenen tahansa tietokoneella, poistamalla vain seuraavan rivin kommentoinnin. -Aarne
-  //updateDataRelatedToMouseXYandDrawOtherAwesomenessOnTheScreen();
-}
-
-/*
-Tämä metodi pitää huolta hiirieleistä:
-Y-suuntaan arvosanasta jonka mukaan analysoidaan
-X-suuntaan vuosista, jotka otetaan mukaan, ylälaidasta lisää, alalaidasta vähentää
-Piirtää lisäksi hipaisualueet, valitut vuodet ja tarkastellun loppuarvosanan
-*/
-void updateDataRelatedToMouseXYandDrawOtherAwesomenessOnTheScreen(){
-  int alkukohta = 520;
-  int delta = 88;
-  int newGrade = 0;
-  if(mouseY > alkukohta-delta*0){
-    newGrade = 1;
-  }
-  else if(mouseY > alkukohta-delta*1){
-    newGrade = 2;
-  }
-  else if(mouseY > alkukohta-delta*2){
-    newGrade = 3;
-  }
-  else if(mouseY > alkukohta-delta*3){
-    newGrade = 4;
-  }
-  else if(mouseY > alkukohta-delta*4){
-    newGrade = 5;
-  }
-  if (newGrade > 0 && newGrade != selectedGrade) {
-    selectedGrade = newGrade;
-    generateDataBalls(selectedGrade);
-  }
-  //vuosien valinta ylälaidassa lisää
-  int hipaisualueenKoko = 20;
-  strokeWeight(0);
-  fill(0, 100);
-  rect(0, 0, width, hipaisualueenKoko);
-  for(int i = 0; i < checkBoxes.length; i++){
-    if(checkBoxes[i].isChecked){
-      fill(0);
-      ellipse((i+0.1)*(width/checkBoxes.length),hipaisualueenKoko/2, hipaisualueenKoko ,hipaisualueenKoko);
-      text(checkBoxes[i].year, (i+0.1)*(width/checkBoxes.length)+hipaisualueenKoko/2, hipaisualueenKoko);
-    }
-    if(mouseY < hipaisualueenKoko && mouseX > i*(width/checkBoxes.length)+5 && !checkBoxes[i].isChecked){
-      checkBoxes[i].mouseClicked();
-    }
-  }
-  //alalaidasta pois
-  fill(0, 100);
-  rect(0, height-hipaisualueenKoko, width, hipaisualueenKoko);
-  for(int i = 0; i < checkBoxes.length; i++){
-    if(mouseY > height-hipaisualueenKoko && mouseX < i*(width/checkBoxes.length)+5 && checkBoxes[i].isChecked){
-      checkBoxes[i].mouseClicked();
-    }
-  }
-  //ajanmukainen data Y-suunnasta
-  rect(930, 60,50, 50);
-  fill(0);
-  text(selectedGrade, 930+15, 60+35);
 }
 
 void drawDataColumns() {
@@ -142,74 +84,11 @@ void drawMenuParts() {
 void generateDataBalls(int totalCourseGrade) {
   StudentContainer gradFiltered = studentContainer.filterByTotalGrade(totalCourseGrade);
   StudentContainer yearsFiltered = gradFiltered.filterBySelectedYears();
-  dataBallContainer = new DataBallContainer(yearsFiltered);
+  visualizer.changeDataBalls(new DataBallContainer(yearsFiltered));
 }
 
 void drawDataBalls() {
-  float marginY = height - 200;
-  float marginX = 120;
-  float gapX = 95;
-  float gapY = 85;
-
-  for(int grade = 0; grade <= 6; grade++) {
-    float y = marginY - (grade - 1) * gapY;
-    //stroke(255, 0, 0);
-    //strokeWeight(1);
-    //Pallot piirretään täysin punaisiksi
-    fill(255, 0, 0, 120);
-
-    DataBall theoryBall = dataBallContainer.theoryBallForGrade(grade);
-    DataBall projectBall = dataBallContainer.projectBallForGrade(grade);
-    DataBall codeBall = dataBallContainer.codeBallForGrade(grade);
-    DataBall examBall = dataBallContainer.examBallForGrade(grade);
-    DataBall portfolioBall = dataBallContainer.portfolioBallForGrade(grade);
-
-    theoryBall.draw(marginX, y);
-    projectBall.draw(marginX + gapX, y);
-    codeBall.draw(marginX + gapX * 2, y);
-    examBall.draw(marginX + gapX * 3, y);
-    portfolioBall.draw(marginX + gapX * 4, y);
-
-    if (codeColumn.isOpen) {
-      for (int codeRound = 1; codeRound <= 6; codeRound++) {
-        DataBall codeRoundBall = dataBallContainer.codeBallForGradeAndRound(grade, codeRound);
-        if (codeRoundBall != null) {
-          float drawX = marginX + gapX * 5;
-          drawX += (codeRound - 1) * (gapX - 20);
-          codeRoundBall.draw(drawX, y);
-        }
-      }
-    } else if (projectColumn.isOpen) {
-      DataBall architectureBall = dataBallContainer.projectBallForGradeAndArchitecture(grade);
-      float drawX = marginX + gapX * 5;
-      architectureBall.draw(drawX, y);
-      DataBall projectCodeBall = dataBallContainer.projectBallForGradeAndCode(grade);
-      drawX += gapX -20;
-      projectCodeBall.draw(drawX, y);
-      DataBall uxBall = dataBallContainer.projectBallForGradeAndUx(grade);
-      drawX += (gapX-20);
-      uxBall.draw(drawX, y);
-      DataBall reportBall = dataBallContainer.projectBallForGradeAndReport(grade);
-      drawX += (gapX-20);
-      reportBall.draw(drawX, y);
-
-    } else if(theoryColumn.isOpen){
-      for (int theoryRound = 1; theoryRound <= 5; theoryRound++) {
-        DataBall theoryRoundBall = dataBallContainer.theoryBallForGradeAndRound(grade, theoryRound);
-        if (theoryRoundBall != null) {
-          float drawX = marginX + gapX * 5;
-          drawX += (theoryRound - 1) * (gapX - 20);
-          theoryRoundBall.draw(drawX, y);
-        }
-      }
-
-    }
-
-    fill(globalGrey);
-    textFont(walkway, 30);
-    text(str(grade), 20, y);
-
-  }
+  visualizer.draw();
 }
 
 boolean isYearSelected(int year) {
@@ -237,10 +116,18 @@ void mouseMoved() {
 }
 
 void mouseClicked() {
+  boolean someoneReacted = false;
   for (int i = 0; i < clickables.size(); i++) {
     ReactsToMouse clickable = clickables.get(i);
     if (clickable.areCoordinatesInside(mouseX, mouseY)) {
       clickable.mouseClicked();
+      someoneReacted = true;
     }
+  }
+
+  // Jos kuka tahansa vastasi hiiren klikkaukseen, oletetaan että piirrettävien
+  // pallojen säteet pitää päivittää.
+  if (someoneReacted) {
+    visualizer.updateBallRadii();
   }
 }
