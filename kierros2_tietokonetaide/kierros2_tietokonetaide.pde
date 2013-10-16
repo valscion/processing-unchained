@@ -53,9 +53,12 @@ PImage makeRedGlitch(PImage im){
     int g = (argb >> 8) & 0xFF;   // Faster way of getting green(argb)
     int b = argb & 0xFF;          // Faster way of getting blue(argb)
     //=> Saadaan jokainen väriarvo erikseen
-    //otetaan vain punainen, ja tehdään sillä RBG-väri
-    color vainPunaista = color(r, 0, 0);
-    //pikseliksi talletetaankin tämä väri
+    //niillä voi sitten leikkiä mielensä mukaan
+    color vainPunaista = color(r, g*0.9, b*0.9);//tummennetaan muita -> punertuu
+    if(g < 100 && b < 100){
+      vainPunaista = color(r, 0, 0);
+    }
+    //pikseliksi talletetaankin tämä muutettu väri
     im.pixels[i] = vainPunaista;
   }
   //päivitetään lista muutetuista pikseleistä takaisin kuvaksi
