@@ -1,3 +1,4 @@
+import javax.swing.*; 
 PImage img;
 
 /*
@@ -5,15 +6,52 @@ Kun metodeissa on parametrinä kuva voidaan myöhemmin käyttää useammilla kuv
 samoja metodeja samanaikaisesti, kun tätä laajennetaan käyttäjän valitsemiin
 kuviin.
 
-Ohjelma on vielä staattinen, eli draw metodia kutsutaan vain kerran.
+Ohjelma on vielä staattinen, eli draw metodia kutsutaan vain kerran per kuva. 
+Kuvan voi itse valita (oletuksena hauska_kissakuva.jpg) ja ikkuna muuttuu kuvan
+mukaan. 
+
+Hyödynnetty valmista tiedoston valitsijaa:
+http://processinghacks.com/hacks:filechooser
+@author Tom Carden
 */
 
 void setup() {
-  //ladataan ensimmäisessä versiossa oletuskuva
-  img = loadImage("hauska_kissakuva.jpg");
+
+  //------- tästä alkaa ulkopuolinen filechooser-koodi
+  // set system look and feel 
+  try { 
+    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); 
+  } catch (Exception e) { 
+    e.printStackTrace();  
+  } 
+  // create a file chooser 
+  final JFileChooser fc = new JFileChooser(); 
+  // in response to a button click: 
+  int returnVal = fc.showOpenDialog(this); 
+  if (returnVal == JFileChooser.APPROVE_OPTION) { 
+    File file = fc.getSelectedFile(); 
+    // see if it's an image 
+    if (file.getName().endsWith("jpg")) { 
+      // load the image using the given file path
+      img = loadImage(file.getPath()); 
+    }
+    //-------tähän loppuu ulkopuolinen koodi
+    else if(file.getName().endsWith("gif")) { 
+      img = loadImage(file.getPath());
+    }
+    //tähän voi lisäillä muutamia Processingin tukemia muotoja kunhan joutaa
+  } else { 
+    //oletuksena vähemmän hauska kissakuva
+    img = loadImage("hauska_kissakuva.jpg");
+  }
+  
   //luodaan ikkunasta sen kuvan kokoinen
   size(img.width, img.height);
-  //staattinen tässä vaiheessa, eli draw piirtyy vain kerran
+  if (frame != null) {
+    frame.setResizable(true);//täytyy olla size:n jälkeen
+    frame.setSize(img.width, img.height);//täytyy olla "uudestaan" koska edellisen arvon täytyy olla true
+  }
+  //staattinen tässä vaiheessa, eli draw piirtyy vain kerran per kuva
   noLoop();
 }
 
@@ -27,9 +65,27 @@ void draw() {
   //PImage jokuMuuGlitsi = jokuMuuGlitsiMetodi(redGlitch);
   //...
   //...
+  
+  PImage randNoise = makeGreenishStaticNoise(redGlitch);
 
   //tässä piirretään viimeisin kuva näytölle
-  image(redGlitch, 0, 0);
+  image(randNoise, 0, 0);
+
+}
+
+void mousePressed() {
+  setup();
+}
+
+void keyPressed() {
+  saveScreenshot();
+}
+
+//tallentaa kuvankaappauksen identioituna millisekuntteina screenshots kansioon
+void saveScreenshot(){
+  float identikaatio = millis();
+  String nimi = "screenshots/screenshot_"+identikaatio+".jpg";
+  save(nimi);
 }
 
 /*metodit palauttavat aina kuvan, jotta globaaleja muuttujia ei luoda kaikille,
@@ -86,3 +142,43 @@ PImage jokuMuuGlitsiMetodi(PImage im){
   return im;
 }
 */
+
+PImage makeGreenishStaticNoise(PImage im){
+  int dimension = im.width * im.height;
+  int alku = round(dimension*0.1);
+  int loppu = round(dimension*0.2);
+  im.loadPixels();
+  for(int i = alku; i < loppu ; i++){
+    color argb = im.pixels[i];
+    int a = (argb >> 24) & 0xFF;
+    int r = (argb >> 16) & 0xFF;  // Faster way of getting red(argb)
+    int g = (argb >> 8) & 0xFF;   // Faster way of getting green(argb)
+    int b = argb & 0xFF;          // Faster way of getting blue(argb)
+
+    float randValue = random(0,1);
+    if(randValue > 0.9){
+      r = 0;
+      g = 255;
+      b = 255;      
+    }
+    else if(randValue > 0.5 && randValue < 0.6){
+      r = 255;
+      g = 255;
+      b = 0;      
+    }
+    else if(randValue > 0.0 && randValue < 0.1){
+      r = 0;
+      g = 255;
+      b = 0;      
+    }
+    color alteredColor = color(r, g, b);
+    im.pixels[i] = alteredColor;
+  }
+  im.updatePixels();
+  return im;
+}
+
+
+
+ 
+
