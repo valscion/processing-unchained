@@ -1,4 +1,4 @@
-import javax.swing.*; 
+import javax.swing.*;
 PImage img;
 
 /*
@@ -6,9 +6,9 @@ Kun metodeissa on parametrinä kuva voidaan myöhemmin käyttää useammilla kuv
 samoja metodeja samanaikaisesti, kun tätä laajennetaan käyttäjän valitsemiin
 kuviin.
 
-Ohjelma on vielä staattinen, eli draw metodia kutsutaan vain kerran per kuva. 
+Ohjelma on vielä staattinen, eli draw metodia kutsutaan vain kerran per kuva.
 Kuvan voi itse valita (oletuksena hauska_kissakuva.jpg) ja ikkuna muuttuu kuvan
-mukaan. 
+mukaan.
 
 Hyödynnetty valmista tiedoston valitsijaa:
 http://processinghacks.com/hacks:filechooser
@@ -18,36 +18,36 @@ http://processinghacks.com/hacks:filechooser
 void setup() {
 
   //------- tästä alkaa ulkopuolinen filechooser-koodi
-  // set system look and feel 
-  try { 
-    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); 
-  } catch (Exception e) { 
-    e.printStackTrace();  
-  } 
-  // create a file chooser 
-  final JFileChooser fc = new JFileChooser(); 
-  // in response to a button click: 
-  int returnVal = fc.showOpenDialog(this); 
-  if (returnVal == JFileChooser.APPROVE_OPTION) { 
-    File file = fc.getSelectedFile(); 
-    // see if it's an image 
-    if (file.getName().endsWith("jpg")) { 
+  // set system look and feel
+  try {
+    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+  } catch (Exception e) {
+    e.printStackTrace();
+  }
+  // create a file chooser
+  final JFileChooser fc = new JFileChooser();
+  // in response to a button click:
+  int returnVal = fc.showOpenDialog(this);
+  if (returnVal == JFileChooser.APPROVE_OPTION) {
+    File file = fc.getSelectedFile();
+    // see if it's an image
+    if (file.getName().endsWith("jpg")) {
       // load the image using the given file path
-      img = loadImage(file.getPath()); 
+      img = loadImage(file.getPath());
     }
     //-------tähän loppuu ulkopuolinen koodi
-    else if(file.getName().endsWith("gif")) { 
+    else if(file.getName().endsWith("gif")) {
       img = loadImage(file.getPath());
     }
     else if(file.getName().endsWith("png")){
       img = loadImage(file.getPath());
     }
     //tähän voi lisäillä muutamia Processingin tukemia muotoja kunhan joutaa
-  } else { 
+  } else {
     //oletuksena vähemmän hauska kissakuva
     img = loadImage("hauska_kissakuva.jpg");
   }
-  
+
   //luodaan ikkunasta sen kuvan kokoinen
   size(img.width, img.height);
   if (frame != null) {
@@ -81,7 +81,7 @@ void mousePressed() {
 }
 
 void keyPressed() {
-  saveScreenshot();
+  //saveScreenshot();
 }
 
 //tallentaa kuvankaappauksen identioituna millisekuntteina screenshots kansioon
