@@ -68,16 +68,13 @@ void draw() {
   img = colorTransfer(img);
   //img = makeVertShift(img);
   img = makeFiltering(img);
-<<<<<<< HEAD
   img = makeVertShift(img);
-=======
   int rand = round(random(80));
   for (int i = 0; i < rand; i++) {
       img = mergePixels(img);
   }
   //img = makeVertShift(img);
 
->>>>>>> deff220ad66dbc113dd811bde49d3c664ad024bd
   //tässä piirretään muokattu kuva näytölle
   image(img, 0, 0);
 }
