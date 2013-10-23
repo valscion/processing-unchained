@@ -65,7 +65,7 @@ void draw() {
   //metodeissa muutetaan img kuvaa, ja ne saavat parametreikseen img
   img = makeRedGlitch(img);
   img = makeGreenishStaticNoise(img);
-
+  img = makeVertShift(img);
   //tässä piirretään muokattu kuva näytölle
   image(img, 0, 0);
 }
@@ -175,8 +175,22 @@ PImage makeGreenishStaticNoise(PImage im){
   im.updatePixels();
   return im;
 }
+PImage makeVertShift(PImage im) {
+  im.loadPixels();
+    for (int k = 0; k<im.height; k++) {
+      for (int j = 0; j < im.width; j++) {
+        color origPixel = im.pixels[k*im.width+j];
+        if (j < k) {
+          im.pixels[(k+1)*im.width-k+j-1] = origPixel;
+        }
+        else {
+          im.pixels[k*im.width+j-k] = origPixel;
+        }
+      }
+    }
 
-
-
+im.updatePixels();
+return im;
+}
 
 
