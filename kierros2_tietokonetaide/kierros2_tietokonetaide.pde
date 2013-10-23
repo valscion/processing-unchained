@@ -65,7 +65,8 @@ void draw() {
   //metodeissa muutetaan img kuvaa, ja ne saavat parametreikseen img
   img = makeRedGlitch(img);
   img = makeGreenishStaticNoise(img);
-  img = makeVertShift(img);
+  img = makeFiltering(img);
+
   //tässä piirretään muokattu kuva näytölle
   image(img, 0, 0);
 }
@@ -84,6 +85,14 @@ void saveScreenshot(){
   float identikaatio = millis();
   String nimi = "screenshots/screenshot_"+identikaatio+".jpg";
   save(nimi);
+}
+PImage makeFiltering(PImage im){
+  PImage newPic = im.get(0,0,50,50);
+  image(im,0,0);
+  image(newPic, 100, 100);
+  im=get(0,0, width, height);
+  im.updatePixels();
+  return im;
 }
 
 /*metodit palauttavat aina kuvan, jotta globaaleja muuttujia ei luoda kaikille,
