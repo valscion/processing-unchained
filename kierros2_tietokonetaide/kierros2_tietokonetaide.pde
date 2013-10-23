@@ -39,6 +39,9 @@ void setup() {
     else if(file.getName().endsWith("gif")) { 
       img = loadImage(file.getPath());
     }
+    else if(file.getName().endsWith("png")){
+      img = loadImage(file.getPath());
+    }
     //tähän voi lisäillä muutamia Processingin tukemia muotoja kunhan joutaa
   } else { 
     //oletuksena vähemmän hauska kissakuva
