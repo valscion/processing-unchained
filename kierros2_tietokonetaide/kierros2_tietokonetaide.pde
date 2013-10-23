@@ -66,6 +66,7 @@ void draw() {
   img = makeRedGlitch(img);
   img = makeGreenishStaticNoise(img);
   img = colorTransfer(img);
+  img = makeFiltering(img);
 
   //tässä piirretään muokattu kuva näytölle
   image(img, 0, 0);
@@ -85,6 +86,14 @@ void saveScreenshot(){
   float identikaatio = millis();
   String nimi = "screenshots/screenshot_"+identikaatio+".jpg";
   save(nimi);
+}
+PImage makeFiltering(PImage im){
+  PImage newPic = im.get(0,0,50,50);
+  image(im,0,0);
+  image(newPic, 100, 100);
+  im=get(0,0, width, height);
+  im.updatePixels();
+  return im;
 }
 
 /*metodit palauttavat aina kuvan, jotta globaaleja muuttujia ei luoda kaikille,
@@ -176,6 +185,22 @@ PImage makeGreenishStaticNoise(PImage im){
   im.updatePixels();
   return im;
 }
+PImage makeVertShift(PImage im) {
+  im.loadPixels();
+    for (int k = 0; k<im.height; k++) {
+      for (int j = 0; j < im.width; j++) {
+        color origPixel = im.pixels[k*im.width+j];
+        if (j < k) {
+          im.pixels[(k+1)*im.width-k+j-1] = origPixel;
+        }
+        else {
+          im.pixels[k*im.width+j-k] = origPixel;
+        }
+      }
+    }
+  im.updatePixels();
+  return im;
+}
 
 PImage colorTransfer(PImage im){
   //int alkuX = int(random(0, im.width/2));
@@ -200,6 +225,3 @@ PImage colorTransfer(PImage im){
   image(part, 0, 0);
   return im;
 }
-
-
-
