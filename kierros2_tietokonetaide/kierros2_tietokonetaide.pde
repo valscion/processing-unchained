@@ -68,6 +68,11 @@ void draw() {
   img = colorTransfer(img);
   img = makeVertShift(img);
   img = makeFiltering(img);
+  int rand = round(random(50));
+  for (int i = 0; i < rand; i++) {
+      img = mergePixels(img);
+  }
+  //img = makeVertShift(img);
 
   //tässä piirretään muokattu kuva näytölle
   image(img, 0, 0);
@@ -202,6 +207,19 @@ PImage makeVertShift(PImage im) {
       }
     }
   im.updatePixels();
+  return im;
+}
+
+PImage mergePixels(PImage im) {
+  float x = random(im.width);
+  float y = random(im.height);
+  color c = im.get(int(x), int(y));
+  fill(c);
+  noStroke();
+  float pixelSize = random(50);
+  image(im,0,0);
+  rect(x, y, pixelSize, pixelSize);
+  im=get(0,0, width, height);
   return im;
 }
 
