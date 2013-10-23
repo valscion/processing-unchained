@@ -63,10 +63,10 @@ void draw() {
   //muutettava img alustetaan org kuvalla
   img = org;
   //metodeissa muutetaan img kuvaa, ja ne saavat parametreikseen img
-  img = makeRedGlitch(img);
+  //img = makeRedGlitch(img);
   img = makeGreenishStaticNoise(img);
   img = colorTransfer(img);
-  img = makeVertShift(img);
+  //img = makeVertShift(img);
   img = makeFiltering(img);
 
   //tässä piirretään muokattu kuva näytölle
@@ -204,25 +204,46 @@ PImage makeVertShift(PImage im) {
 }
 
 PImage colorTransfer(PImage im){
-  //int alkuX = int(random(0, im.width/2));
-  //int loppuX = int(random(im.width/2, im.width));
-  //int alkuY = int(random(0, im.height/2));
-  //int loppuY = int(random(im.height/2, im.height));
-  PImage part = im.get(100, 100, 100, 100);
+  //int rand1 = int(random(0, im.width-100));
+  //int rand2 = int(random(0, im.height-100));
+  //int rand3 = int(random(0, im.width-rand1));
+  //int rand4 = int(random(0, im.height-rand2));
+  PImage part = im.get(0, 0, width, height);
+  PImage rPart = im.get(0, 0, width, height);
+  PImage gPart = im.get(0, 0, width, height);
+  PImage bPart = im.get(0, 0, width, height);
 
   int dimension = part.width * part.height;
 
   part.loadPixels();
+  rPart.loadPixels();
+  gPart.loadPixels();
+  bPart.loadPixels();
+
   for(int i = 0; i < dimension; i++){
     color argb = part.pixels[i];
     int a = (argb >> 24) & 0xFF;
     int r = (argb >> 16) & 0xFF;  // Faster way of getting red(argb)
     int g = (argb >> 8) & 0xFF;   // Faster way of getting green(argb)
     int b = argb & 0xFF;          // Faster way of getting blue(argb)
-    color vainKeltaista = color(r, g, 0);
-    im.pixels[i] = vainKeltaista;
+
+    if(r > g && r > b){
+      color vainPunaista = color(r, 0, 0, 255);
+      rPart.pixels[i] = vainPunaista;
+    }
+    else{
+      rPart.pixels[i] = color(r, g, b, 0);
+    }
   }
   part.updatePixels();
-  image(part, 0, 0);
+  rPart.updatePixels();
+  gPart.updatePixels();
+  bPart.updatePixels();
+
+  image(im,0,0);
+  //tint(255, 126);
+  image(rPart, 25, 30);
+  im=get(0,0, width, height);
+
   return im;
 }
