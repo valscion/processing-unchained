@@ -65,6 +65,8 @@ void draw() {
   //metodeissa muutetaan img kuvaa, ja ne saavat parametreikseen img
   img = makeRedGlitch(img);
   img = makeGreenishStaticNoise(img);
+  img = colorTransfer(img);
+  img = makeVertShift(img);
   img = makeFiltering(img);
 
   //tässä piirretään muokattu kuva näytölle
@@ -192,16 +194,37 @@ PImage makeVertShift(PImage im) {
       for (int j = 0; j < im.width; j++) {
         color origPixel = im.pixels[k*im.width+j];
         if (j < k) {
-          im.pixels[(k+1)*im.width-k+j-1] = origPixel;
+          im.pixels[(k+1)*im.width-(k+j-1)] = origPixel;
         }
         else {
           im.pixels[k*im.width+j-k] = origPixel;
         }
       }
     }
-
-im.updatePixels();
-return im;
+  im.updatePixels();
+  return im;
 }
 
+PImage colorTransfer(PImage im){
+  //int alkuX = int(random(0, im.width/2));
+  //int loppuX = int(random(im.width/2, im.width));
+  //int alkuY = int(random(0, im.height/2));
+  //int loppuY = int(random(im.height/2, im.height));
+  PImage part = im.get(100, 100, 100, 100);
 
+  int dimension = part.width * part.height;
+
+  part.loadPixels();
+  for(int i = 0; i < dimension; i++){
+    color argb = part.pixels[i];
+    int a = (argb >> 24) & 0xFF;
+    int r = (argb >> 16) & 0xFF;  // Faster way of getting red(argb)
+    int g = (argb >> 8) & 0xFF;   // Faster way of getting green(argb)
+    int b = argb & 0xFF;          // Faster way of getting blue(argb)
+    color vainKeltaista = color(r, g, 0);
+    im.pixels[i] = vainKeltaista;
+  }
+  part.updatePixels();
+  image(part, 0, 0);
+  return im;
+}
