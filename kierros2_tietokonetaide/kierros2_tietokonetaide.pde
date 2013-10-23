@@ -68,7 +68,7 @@ void draw() {
   img = colorTransfer(img);
   img = makeVertShift(img);
   img = makeFiltering(img);
-  int rand = round(random(50));
+  int rand = round(random(80));
   for (int i = 0; i < rand; i++) {
       img = mergePixels(img);
   }
