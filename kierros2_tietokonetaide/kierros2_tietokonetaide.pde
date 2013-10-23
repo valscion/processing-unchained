@@ -184,8 +184,22 @@ PImage makeGreenishStaticNoise(PImage im){
   im.updatePixels();
   return im;
 }
+PImage makeVertShift(PImage im) {
+  im.loadPixels();
+    for (int k = 0; k<im.height; k++) {
+      for (int j = 0; j < im.width; j++) {
+        color origPixel = im.pixels[k*im.width+j];
+        if (j < k) {
+          im.pixels[(k+1)*im.width-k+j-1] = origPixel;
+        }
+        else {
+          im.pixels[k*im.width+j-k] = origPixel;
+        }
+      }
+    }
 
-
-
+im.updatePixels();
+return im;
+}
 
 
