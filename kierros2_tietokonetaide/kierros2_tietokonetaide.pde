@@ -1,4 +1,5 @@
 import javax.swing.*;
+PImage org;
 PImage img;
 
 /*
@@ -33,46 +34,40 @@ void setup() {
     // see if it's an image
     if (file.getName().endsWith("jpg")) {
       // load the image using the given file path
-      img = loadImage(file.getPath());
+      org = loadImage(file.getPath());
     }
     //-------tähän loppuu ulkopuolinen koodi
     else if(file.getName().endsWith("gif")) {
-      img = loadImage(file.getPath());
+      org = loadImage(file.getPath());
     }
     else if(file.getName().endsWith("png")){
-      img = loadImage(file.getPath());
+      org = loadImage(file.getPath());
     }
     //tähän voi lisäillä muutamia Processingin tukemia muotoja kunhan joutaa
   } else {
     //oletuksena vähemmän hauska kissakuva
-    img = loadImage("hauska_kissakuva.jpg");
+    org = loadImage("hauska_kissakuva.jpg");
   }
 
   //luodaan ikkunasta sen kuvan kokoinen
-  size(img.width, img.height);
+  size(org.width, org.height);
   if (frame != null) {
     frame.setResizable(true);//täytyy olla size:n jälkeen
-    frame.setSize(img.width, img.height);//täytyy olla "uudestaan" koska edellisen arvon täytyy olla true
+    frame.setSize(org.width, org.height);//täytyy olla "uudestaan" koska edellisen arvon täytyy olla true
   }
   //staattinen tässä vaiheessa, eli draw piirtyy vain kerran per kuva
   noLoop();
 }
 
 void draw() {
-    /*
-  Tässä metodissa kutsutaan aina edellisellä kuvalla uutta metodia. Esimerkiksi
-  on kirjoitettu makeRedGlitch-metodi, jota kutsutaan valitulla (nyt oletus-)
-  kuvalla
-  */
-  PImage redGlitch = makeRedGlitch(img);
-  //PImage jokuMuuGlitsi = jokuMuuGlitsiMetodi(redGlitch);
-  //...
-  //...
-  
-  PImage randNoise = makeGreenishStaticNoise(redGlitch);
+  //muutettava img alustetaan org kuvalla
+  img = org;
+  //metodeissa muutetaan img kuvaa, ja ne saavat parametreikseen img
+  img = makeRedGlitch(img);
+  img = makeGreenishStaticNoise(img);
 
   //tässä piirretään viimeisin kuva näytölle
-  image(randNoise, 0, 0);
+  image(img, 0, 0);
 
 }
 
@@ -162,17 +157,17 @@ PImage makeGreenishStaticNoise(PImage im){
     if(randValue > 0.9){
       r = 0;
       g = 255;
-      b = 255;      
+      b = 255;
     }
     else if(randValue > 0.5 && randValue < 0.6){
       r = 255;
       g = 255;
-      b = 0;      
+      b = 0;
     }
     else if(randValue > 0.0 && randValue < 0.1){
       r = 0;
       g = 255;
-      b = 0;      
+      b = 0;
     }
     color alteredColor = color(r, g, b);
     im.pixels[i] = alteredColor;
@@ -183,5 +178,5 @@ PImage makeGreenishStaticNoise(PImage im){
 
 
 
- 
+
 
