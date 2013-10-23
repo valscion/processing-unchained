@@ -63,10 +63,21 @@ void draw() {
   //muutettava img alustetaan org kuvalla
   img = org;
   //metodeissa muutetaan img kuvaa, ja ne saavat parametreikseen img
-  img = makeRedGlitch(img);
+  //img = makeRedGlitch(img);
   img = makeGreenishStaticNoise(img);
+  img = colorTransfer(img);
+  //img = makeVertShift(img);
   img = makeFiltering(img);
+<<<<<<< HEAD
   img = makeVertShift(img);
+=======
+  int rand = round(random(80));
+  for (int i = 0; i < rand; i++) {
+      img = mergePixels(img);
+  }
+  //img = makeVertShift(img);
+
+>>>>>>> deff220ad66dbc113dd811bde49d3c664ad024bd
   //tässä piirretään muokattu kuva näytölle
   image(img, 0, 0);
 }
@@ -87,11 +98,13 @@ void saveScreenshot(){
   save(nimi);
 }
 PImage makeFiltering(PImage im){
-  PImage newPic = im.get(0,0,50,50);
+  int randomX = round(random(width));
+  int randomY = round(random(height));
+  PImage newPic = im.get(0,randomY,width,randomY);
   image(im,0,0);
-  image(newPic, 100, 100);
+  newPic.filter(INVERT);
+  image(newPic, 0, randomY);
   im=get(0,0, width, height);
-  im.updatePixels();
   return im;
 }
 
@@ -197,9 +210,64 @@ PImage makeVertShift(PImage im) {
         }
       }
     }
-
-im.updatePixels();
-return im;
+  im.updatePixels();
+  return im;
 }
 
+PImage mergePixels(PImage im) {
+  float x = random(im.width);
+  float y = random(im.height);
+  color c = im.get(int(x), int(y));
+  fill(c);
+  noStroke();
+  float pixelSize = random(50);
+  image(im,0,0);
+  rect(x, y, pixelSize, pixelSize);
+  im=get(0,0, width, height);
+  return im;
+}
 
+PImage colorTransfer(PImage im){
+  //int rand1 = int(random(0, im.width-100));
+  //int rand2 = int(random(0, im.height-100));
+  //int rand3 = int(random(0, im.width-rand1));
+  //int rand4 = int(random(0, im.height-rand2));
+  PImage part = im.get(0, 0, width, height);
+  PImage rPart = im.get(0, 0, width, height);
+  PImage gPart = im.get(0, 0, width, height);
+  PImage bPart = im.get(0, 0, width, height);
+
+  int dimension = part.width * part.height;
+
+  part.loadPixels();
+  rPart.loadPixels();
+  gPart.loadPixels();
+  bPart.loadPixels();
+
+  for(int i = 0; i < dimension; i++){
+    color argb = part.pixels[i];
+    int a = (argb >> 24) & 0xFF;
+    int r = (argb >> 16) & 0xFF;  // Faster way of getting red(argb)
+    int g = (argb >> 8) & 0xFF;   // Faster way of getting green(argb)
+    int b = argb & 0xFF;          // Faster way of getting blue(argb)
+
+    if(r > g && r > b){
+      color vainPunaista = color(r, 0, 0, 255);
+      rPart.pixels[i] = vainPunaista;
+    }
+    else{
+      rPart.pixels[i] = color(r, g, b, 0);
+    }
+  }
+  part.updatePixels();
+  rPart.updatePixels();
+  gPart.updatePixels();
+  bPart.updatePixels();
+
+  image(im,0,0);
+  //tint(255, 126);
+  image(rPart, 25, 30);
+  im=get(0,0, width, height);
+
+  return im;
+}
