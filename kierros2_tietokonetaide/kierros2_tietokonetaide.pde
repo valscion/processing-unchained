@@ -66,7 +66,7 @@ void draw() {
   img = makeRedGlitch(img);
   img = makeGreenishStaticNoise(img);
   img = makeFiltering(img);
-
+  img = makeVertShift(img);
   //tässä piirretään muokattu kuva näytölle
   image(img, 0, 0);
 }
@@ -189,8 +189,8 @@ PImage makeVertShift(PImage im) {
     for (int k = 0; k<im.height; k++) {
       for (int j = 0; j < im.width; j++) {
         color origPixel = im.pixels[k*im.width+j];
-        if (j < k) {
-          im.pixels[(k+1)*im.width-(k+j-1)] = origPixel;
+        if (j <= k) {
+          im.pixels[(k)*im.width-(k-j)] = origPixel;
         }
         else {
           im.pixels[k*im.width+j-k] = origPixel;
