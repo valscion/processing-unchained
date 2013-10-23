@@ -87,11 +87,13 @@ void saveScreenshot(){
   save(nimi);
 }
 PImage makeFiltering(PImage im){
-  PImage newPic = im.get(0,0,50,50);
+  int randomX = round(random(width));
+  int randomY = round(random(height));
+  PImage newPic = im.get(randomX,randomY,500,150);
   image(im,0,0);
-  image(newPic, 100, 100);
+  newPic.filter(INVERT);
+  image(newPic, randomX, randomY);
   im=get(0,0, width, height);
-  im.updatePixels();
   return im;
 }
 
