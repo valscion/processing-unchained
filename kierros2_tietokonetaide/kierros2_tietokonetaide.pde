@@ -91,10 +91,10 @@ void saveScreenshot(){
 PImage makeFiltering(PImage im){
   int randomX = round(random(width));
   int randomY = round(random(height));
-  PImage newPic = im.get(randomX,randomY,500,150);
+  PImage newPic = im.get(0,randomY,width,randomY);
   image(im,0,0);
   newPic.filter(INVERT);
-  image(newPic, randomX, randomY);
+  image(newPic, 0, randomY);
   im=get(0,0, width, height);
   return im;
 }
