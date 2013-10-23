@@ -66,9 +66,8 @@ void draw() {
   img = makeRedGlitch(img);
   img = makeGreenishStaticNoise(img);
 
-  //tässä piirretään viimeisin kuva näytölle
+  //tässä piirretään muokattu kuva näytölle
   image(img, 0, 0);
-
 }
 
 void mousePressed() {
@@ -76,6 +75,7 @@ void mousePressed() {
 }
 
 void keyPressed() {
+  draw();
   //saveScreenshot();
 }
 
