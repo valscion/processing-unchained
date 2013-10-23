@@ -66,6 +66,7 @@ void draw() {
   img = makeRedGlitch(img);
   img = makeGreenishStaticNoise(img);
   img = colorTransfer(img);
+  img = makeVertShift(img);
   img = makeFiltering(img);
 
   //tässä piirretään muokattu kuva näytölle
