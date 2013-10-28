@@ -230,16 +230,14 @@ PImage colorTransfer(PImage im){
   //int rand3 = int(random(0, im.width-rand1));
   //int rand4 = int(random(0, im.height-rand2));
   PImage part = im.get(0, 0, width, height);
-  PImage rPart = im.get(0, 0, width, height);
-  PImage gPart = im.get(0, 0, width, height);
-  PImage bPart = im.get(0, 0, width, height);
 
   int dimension = part.width * part.height;
 
   part.loadPixels();
-  rPart.loadPixels();
-  gPart.loadPixels();
-  bPart.loadPixels();
+  int siirtyma1 = -50 + 1*part.width;
+  int siirtyma2 = -20 + 12*part.width;
+  int siirtyma3 = 1 + 75*part.width;
+  float vahvuus1 = 0.4;
 
   for(int i = 0; i < dimension; i++){
     color argb = part.pixels[i];
@@ -248,23 +246,25 @@ PImage colorTransfer(PImage im){
     int g = (argb >> 8) & 0xFF;   // Faster way of getting green(argb)
     int b = argb & 0xFF;          // Faster way of getting blue(argb)
 
-    if(r > g && r > b){
-      color vainPunaista = color(r, 0, 0, 255);
-      rPart.pixels[i] = vainPunaista;
-    }
-    else{
-      rPart.pixels[i] = color(r, g, b, 0);
+    if(i-siirtyma1 > 0 && i-siirtyma2 > 0 && i-siirtyma3 > 0){
+      if(r > g+20 && r > b+20){
+        color vain = color(r*1.5, 0,0);
+        color vieresta = part.pixels[i - siirtyma1];
+        part.pixels[i - siirtyma1] = lerpColor(vain, part.pixels[i - siirtyma1], vahvuus1);
+      }
+      else if(g > b+2 && g > r+2){
+        color vain = color(0, g, 0);
+        color vieresta = part.pixels[i - siirtyma2];
+        part.pixels[i - siirtyma2] =  lerpColor(vain, part.pixels[i - siirtyma2], vahvuus1);
+      }
+      else if(b > r+20 && b > g+20){
+        color vain = color(0, 0, b);
+        color vieresta = part.pixels[i - siirtyma3];
+        part.pixels[i - siirtyma3] = lerpColor(vain, part.pixels[i - siirtyma3], vahvuus1);
+      }
     }
   }
   part.updatePixels();
-  rPart.updatePixels();
-  gPart.updatePixels();
-  bPart.updatePixels();
-
-  image(im,0,0);
-  //tint(255, 126);
-  image(rPart, 25, 30);
-  im=get(0,0, width, height);
-
+  im = part;
   return im;
 }
