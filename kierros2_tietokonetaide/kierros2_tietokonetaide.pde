@@ -3,6 +3,7 @@ PImage org;
 PImage img;
 int clicks;
 boolean glitched;
+int currentPic;
 /*
 Kun metodeissa on parametrinä kuva voidaan myöhemmin käyttää useammilla kuvilla
  samoja metodeja samanaikaisesti, kun tätä laajennetaan käyttäjän valitsemiin
@@ -12,62 +13,66 @@ Kun metodeissa on parametrinä kuva voidaan myöhemmin käyttää useammilla kuv
  mukaan. Käyttäjän hiiren klikkaukset glitchaavat kuvaa. Näppäimellä ohjelma 
  kysyy uutta kuvaa. 
  
- Hyödynnetty valmista tiedoston valitsijaa:
+ Hyödynnetty valmista tiedoston valitsijaa askForImageMetodissa:
  http://processinghacks.com/hacks:filechooser
  @author Tom Carden
  */
 
 void setup() {
-  //------- tästä alkaa ulkopuolinen filechooser-koodi
-  // set system look and feel
+  currentPic = 1;
+  frameRate(30);
+  img = askForImage();
+  setupWithPicture(img);
+}
+
+void setupWithPicture(PImage im){
+  img = im;
+  org = im;
+  //luodaan ikkunasta sen kuvan kokoinen
+  size(img.width, img.height);
+  if (frame != null) {
+    frame.setResizable(true);//täytyy olla size:n jälkeen
+    frame.setSize(img.width+16, img.height+38);//jostain syystä heittää aina defaulttina 16 px vaakaa ja 38 pystyä, win7 ikkunalla ainakin
+  }
+  glitched = true;
+  clicks = 0;
+}
+
+PImage askForImage(){
+  //filechooser koodi on hieman muokattuna tässä metodissa
   try {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
   } 
   catch (Exception e) {
     e.printStackTrace();
   }
-  // create a file chooser
   final JFileChooser fc = new JFileChooser();
-  // in response to a button click:
   int returnVal = fc.showOpenDialog(this);
   if (returnVal == JFileChooser.APPROVE_OPTION) {
     File file = fc.getSelectedFile();
-    // see if it's an image
-    //vähän omia lisailyja
     if (file.getName().endsWith("jpg") || file.getName().endsWith("gif") || file.getName().endsWith("png")) {
-      // load the image using the given file path
       org = loadImage(file.getPath());
-      img = loadImage(file.getPath());
     }
   } 
   else {
-    //oletuksena vähemmän hauska kissakuva
-    org = loadImage("hauska_kissakuva.jpg");
-    img = loadImage("hauska_kissakuva.jpg");
+    //oletuksena kissakuva
+    org = loadImage("example"+currentPic+".jpg");
   }
-
-  //luodaan ikkunasta sen kuvan kokoinen
-  size(org.width, org.height);
-  if (frame != null) {
-    frame.setResizable(true);//täytyy olla size:n jälkeen
-    frame.setSize(org.width+16, org.height+38);//jostain syystä heittää aina defaulttina 16 px vaakaa ja 38 pystyä, win7 ikkunalla ainakin
-  }
-  frameRate(10);
-  glitched = true;
-  clicks = 0;
+  return org;
 }
 
 void draw() {
-  image(img, 0, 0);
-  if (millis()< 20000) {
-    int textTime = (20000 - millis()) / 1000;
-    text("Tämä teksti katoaa "+textTime+" sekunnin kuluttua. \n"+
-      "Painamalla näppäintä voit valita uuden kuvan. \n"+
-      "Klikkaamalla hiirellä kuvaan ilmestyy häiriötä.", 10, 20);
-  }
   glitchifyLoop(mouseX, mouseY);
+  image(img, 0, 0);
+  if (millis()< 25000) {
+    int textTime = (25000 - millis()) / 1000;
+    text("Tämä ohje katoaa "+textTime+" sekunnin kuluttua. \n"+
+      "Painamalla nuolta ylöspäin saat uuden esimerkkikuvan. \n"+
+      "Painamalla nuolta vasemmalle ohjelma tallentaa kuvankaappauksen screenshots-kansioon. \n"+
+      "Painamalla jotain muuta näppäintä voit valita uuden kuvan itse. \n"+
+      "Klikkaamalla hiirellä kuvaan ilmestyy uusi häiriö.", 10, 20);
+  }
 }
-
 
 void glitchify(int x, int y) {
   //metodeissa muutetaan img kuvaa, ja ne saavat parametreikseen img
@@ -95,23 +100,29 @@ void glitchify(int x, int y) {
   image(img, 0, 0);
   clicks++;
 }
+
 void glitchifyLoop(int x, int y) {
   img = org.get();
-  if (glitched) {
-    glitched = false;
+  if (isItTime()){
   }
-  else {
-    glitched = true;
+  else{
     switch (clicks) {
-    case 0: 
+    case 1: 
       img = colorTransfer(img, x, y); 
       break;
-    case 1: 
+    case 2: 
       img = makeVertShift(mouseX, mouseY); 
       break;
-    case 2: 
-      img = img = makeFiltering(img); 
+    case 3: 
+      img = makeFiltering(img); 
       break;
+    case 4:{
+      for (int i = 0; i < 100; i++) {
+        img = mergePixels(img);
+      }
+      break;
+    }
+    case 5: clicks = 0; break;
     }
   }
 }
@@ -121,8 +132,47 @@ void mousePressed() {
 }
 
 void keyPressed() {
-  setup();
-  //saveScreenshot();
+  if(keyCode == UP){
+    switchExamplePicture();
+  }
+  else if(keyCode == LEFT){
+    saveScreenshot();
+  }
+  else{
+    setup();
+  }
+}
+
+void switchExamplePicture(){
+  boolean isOld = true;
+  while(isOld){
+    currentPic++;
+    if(currentPic > 0 && currentPic <= 6){
+      PImage nextExample = loadImage("example"+currentPic+".jpg");
+      setupWithPicture(nextExample);
+      isOld = false;
+    }
+    else{
+      currentPic = 0;
+    }
+  }
+}
+
+int glitchTime = 250;
+int millisAtLastTrue = 0;
+/*
+Antaa booleanin riippuen siitä onko satunnainen aika 100-1000 ms välillä kulunut
+*/
+boolean isItTime(){
+  if(millis()-millisAtLastTrue < glitchTime){
+    return false;
+  }
+  else{
+  int randTimePeriod = int(random(100, 1000));
+  glitchTime = randTimePeriod;
+  millisAtLastTrue = millis();
+  return true;
+  }
 }
 
 //tallentaa kuvankaappauksen identioituna millisekuntteina screenshots kansioon
@@ -188,7 +238,6 @@ boolean isEnoughColorToTransfer(PImage im, int partR, int partG, int partB) {
     int r = (argb >> 16) & 0xFF;
     int g = (argb >> 8) & 0xFF;
     int b = argb & 0xFF;
-    //punainen
     if ( partR == 255 && r > g+20 && r > b+20 
       ||partG == 255 && g > b+5 && g > r+5
       ||partB == 255 && b > r+20 && b > g+20
@@ -196,8 +245,8 @@ boolean isEnoughColorToTransfer(PImage im, int partR, int partG, int partB) {
       numberOfThatColor++;
     }
   }
-  if (numberOfThatColor > dimension*0.15 && numberOfThatColor < dimension*0.6) return true;
-  if (partR == 255 && numberOfThatColor > dimension*0.05 && numberOfThatColor < dimension*0.5) return true;
+  if (numberOfThatColor > dimension*0.05 && numberOfThatColor < dimension*0.8) return true;
+  if (partR == 255 && numberOfThatColor > dimension*0.01 && numberOfThatColor < dimension*0.5) return true;
   else return false;
 }
 
@@ -210,8 +259,9 @@ PImage colorTransfer(PImage im, int x, int y) {
   int deltaY = 1;//vain yksi rivi ylöspäin oletuksena, 
   while (deltaY*part.width <= deltaX) deltaY++;//mutta joissain tapauksissa tarvitaan enemmän. 
   int redTransfer    = deltaX   + deltaY*  part.width;
-  int yellowTransfer = deltaX/2 + deltaY*2*part.width;
+  int yellowTransfer = int(deltaX/1.1 + deltaY*2*part.width);
   int blueTransfer   = deltaX/4 + deltaY*  part.width;
+  int greenTransfer  = deltaX/6 + deltaY*3*part.width;
   float occupation = 0.4;
 
   //pohtii mitä värejä kuvan perusteella kannattaisi siirtää
@@ -222,7 +272,7 @@ PImage colorTransfer(PImage im, int x, int y) {
   if (!isRedTransfer && !isGreenTransfer && !isYellowTransfer && !isBlueTransfer) {//joka tapauksessa edes joku siirtyy
     isRedTransfer= true;
     isYellowTransfer = true;
-  } 
+  }  
 
   //käy pikselit läpi
   for (int i = 0; i < dimension; i++) {
@@ -232,7 +282,7 @@ PImage colorTransfer(PImage im, int x, int y) {
     int g = (argb >> 8) & 0xFF;
     int b = argb & 0xFF;
 
-    if (i-redTransfer > 0 && i-yellowTransfer > 0 && i-blueTransfer > 0) {
+    if (i-redTransfer > 0 && i-yellowTransfer > 0 && i-blueTransfer > 0 && i-greenTransfer > 0) {
       //punainen
       if (isRedTransfer && r > g+20 && r > b+20) {
         color strongColor = color(r, 0, 0); //muodostetaan haluttu uusi väri
@@ -243,8 +293,8 @@ PImage colorTransfer(PImage im, int x, int y) {
       //vihreä
       if (isGreenTransfer && g > b+5 && g > r+5) {
         color strongColor = color(0, g, 0);
-        color targetPxColor = part.pixels[i - yellowTransfer];
-        part.pixels[i - yellowTransfer] =  lerpColor(strongColor, targetPxColor, occupation);
+        color targetPxColor = part.pixels[i - greenTransfer];
+        part.pixels[i - greenTransfer] =  lerpColor(strongColor, targetPxColor, occupation);
         part.pixels[i] = color(r, (r+b)/2, b);
       }
       //keltainen
