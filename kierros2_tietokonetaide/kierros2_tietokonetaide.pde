@@ -68,7 +68,7 @@ void glitchify(int x, int y) {
   //hiiren klikkauksen mukaan tehdään vuorollaan eri asioita
   switch (clicks){
     case 0: img = colorTransfer(img, x, y); break;
-    case 1: img = makeVertShift(img); break;
+    case 1: img = makeVertShift(); break;
     case 2: img = img = makeFiltering(img); break;
     default: {
       int rand = round(random(80));
@@ -110,21 +110,21 @@ PImage makeFiltering(PImage im){
   return im;
 }
 
-PImage makeVertShift(PImage im) {
-  im.loadPixels();
-    for (int k = 0; k<im.height; k++) {
-      for (int j = 0; j < im.width; j++) {
-        color origPixel = im.pixels[k*im.width+j];
+PImage makeVertShift() {
+  img.loadPixels();
+    for (int k = 0; k<img.height; k++) {
+      for (int j = 0; j < img.width; j++) {
+        color origPixel = img.pixels[k*img.width+j];
         if (j <= k) {
-          im.pixels[(k)*im.width-(k-j)] = origPixel;
+          img.pixels[(k)*img.width-(k-j)] = origPixel;
         }
         else {
-          im.pixels[k*im.width+j-k] = origPixel;
+          img.pixels[k*img.width+j-k] = origPixel;
         }
       }
     }
-  im.updatePixels();
-  return im;
+  img.updatePixels();
+  return img;
 }
 
 PImage mergePixels(PImage im) {
