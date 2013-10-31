@@ -76,67 +76,36 @@ void draw() {
   }
 }
 
-void glitchify(int x, int y) {
-  //metodeissa muutetaan img kuvaa, ja ne saavat parametreikseen img
-  //hiiren klikkauksen mukaan tehdään vuorollaan eri asioita
-  switch (clicks) {
-  case 0:
-    img = colorTransfer(img, x, y);
-    break;
-  case 1:
-    img = makeVertShift(mouseX, mouseY);
-    break;
-  case 2:
-    img = img = makeFiltering(img);
-    break;
-  default:
-    {
-      int rand = round(random(80));
-      for (int i = 0; i < rand; i++) {
-        img = mergePixels(img);
-      }
-      break;
-    }
-  }
-  //tässä piirretään muokattu kuva näytölle
-  image(img, 0, 0);
-  clicks++;
-}
-
 void glitchifyLoop(int x, int y) {
   img = org.get();
-  if (isItTime()) {
+  switch (clicks) {
+  case 1:
+    img = colorTransfer(img, x, y);
+    break;
+  case 2:
+    img = makeVertShift(mouseX, mouseY);
+    break;
+  case 3:
+    img = makeFiltering(img);
+    break;
+  case 4:
+    frameRate(10);
+    img = tintImage(img);
+    break;
+  case 5:
+    frameRate(7);
+    img = mergePixels(img);
+    break;
+  case 6:
+    clicks = 0;
+    break;
+  default:
+    break;
   }
-  else {
-    switch (clicks) {
-    case 1:
-      img = colorTransfer(img, x, y);
-      break;
-    case 2:
-      img = makeVertShift(mouseX, mouseY);
-      break;
-    case 3:
-      img = makeFiltering(img);
-      break;
-    case 4:
-      frameRate(10);
-      img = tintImage(img);
-      break;
-    case 5:
-      frameRate(7);
-      img = mergePixels(img);
-      break;
-    case 6:
-      clicks = 0;
-      break;
-    default:
-      image(img, 0, 0);
-      break;
-    }
-  }
+  image(img, 0, 0);
 }
+
 void mousePressed() {
-  // glitchify(mouseX, mouseY);
   clicks++;
   noTint();
   frameRate(30);
@@ -319,10 +288,10 @@ PImage colorTransfer(PImage im, int x, int y) {
   int deltaX = (part.width/2)-x;
   int deltaY = 1;//vain yksi rivi ylöspäin oletuksena,
   while (deltaY*part.width <= deltaX) deltaY++;//mutta joissain tapauksissa tarvitaan enemmän.
-  int redTransfer    = deltaX   + deltaY*  part.width;
+  int redTransfer    = int(deltaX     + deltaY*  part.width);
   int yellowTransfer = int(deltaX/1.1 + deltaY*2*part.width);
-  int blueTransfer   = deltaX/4 + deltaY*  part.width;
-  int greenTransfer  = deltaX/6 + deltaY*3*part.width;
+  int blueTransfer   = int(deltaX/4   + deltaY*  part.width);
+  int greenTransfer  = int(deltaX/6   + deltaY*3*part.width);
   float occupation = 0.4;
 
   //pohtii mitä värejä kuvan perusteella kannattaisi siirtää
@@ -343,34 +312,35 @@ PImage colorTransfer(PImage im, int x, int y) {
     int g = (argb >> 8) & 0xFF;
     int b = argb & 0xFF;
 
-    if (i-redTransfer > 0 && i-yellowTransfer > 0 && i-blueTransfer > 0 && i-greenTransfer > 0) {
+    if (i-redTransfer > 0 && i-yellowTransfer > 0 && i-blueTransfer > 0 && i-greenTransfer > 0
+      && i-redTransfer < dimension && i-yellowTransfer < dimension && i-blueTransfer < dimension && i-greenTransfer < dimension ) {
       //punainen
       if (isRedTransfer && r > g+20 && r > b+20) {
         color strongColor = color(r, 0, 0); //muodostetaan haluttu uusi väri
         color targetPxColor = part.pixels[i - redTransfer]; //haetaan kohteesta sen väri
         part.pixels[i - redTransfer] = lerpColor(strongColor, targetPxColor, occupation);//tasoittaa uuden ja vanhan pikselin värit = läpinäkyvyyttä siirtoon
-        part.pixels[i] = color((g+b)/2, g, b);//"heikentää" väriä joka "poistetaan"/"siirretään";
+        //part.pixels[i] = color((g+b)/2, g, b);//"heikentää" väriä joka "poistetaan"/"siirretään";
       }
       //vihreä
       if (isGreenTransfer && g > b+5 && g > r+5) {
         color strongColor = color(0, g, 0);
         color targetPxColor = part.pixels[i - greenTransfer];
         part.pixels[i - greenTransfer] =  lerpColor(strongColor, targetPxColor, occupation);
-        part.pixels[i] = color(r, (r+b)/2, b);
+        //part.pixels[i] = color(r, (r+b)/2, b);
       }
       //keltainen
       if (isYellowTransfer && r > b+50 && g > b+50) {
         color strongColor = color(r, g, 0);
         color targetPxColor = part.pixels[i - yellowTransfer];
         part.pixels[i - yellowTransfer] = lerpColor(strongColor, targetPxColor, occupation);
-        part.pixels[i] = color(b, b, b);
+        //part.pixels[i] = color(b, b, b);
       }
       //sininen
       if (isBlueTransfer && b > r+20 && b > g+20) {
         color strongColor = color(0, 0, b);
         color targetPxColor = part.pixels[i - blueTransfer];
         part.pixels[i - blueTransfer] = lerpColor(strongColor, targetPxColor, occupation);
-        part.pixels[i] = color(r, g, (g+r)/2);
+        //part.pixels[i] = color(r, g, (g+r)/2);
       }
     }
   }
