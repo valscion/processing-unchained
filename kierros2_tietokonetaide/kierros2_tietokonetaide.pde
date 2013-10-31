@@ -8,11 +8,11 @@ int currentPic;
 Kun metodeissa on parametrinä kuva voidaan myöhemmin käyttää useammilla kuvilla
  samoja metodeja samanaikaisesti, kun tätä laajennetaan käyttäjän valitsemiin
  kuviin.
- 
+
  Kuvan voi itse valita (oletuksena hauska_kissakuva.jpg) ja ikkuna muuttuu kuvan
- mukaan. Käyttäjän hiiren klikkaukset glitchaavat kuvaa. Näppäimellä ohjelma 
- kysyy uutta kuvaa. 
- 
+ mukaan. Käyttäjän hiiren klikkaukset glitchaavat kuvaa. Näppäimellä ohjelma
+ kysyy uutta kuvaa.
+
  Hyödynnetty valmista tiedoston valitsijaa askForImageMetodissa:
  http://processinghacks.com/hacks:filechooser
  @author Tom Carden
@@ -42,7 +42,7 @@ PImage askForImage(){
   //filechooser koodi on hieman muokattuna tässä metodissa
   try {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-  } 
+  }
   catch (Exception e) {
     e.printStackTrace();
   }
@@ -53,7 +53,7 @@ PImage askForImage(){
     if (file.getName().endsWith("jpg") || file.getName().endsWith("gif") || file.getName().endsWith("png")) {
       org = loadImage(file.getPath());
     }
-  } 
+  }
   else {
     //oletuksena kissakuva
     org = loadImage("example"+currentPic+".jpg");
@@ -103,27 +103,23 @@ void glitchify(int x, int y) {
 
 void glitchifyLoop(int x, int y) {
   img = org.get();
-  if (isItTime()){
+  switch (clicks) {
+  case 1:
+    img = colorTransfer(img, x, y);
+    break;
+  case 2:
+    img = makeVertShift(mouseX, mouseY);
+    break;
+  case 3:
+    img = makeFiltering(img);
+    break;
+  case 4:{
+    for (int i = 0; i < 100; i++) {
+      img = mergePixels(img);
+    }
+    break;
   }
-  else{
-    switch (clicks) {
-    case 1: 
-      img = colorTransfer(img, x, y); 
-      break;
-    case 2: 
-      img = makeVertShift(mouseX, mouseY); 
-      break;
-    case 3: 
-      img = makeFiltering(img); 
-      break;
-    case 4:{
-      for (int i = 0; i < 100; i++) {
-        img = mergePixels(img);
-      }
-      break;
-    }
-    case 5: clicks = 0; break;
-    }
+  case 5: clicks = 0; break;
   }
 }
 void mousePressed() {
@@ -196,7 +192,7 @@ PImage makeFiltering(PImage im) {
 PImage makeVertShift(int x, int y) {
  PImage copy = org.get();
  copy.loadPixels();
- 
+
     for (int k = 0; k<copy.height; k++) {
       for (int j = 0; j < copy.width; j++) {
         color origPixel = copy.pixels[k*copy.width+j];
@@ -238,7 +234,7 @@ boolean isEnoughColorToTransfer(PImage im, int partR, int partG, int partB) {
     int r = (argb >> 16) & 0xFF;
     int g = (argb >> 8) & 0xFF;
     int b = argb & 0xFF;
-    if ( partR == 255 && r > g+20 && r > b+20 
+    if ( partR == 255 && r > g+20 && r > b+20
       ||partG == 255 && g > b+5 && g > r+5
       ||partB == 255 && b > r+20 && b > g+20
       ||partR == 127 && partG == 127 && r > b+50 && g > b+50) {
@@ -256,12 +252,12 @@ PImage colorTransfer(PImage im, int x, int y) {
   part.loadPixels();
   //hiiren x:n mukaan siirtää kuvan keskikohdan suhteen sivusuunnassa
   int deltaX = (part.width/2)-x;
-  int deltaY = 1;//vain yksi rivi ylöspäin oletuksena, 
-  while (deltaY*part.width <= deltaX) deltaY++;//mutta joissain tapauksissa tarvitaan enemmän. 
-  int redTransfer    = deltaX   + deltaY*  part.width;
-  int yellowTransfer = int(deltaX/1.1 + deltaY*2*part.width);
-  int blueTransfer   = deltaX/4 + deltaY*  part.width;
-  int greenTransfer  = deltaX/6 + deltaY*3*part.width;
+  int deltaY = 1;//vain yksi rivi ylöspäin oletuksena,
+  while (deltaY*part.width <= deltaX) deltaY++;//mutta joissain tapauksissa tarvitaan enemmän.
+  int redTransfer    = int(deltaX   + deltaY*  part.width);//+part.width*part.height*0.5);
+  int yellowTransfer = int(deltaX/1.1 + deltaY*2*part.width);//+part.width*part.height*0.5);
+  int blueTransfer   =int(deltaX/4 + deltaY*  part.width);//+part.width*part.height*0.5);
+  int greenTransfer  =int(deltaX/6 + deltaY*3*part.width);//+part.width*part.height*0.5);
   float occupation = 0.4;
 
   //pohtii mitä värejä kuvan perusteella kannattaisi siirtää
@@ -272,7 +268,7 @@ PImage colorTransfer(PImage im, int x, int y) {
   if (!isRedTransfer && !isGreenTransfer && !isYellowTransfer && !isBlueTransfer) {//joka tapauksessa edes joku siirtyy
     isRedTransfer= true;
     isYellowTransfer = true;
-  }  
+  }
 
   //käy pikselit läpi
   for (int i = 0; i < dimension; i++) {
@@ -285,14 +281,14 @@ PImage colorTransfer(PImage im, int x, int y) {
     if (i-redTransfer > 0 && i-yellowTransfer > 0 && i-blueTransfer > 0 && i-greenTransfer > 0) {
       //punainen
       if (isRedTransfer && r > g+20 && r > b+20) {
-        color strongColor = color(r, 0, 0); //muodostetaan haluttu uusi väri
+        color strongColor = color(r, 0, 0);//(255, 75, 132);// //muodostetaan haluttu uusi väri
         color targetPxColor = part.pixels[i - redTransfer]; //haetaan kohteesta sen väri
         part.pixels[i - redTransfer] = lerpColor(strongColor, targetPxColor, occupation);//tasoittaa uuden ja vanhan pikselin värit = läpinäkyvyyttä siirtoon
         part.pixels[i] = color((g+b)/2, g, b);//"heikentää" väriä joka "poistetaan"/"siirretään";
       }
       //vihreä
       if (isGreenTransfer && g > b+5 && g > r+5) {
-        color strongColor = color(0, g, 0);
+        color strongColor = color(0, g, 0);//(125, 241, 255);
         color targetPxColor = part.pixels[i - greenTransfer];
         part.pixels[i - greenTransfer] =  lerpColor(strongColor, targetPxColor, occupation);
         part.pixels[i] = color(r, (r+b)/2, b);
@@ -317,4 +313,3 @@ PImage colorTransfer(PImage im, int x, int y) {
   im = part;
   return im;
 }
-
