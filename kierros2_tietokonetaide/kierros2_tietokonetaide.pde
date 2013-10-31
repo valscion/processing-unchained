@@ -148,7 +148,7 @@ boolean isItTime() {
   if (millis()-millisAtLastTrue < glitchTime) {
     return false;
   }
-  els
+  else{
   int randTimePeriod = int(random(500, 1000));
   glitchTime = randTimePeriod;
   millisAtLastTrue = millis();
