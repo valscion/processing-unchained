@@ -25,20 +25,20 @@ void setup() {
   setupWithPicture(img);
 }
 
-void setupWithPicture(PImage im){
+void setupWithPicture(PImage im) {
   img = im;
   org = im;
   //luodaan ikkunasta sen kuvan kokoinen
   size(img.width, img.height);
   if (frame != null) {
     frame.setResizable(true);//täytyy olla size:n jälkeen
-    frame.setSize(img.width+16, img.height+38);//jostain syystä heittää aina defaulttina 16 px vaakaa ja 38 pystyä, win7 ikkunalla ainakin
+    frame.setSize(img.width, img.height);//jostain syystä heittää aina defaulttina 16 px vaakaa ja 38 pystyä, win7 ikkunalla ainakin
   }
   glitched = true;
   clicks = 0;
 }
 
-PImage askForImage(){
+PImage askForImage() {
   //filechooser koodi on hieman muokattuna tässä metodissa
   try {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -63,7 +63,7 @@ PImage askForImage(){
 
 void draw() {
   glitchifyLoop(mouseX, mouseY);
-  image(img, 0, 0);
+  //image(img, 0, 0);
   if (millis()< 25000) {
     int textTime = (25000 - millis()) / 1000;
     text("Tämä ohje katoaa "+textTime+" sekunnin kuluttua. \n"+
@@ -72,33 +72,6 @@ void draw() {
       "Painamalla jotain muuta näppäintä voit valita uuden kuvan itse. \n"+
       "Klikkaamalla hiirellä kuvaan ilmestyy uusi häiriö.", 10, 20);
   }
-}
-
-void glitchify(int x, int y) {
-  //metodeissa muutetaan img kuvaa, ja ne saavat parametreikseen img
-  //hiiren klikkauksen mukaan tehdään vuorollaan eri asioita
-  switch (clicks) {
-  case 0:
-    img = colorTransfer(img, x, y);
-    break;
-  case 1:
-    img = makeVertShift(mouseX, mouseY);
-    break;
-  case 2:
-    img = img = makeFiltering(img);
-    break;
-  default:
-    {
-      int rand = round(random(80));
-      for (int i = 0; i < rand; i++) {
-        img = mergePixels(img);
-      }
-      break;
-    }
-  }
-  //tässä piirretään muokattu kuva näytölle
-  image(img, 0, 0);
-  clicks++;
 }
 
 void glitchifyLoop(int x, int y) {
@@ -114,38 +87,50 @@ void glitchifyLoop(int x, int y) {
     img = makeFiltering(img);
     break;
   case 4:
+    frameRate(10);
+    img = tintImage(img);
+    break;
+  case 5:
+    frameRate(7);
     img = mergePixels(img);
     break;
+  case 6:
+    clicks = 0;
+    break;
+  default:
+    break;
   }
+  image(img, 0, 0);
 }
 
 void mousePressed() {
-  // glitchify(mouseX, mouseY);
   clicks++;
+  noTint();
+  frameRate(30);
 }
 
 void keyPressed() {
-  if(keyCode == UP){
+  if (keyCode == UP) {
     switchExamplePicture();
   }
-  else if(keyCode == LEFT){
+  else if (keyCode == LEFT) {
     saveScreenshot();
   }
-  else{
+  else {
     setup();
   }
 }
 
-void switchExamplePicture(){
+void switchExamplePicture() {
   boolean isOld = true;
-  while(isOld){
+  while (isOld) {
     currentPic++;
-    if(currentPic > 0 && currentPic <= 6){
+    if (currentPic > 0 && currentPic <= 6) {
       PImage nextExample = loadImage("example"+currentPic+".jpg");
       setupWithPicture(nextExample);
       isOld = false;
     }
-    else{
+    else {
       currentPic = 0;
     }
   }
@@ -155,16 +140,16 @@ int glitchTime = 250;
 int millisAtLastTrue = 0;
 /*
 Antaa booleanin riippuen siitä onko satunnainen aika 100-1000 ms välillä kulunut
-*/
-boolean isItTime(){
-  if(millis()-millisAtLastTrue < glitchTime){
+ */
+boolean isItTime() {
+  if (millis()-millisAtLastTrue < glitchTime) {
     return false;
   }
-  else{
-  int randTimePeriod = int(random(100, 1000));
-  glitchTime = randTimePeriod;
-  millisAtLastTrue = millis();
-  return true;
+  else {
+    int randTimePeriod = int(random(100, 1000));
+    glitchTime = randTimePeriod;
+    millisAtLastTrue = millis();
+    return true;
   }
 }
 
@@ -178,57 +163,89 @@ void saveScreenshot() {
 PImage makeFiltering(PImage im) {
   int randomX = round(random(width));
   int randomY = round(random(height));
-  int randomZ = round(random(100));
   PImage newPic = im.get(0, randomY, width, randomY);
   image(im, 0, 0);
-  if(randomZ < 25){
   newPic.filter(INVERT);
-  }
-  else if(randomZ < 50){
-    newPic.filter(THRESHOLD);
-  }
-  else if(randomZ < 75){
-    newPic.filter(POSTERIZE, 4);
-  }
-  else{
-    newPic.filter(GRAY);
-  }
   image(newPic, 0, randomY);
   im=get(0, 0, width, height);
   return im;
 }
 
 PImage makeVertShift(int x, int y) {
- PImage copy = org.get();
- copy.loadPixels();
+  PImage copy = org.get();
+  copy.loadPixels();
 
-    for (int k = 0; k<copy.height; k++) {
-      for (int j = 0; j < copy.width; j++) {
-        color origPixel = copy.pixels[k*copy.width+j];
-        if (j <= k) {
-          copy.pixels[(k)*copy.width-(k-j)] = origPixel;
-        }
-        else {
-          copy.pixels[k*copy.width+j-k] = origPixel;
+  int c = y-(copy.width-x);
+  if ( c <= 0) {
+    if (y+x < copy.height) {
+      for (int k =x+y ; k>=0; k--) {
+        for (int j = 0; j < copy.width; j++) {
+          color origPixel = copy.pixels[k*copy.width+j];
+          copy.pixels[(k+1)*copy.width+j-(k-x-y)-2] = origPixel;
         }
       }
     }
+    else {
+      for (int k = y ; k>0; k--) {
+        for (int j = 0; j < copy.width; j++) {
+          color origPixel = copy.pixels[k*copy.width+j];
+          copy.pixels[(k+1)*copy.width+j-(k-x-y)] = origPixel;
+        }
+      }
+      for (int k = y+1 ; k<copy.height; k++) {
+        for (int j = 0; j < copy.width; j++) {
+          color origPixel = copy.pixels[k*copy.width+j];
+          copy.pixels[k*copy.width+j-(k-c)] = origPixel;
+        }
+      }
+    }
+  }
+  else {
+
+    for (int k =c ; k<copy.height; k++) {
+      for (int j = 0; j < copy.width; j++) {
+        color origPixel = copy.pixels[k*copy.width+j];
+        copy.pixels[k*copy.width+j-(k-c)] = origPixel;
+      }
+    }
+  }
+
+
   copy.updatePixels();
 
   return copy;
 }
-
+float pixelSize = 1;
 
 PImage mergePixels(PImage im) {
+  noStroke();
+  //float pixelSize = random(3, 30);
+  pixelSize++;
+  if (pixelSize >= 30) {
+    pixelSize = 0;
+  }
+  for (int z = 0; z < 10000; z++) {
+    float x = random(im.width);
+    float y = random(im.height);
+    color c = im.get(int(x), int(y));
+    fill(c);
+    rectMode(CENTER);
+    rect(x, y, pixelSize, pixelSize);
+  }
+  im=get(0, 0, width, height);
+  return im;
+}
+
+PImage tintImage(PImage im) {
   float x = random(im.width);
   float y = random(im.height);
-  color c = im.get(int(x), int(y));
-  fill(c);
-  noStroke();
-  float pixelSize = random(50);
+  image(im, 25, 0);
+  int randr = round(random(150,255));
+  int randg = round(random(150,255));
+  int randb = round(random(150,255));
+  int randa = round(random(255));
+  tint(randr, randg, randb, randa);
   image(im, 0, 0);
-  rect(x, y, pixelSize, pixelSize);
-  im=get(0, 0, width, height);
   return im;
 }
 
@@ -291,14 +308,14 @@ PImage colorTransfer(PImage im, int x, int y) {
       && i-redTransfer < dimension && i-yellowTransfer < dimension && i-blueTransfer < dimension && i-greenTransfer < dimension ) {
       //punainen
       if (isRedTransfer && r > g+20 && r > b+20) {
-        color strongColor = color(r, 0, 0);//(255, 75, 132);// //muodostetaan haluttu uusi väri
+        color strongColor = color(r, 0, 0); //muodostetaan haluttu uusi väri
         color targetPxColor = part.pixels[i - redTransfer]; //haetaan kohteesta sen väri
         part.pixels[i - redTransfer] = lerpColor(strongColor, targetPxColor, occupation);//tasoittaa uuden ja vanhan pikselin värit = läpinäkyvyyttä siirtoon
         //part.pixels[i] = color((g+b)/2, g, b);//"heikentää" väriä joka "poistetaan"/"siirretään";
       }
       //vihreä
       if (isGreenTransfer && g > b+5 && g > r+5) {
-        color strongColor = color(0, g, 0);//(125, 241, 255);
+        color strongColor = color(0, g, 0);
         color targetPxColor = part.pixels[i - greenTransfer];
         part.pixels[i - greenTransfer] =  lerpColor(strongColor, targetPxColor, occupation);
         //part.pixels[i] = color(r, (r+b)/2, b);
@@ -323,3 +340,4 @@ PImage colorTransfer(PImage im, int x, int y) {
   im = part;
   return im;
 }
+
