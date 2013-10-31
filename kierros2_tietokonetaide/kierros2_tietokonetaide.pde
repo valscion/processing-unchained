@@ -166,13 +166,17 @@ void saveScreenshot() {
 
 PImage makeFiltering(PImage im) {
   PImage newPic = im.get(0, mouseY, width, mouseY);
-  Integer[] filterNames = {INVERT,THRESHOLD,GRAY};
+  Integer[] filterNames = {GRAY,THRESHOLD,INVERT,POSTERIZE};
   image(im, 0, 0);
   if(isItTime()){
-    currentNumber = round(random(2));
+    currentNumber = round(random(3));
   }
   else{
-    newPic.filter(filterNames[currentNumber]);
+    if (currentNumber == 3) {
+      newPic.filter(filterNames[currentNumber], 4);
+    } else {
+       newPic.filter(filterNames[currentNumber]);
+    }
   }
   image(newPic, 0, mouseY);
   im=get(0, 0, width, height);
