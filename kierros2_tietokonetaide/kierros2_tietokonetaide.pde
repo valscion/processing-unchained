@@ -180,7 +180,7 @@ PImage makeFiltering(PImage im) {
 }
 
 PImage makeVertShift(int x, int y) {
-  PImage copy = org.get();
+  PImage copy = img;
   copy.loadPixels();
 
   int c = y-(copy.width-x);
