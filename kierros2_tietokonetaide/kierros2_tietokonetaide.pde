@@ -50,7 +50,8 @@ PImage askForImage() {
   int returnVal = fc.showOpenDialog(this);
   if (returnVal == JFileChooser.APPROVE_OPTION) {
     File file = fc.getSelectedFile();
-    if (file.getName().endsWith("jpg") || file.getName().endsWith("gif") || file.getName().endsWith("png")) {
+    if (file.getName().endsWith("jpg") || file.getName().endsWith("gif") || file.getName().endsWith("png")
+      || file.getName().endsWith("JPG") || file.getName().endsWith("GIF") || file.getName().endsWith("PNG")) {
       org = loadImage(file.getPath());
     }
   } 
