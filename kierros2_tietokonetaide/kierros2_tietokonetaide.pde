@@ -25,7 +25,7 @@ void setup() {
   setupWithPicture(img);
 }
 
-void setupWithPicture(PImage im){
+void setupWithPicture(PImage im) {
   img = im;
   org = im;
   //luodaan ikkunasta sen kuvan kokoinen
@@ -38,7 +38,7 @@ void setupWithPicture(PImage im){
   clicks = 0;
 }
 
-PImage askForImage(){
+PImage askForImage() {
   //filechooser koodi on hieman muokattuna tässä metodissa
   try {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -103,9 +103,9 @@ void glitchify(int x, int y) {
 
 void glitchifyLoop(int x, int y) {
   img = org.get();
-  if (isItTime()){
+  if (isItTime()) {
   }
-  else{
+  else {
     switch (clicks) {
     case 1: 
       img = colorTransfer(img, x, y); 
@@ -116,13 +116,16 @@ void glitchifyLoop(int x, int y) {
     case 3: 
       img = makeFiltering(img); 
       break;
-    case 4:{
-      for (int i = 0; i < 100; i++) {
-        img = mergePixels(img);
+    case 4:
+      {
+        for (int i = 0; i < 100; i++) {
+          img = mergePixels(img);
+        }
+        break;
       }
+    case 5: 
+      clicks = 0; 
       break;
-    }
-    case 5: clicks = 0; break;
     }
   }
 }
@@ -132,27 +135,27 @@ void mousePressed() {
 }
 
 void keyPressed() {
-  if(keyCode == UP){
+  if (keyCode == UP) {
     switchExamplePicture();
   }
-  else if(keyCode == LEFT){
+  else if (keyCode == LEFT) {
     saveScreenshot();
   }
-  else{
+  else {
     setup();
   }
 }
 
-void switchExamplePicture(){
+void switchExamplePicture() {
   boolean isOld = true;
-  while(isOld){
+  while (isOld) {
     currentPic++;
-    if(currentPic > 0 && currentPic <= 6){
+    if (currentPic > 0 && currentPic <= 6) {
       PImage nextExample = loadImage("example"+currentPic+".jpg");
       setupWithPicture(nextExample);
       isOld = false;
     }
-    else{
+    else {
       currentPic = 0;
     }
   }
@@ -162,16 +165,16 @@ int glitchTime = 250;
 int millisAtLastTrue = 0;
 /*
 Antaa booleanin riippuen siitä onko satunnainen aika 100-1000 ms välillä kulunut
-*/
-boolean isItTime(){
-  if(millis()-millisAtLastTrue < glitchTime){
+ */
+boolean isItTime() {
+  if (millis()-millisAtLastTrue < glitchTime) {
     return false;
   }
-  else{
-  int randTimePeriod = int(random(100, 1000));
-  glitchTime = randTimePeriod;
-  millisAtLastTrue = millis();
-  return true;
+  else {
+    int randTimePeriod = int(random(100, 1000));
+    glitchTime = randTimePeriod;
+    millisAtLastTrue = millis();
+    return true;
   }
 }
 
@@ -194,32 +197,43 @@ PImage makeFiltering(PImage im) {
 }
 
 PImage makeVertShift(int x, int y) {
- PImage copy = org.get();
- copy.loadPixels();
+  PImage copy = org.get();
+  copy.loadPixels();
 
-    int c = y-(copy.width-x);
- if( c <= 0){
-  if(y+x < copy.height){
-    for (int k =x+y ; k>=0; k--) {
-      for (int j = 0; j < copy.width; j++) {
-        color origPixel = copy.pixels[k*copy.width+j];
+  int c = y-(copy.width-x);
+  if ( c <= 0) {
+    if (y+x < copy.height) {
+      for (int k =x+y ; k>=0; k--) {
+        for (int j = 0; j < copy.width; j++) {
+          color origPixel = copy.pixels[k*copy.width+j];
+          copy.pixels[(k+1)*copy.width+j-(k-x-y)-2] = origPixel;
+        }
+      }
+    }
+    else {
+      for (int k = y ; k>0; k--) {
+        for (int j = 0; j < copy.width; j++) {
+          color origPixel = copy.pixels[k*copy.width+j];
           copy.pixels[(k+1)*copy.width+j-(k-x-y)] = origPixel;
+        }
+      }
+      for (int k = y+1 ; k<copy.height; k++) {
+        for (int j = 0; j < copy.width; j++) {
+          color origPixel = copy.pixels[k*copy.width+j];
+          copy.pixels[k*copy.width+j-(k-c)] = origPixel;
+        }
       }
     }
   }
-  else{
-    
-  }
- }
- else{
+  else {
 
     for (int k =c ; k<copy.height; k++) {
       for (int j = 0; j < copy.width; j++) {
         color origPixel = copy.pixels[k*copy.width+j];
-          copy.pixels[k*copy.width+j-(k-c)] = origPixel;
+        copy.pixels[k*copy.width+j-(k-c)] = origPixel;
       }
-    } 
- }
+    }
+  }
 
 
   copy.updatePixels();
