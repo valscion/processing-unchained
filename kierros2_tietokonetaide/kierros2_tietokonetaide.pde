@@ -197,18 +197,32 @@ PImage makeFiltering(PImage im) {
 PImage makeVertShift(int x, int y) {
  PImage copy = org.get();
  copy.loadPixels();
- 
-    for (int k = 0; k<copy.height; k++) {
+
+    int c = y-(copy.width-x);
+ if( c <= 0){
+  if(y+x < copy.height){
+    for (int k =x+y ; k>=0; k--) {
       for (int j = 0; j < copy.width; j++) {
         color origPixel = copy.pixels[k*copy.width+j];
-        if (j <= k) {
-          copy.pixels[(k)*copy.width-(k-j)] = origPixel;
-        }
-        else {
-          copy.pixels[k*copy.width+j-k] = origPixel;
-        }
+          copy.pixels[(k+1)*copy.width+j-(k-x-y)] = origPixel;
       }
     }
+  }
+  else{
+    
+  }
+ }
+ else{
+
+    for (int k =c ; k<copy.height; k++) {
+      for (int j = 0; j < copy.width; j++) {
+        color origPixel = copy.pixels[k*copy.width+j];
+          copy.pixels[k*copy.width+j-(k-c)] = origPixel;
+      }
+    } 
+ }
+
+
   copy.updatePixels();
 
   return copy;
