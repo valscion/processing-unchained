@@ -128,7 +128,7 @@ void switchExamplePicture() {
   boolean isOld = true;
   while (isOld) {
     currentPic++;
-    if (currentPic > 0 && currentPic <= 6) {
+    if (currentPic > 0 && currentPic <= 9) {
       PImage nextExample = loadImage("example"+currentPic+".jpg");
       setupWithPicture(nextExample);
       isOld = false;
