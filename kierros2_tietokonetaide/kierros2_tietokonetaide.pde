@@ -117,17 +117,6 @@ void glitchifyLoop(int x, int y) {
       img = makeFiltering(img); 
       break;
     case 4:
-<<<<<<< HEAD
-      {
-        for (int i = 0; i < 100; i++) {
-          img = mergePixels(img);
-        }
-        break;
-      }
-    case 5: 
-      clicks = 0; 
-=======
-      frameRate(10);
       img = tintImage(img);
       break;
     case 5:
@@ -139,7 +128,6 @@ void glitchifyLoop(int x, int y) {
       break;
     default:
       image(img, 0, 0);
->>>>>>> 582e1049de6c8f6db6eb87c488bf8f1e935cdfdd
       break;
     }
   }
