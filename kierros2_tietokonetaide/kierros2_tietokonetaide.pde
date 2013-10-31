@@ -98,12 +98,56 @@ void glitchifyLoop(int x, int y) {
     img = mergePixels(img);
     break;
   case 6:
+    combineGlitches(clicks-6);
+    break;
+  case 7:
+    combineGlitches(clicks-6);
+    break;
+  case 8:
+    combineGlitches(clicks-6);
+    break;
+  case 9:
+    combineGlitches(clicks-6);
+    break;
+  case 10:
+    combineGlitches(clicks-6);
+    break;
+  case 11:
     clicks = 0;
     break;
   default:
     break;
   }
   image(img, 0, 0);
+}
+
+void combineGlitches(int num){
+  switch (num){
+    case 0:
+      img = makeVertShift(mouseX, mouseY);
+      img = makeFiltering(img);
+      break;
+    case 1:
+      img = colorTransfer(img, mouseX, mouseY);
+      frameRate(7);
+      img = mergePixels(img);
+      break;
+    case 2:
+      img = makeFiltering(img);
+      frameRate(10);
+      img = tintImage(img);
+      break;
+    case 3:
+      img = makeVertShift(mouseX, mouseY);
+      img = colorTransfer(img, mouseX, mouseY);
+      break;
+    case 4:
+
+      break;
+    case 5:
+
+      break;
+  }
 }
 
 void mousePressed() {
