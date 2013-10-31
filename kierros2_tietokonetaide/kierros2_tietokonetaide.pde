@@ -78,16 +78,16 @@ void glitchify(int x, int y) {
   //metodeissa muutetaan img kuvaa, ja ne saavat parametreikseen img
   //hiiren klikkauksen mukaan tehdään vuorollaan eri asioita
   switch (clicks) {
-  case 0: 
-    img = colorTransfer(img, x, y); 
+  case 0:
+    img = colorTransfer(img, x, y);
     break;
-  case 1: 
-    img = makeVertShift(mouseX, mouseY); 
+  case 1:
+    img = makeVertShift(mouseX, mouseY);
     break;
-  case 2: 
-    img = img = makeFiltering(img); 
+  case 2:
+    img = img = makeFiltering(img);
     break;
-  default: 
+  default:
     {
       int rand = round(random(80));
       for (int i = 0; i < rand; i++) {
@@ -113,15 +113,12 @@ void glitchifyLoop(int x, int y) {
   case 3:
     img = makeFiltering(img);
     break;
-  case 4:{
-    for (int i = 0; i < 100; i++) {
-      img = mergePixels(img);
-    }
+  case 4:
+    img = mergePixels(img);
     break;
   }
-  case 5: clicks = 0; break;
-  }
 }
+
 void mousePressed() {
   // glitchify(mouseX, mouseY);
   clicks++;
@@ -181,9 +178,21 @@ void saveScreenshot() {
 PImage makeFiltering(PImage im) {
   int randomX = round(random(width));
   int randomY = round(random(height));
+  int randomZ = round(random(100));
   PImage newPic = im.get(0, randomY, width, randomY);
   image(im, 0, 0);
+  if(randomZ < 25){
   newPic.filter(INVERT);
+  }
+  else if(randomZ < 50){
+    newPic.filter(THRESHOLD);
+  }
+  else if(randomZ < 75){
+    newPic.filter(POSTERIZE, 4);
+  }
+  else{
+    newPic.filter(GRAY);
+  }
   image(newPic, 0, randomY);
   im=get(0, 0, width, height);
   return im;
