@@ -4,17 +4,15 @@ PImage img;
 int clicks;
 boolean glitched;
 int currentPic;
-int currentNumber = 0;
-
 /*
 Kun metodeissa on parametrinä kuva voidaan myöhemmin käyttää useammilla kuvilla
  samoja metodeja samanaikaisesti, kun tätä laajennetaan käyttäjän valitsemiin
  kuviin.
-
+ 
  Kuvan voi itse valita (oletuksena hauska_kissakuva.jpg) ja ikkuna muuttuu kuvan
- mukaan. Käyttäjän hiiren klikkaukset glitchaavat kuvaa. Näppäimellä ohjelma
- kysyy uutta kuvaa.
-
+ mukaan. Käyttäjän hiiren klikkaukset glitchaavat kuvaa. Näppäimellä ohjelma 
+ kysyy uutta kuvaa. 
+ 
  Hyödynnetty valmista tiedoston valitsijaa askForImageMetodissa:
  http://processinghacks.com/hacks:filechooser
  @author Tom Carden
@@ -34,7 +32,7 @@ void setupWithPicture(PImage im) {
   size(img.width, img.height);
   if (frame != null) {
     frame.setResizable(true);//täytyy olla size:n jälkeen
-    frame.setSize(img.width, img.height);//jostain syystä heittää aina defaulttina 16 px vaakaa ja 38 pystyä, win7 ikkunalla ainakin
+    frame.setSize(img.width+16, img.height+38);//jostain syystä heittää aina defaulttina 16 px vaakaa ja 38 pystyä, win7 ikkunalla ainakin
   }
   glitched = true;
   clicks = 0;
@@ -44,7 +42,7 @@ PImage askForImage() {
   //filechooser koodi on hieman muokattuna tässä metodissa
   try {
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-  }
+  } 
   catch (Exception e) {
     e.printStackTrace();
   }
@@ -56,7 +54,7 @@ PImage askForImage() {
       || file.getName().endsWith("JPG") || file.getName().endsWith("GIF") || file.getName().endsWith("PNG")) {
       org = loadImage(file.getPath());
     }
-  }
+  } 
   else {
     //oletuksena kissakuva
     org = loadImage("example"+currentPic+".jpg");
@@ -66,7 +64,7 @@ PImage askForImage() {
 
 void draw() {
   glitchifyLoop(mouseX, mouseY);
-  //image(img, 0, 0);
+  image(img, 0, 0);
   if (millis()< 25000) {
     int textTime = (25000 - millis()) / 1000;
     text("Tämä ohje katoaa "+textTime+" sekunnin kuluttua. \n"+
@@ -77,39 +75,64 @@ void draw() {
   }
 }
 
-void glitchifyLoop(int x, int y) {
-  img = org.get();
+void glitchify(int x, int y) {
+  //metodeissa muutetaan img kuvaa, ja ne saavat parametreikseen img
+  //hiiren klikkauksen mukaan tehdään vuorollaan eri asioita
   switch (clicks) {
-  case 1:
-    img = colorTransfer(img, x, y);
+  case 0: 
+    img = colorTransfer(img, x, y); 
     break;
-  case 2:
-    img = makeVertShift(mouseX, mouseY);
+  case 1: 
+    img = makeVertShift(mouseX, mouseY); 
     break;
-  case 3:
-    img = makeFiltering(img);
+  case 2: 
+    img = img = makeFiltering(img); 
     break;
-  case 4:
-    frameRate(10);
-    img = tintImage(img);
-    break;
-  case 5:
-    frameRate(7);
-    img = mergePixels(img);
-    break;
-  case 6:
-    clicks = 0;
-    break;
-  default:
-    break;
+  default: 
+    {
+      int rand = round(random(80));
+      for (int i = 0; i < rand; i++) {
+        img = mergePixels(img);
+      }
+      break;
+    }
   }
+  //tässä piirretään muokattu kuva näytölle
   image(img, 0, 0);
+  clicks++;
 }
 
+void glitchifyLoop(int x, int y) {
+  img = org.get();
+  if (isItTime()) {
+  }
+  else {
+    switch (clicks) {
+    case 1: 
+      img = colorTransfer(img, x, y); 
+      break;
+    case 2: 
+      img = makeVertShift(mouseX, mouseY); 
+      break;
+    case 3: 
+      img = makeFiltering(img); 
+      break;
+    case 4:
+      {
+        for (int i = 0; i < 100; i++) {
+          img = mergePixels(img);
+        }
+        break;
+      }
+    case 5: 
+      clicks = 0; 
+      break;
+    }
+  }
+}
 void mousePressed() {
+  // glitchify(mouseX, mouseY);
   clicks++;
-  noTint();
-  frameRate(30);
 }
 
 void keyPressed() {
@@ -148,11 +171,11 @@ boolean isItTime() {
   if (millis()-millisAtLastTrue < glitchTime) {
     return false;
   }
-  else{
-  int randTimePeriod = int(random(50, 200));
-  glitchTime = randTimePeriod;
-  millisAtLastTrue = millis();
-  return true;
+  else {
+    int randTimePeriod = int(random(100, 1000));
+    glitchTime = randTimePeriod;
+    millisAtLastTrue = millis();
+    return true;
   }
 }
 
@@ -163,19 +186,13 @@ void saveScreenshot() {
   save(nimi);
 }
 
-
 PImage makeFiltering(PImage im) {
-  PImage newPic = im.get(0, mouseY, width, mouseY);
-  Integer[] filterNames = {INVERT,THRESHOLD,GRAY};
+  int randomX = round(random(width));
+  int randomY = round(random(height));
+  PImage newPic = im.get(0, randomY, width, randomY);
   image(im, 0, 0);
-  if(isItTime()){
-    currentNumber = round(random(2));
-  }
-  else{
-    newPic.filter(filterNames[currentNumber]);
-  }
-
-  image(newPic, 0, mouseY);
+  newPic.filter(INVERT);
+  image(newPic, 0, randomY);
   im=get(0, 0, width, height);
   return im;
 }
@@ -186,7 +203,7 @@ PImage makeVertShift(int x, int y) {
 
   int c = y-(copy.width-x);
   if ( c <= 0) {
-    if (y+x < copy.height) {
+    if (y+x+1 < copy.height) {
       for (int k =x+y ; k>=0; k--) {
         for (int j = 0; j < copy.width; j++) {
           color origPixel = copy.pixels[k*copy.width+j];
@@ -198,7 +215,7 @@ PImage makeVertShift(int x, int y) {
       for (int k = y ; k>0; k--) {
         for (int j = 0; j < copy.width; j++) {
           color origPixel = copy.pixels[k*copy.width+j];
-          copy.pixels[(k+1)*copy.width+j-(k-x-y)] = origPixel;
+          copy.pixels[(k+1)*copy.width+j-(k-x-y)-10] = origPixel;
         }
       }
       for (int k = y+1 ; k<copy.height; k++) {
@@ -223,37 +240,18 @@ PImage makeVertShift(int x, int y) {
 
   return copy;
 }
-float pixelSize = 1;
+
 
 PImage mergePixels(PImage im) {
-  noStroke();
-  //float pixelSize = random(3, 30);
-  pixelSize++;
-  if (pixelSize >= 30) {
-    pixelSize = 0;
-  }
-  for (int z = 0; z < 10000; z++) {
-    float x = random(im.width);
-    float y = random(im.height);
-    color c = im.get(int(x), int(y));
-    fill(c);
-    rectMode(CENTER);
-    rect(x, y, pixelSize, pixelSize);
-  }
-  im=get(0, 0, width, height);
-  return im;
-}
-
-PImage tintImage(PImage im) {
   float x = random(im.width);
   float y = random(im.height);
-  image(im, 25, 0);
-  int randr = round(random(150,255));
-  int randg = round(random(150,255));
-  int randb = round(random(150,255));
-  int randa = round(random(255));
-  tint(randr, randg, randb, randa);
+  color c = im.get(int(x), int(y));
+  fill(c);
+  noStroke();
+  float pixelSize = random(50);
   image(im, 0, 0);
+  rect(x, y, pixelSize, pixelSize);
+  im=get(0, 0, width, height);
   return im;
 }
 
@@ -268,7 +266,7 @@ boolean isEnoughColorToTransfer(PImage im, int partR, int partG, int partB) {
     int r = (argb >> 16) & 0xFF;
     int g = (argb >> 8) & 0xFF;
     int b = argb & 0xFF;
-    if ( partR == 255 && r > g+20 && r > b+20
+    if ( partR == 255 && r > g+20 && r > b+20 
       ||partG == 255 && g > b+5 && g > r+5
       ||partB == 255 && b > r+20 && b > g+20
       ||partR == 127 && partG == 127 && r > b+50 && g > b+50) {
@@ -286,12 +284,12 @@ PImage colorTransfer(PImage im, int x, int y) {
   part.loadPixels();
   //hiiren x:n mukaan siirtää kuvan keskikohdan suhteen sivusuunnassa
   int deltaX = (part.width/2)-x;
-  int deltaY = 1;//vain yksi rivi ylöspäin oletuksena,
-  while (deltaY*part.width <= deltaX) deltaY++;//mutta joissain tapauksissa tarvitaan enemmän.
-  int redTransfer    = int(deltaX     + deltaY*  part.width);
+  int deltaY = 1;//vain yksi rivi ylöspäin oletuksena, 
+  while (deltaY*part.width <= deltaX) deltaY++;//mutta joissain tapauksissa tarvitaan enemmän. 
+  int redTransfer    = deltaX   + deltaY*  part.width;
   int yellowTransfer = int(deltaX/1.1 + deltaY*2*part.width);
-  int blueTransfer   = int(deltaX/4   + deltaY*  part.width);
-  int greenTransfer  = int(deltaX/6   + deltaY*3*part.width);
+  int blueTransfer   = deltaX/4 + deltaY*  part.width;
+  int greenTransfer  = deltaX/6 + deltaY*3*part.width;
   float occupation = 0.4;
 
   //pohtii mitä värejä kuvan perusteella kannattaisi siirtää
@@ -302,7 +300,7 @@ PImage colorTransfer(PImage im, int x, int y) {
   if (!isRedTransfer && !isGreenTransfer && !isYellowTransfer && !isBlueTransfer) {//joka tapauksessa edes joku siirtyy
     isRedTransfer= true;
     isYellowTransfer = true;
-  }
+  }  
 
   //käy pikselit läpi
   for (int i = 0; i < dimension; i++) {
@@ -312,35 +310,34 @@ PImage colorTransfer(PImage im, int x, int y) {
     int g = (argb >> 8) & 0xFF;
     int b = argb & 0xFF;
 
-    if (i-redTransfer > 0 && i-yellowTransfer > 0 && i-blueTransfer > 0 && i-greenTransfer > 0
-      && i-redTransfer < dimension && i-yellowTransfer < dimension && i-blueTransfer < dimension && i-greenTransfer < dimension ) {
+    if (i-redTransfer > 0 && i-yellowTransfer > 0 && i-blueTransfer > 0 && i-greenTransfer > 0) {
       //punainen
       if (isRedTransfer && r > g+20 && r > b+20) {
         color strongColor = color(r, 0, 0); //muodostetaan haluttu uusi väri
         color targetPxColor = part.pixels[i - redTransfer]; //haetaan kohteesta sen väri
         part.pixels[i - redTransfer] = lerpColor(strongColor, targetPxColor, occupation);//tasoittaa uuden ja vanhan pikselin värit = läpinäkyvyyttä siirtoon
-        //part.pixels[i] = color((g+b)/2, g, b);//"heikentää" väriä joka "poistetaan"/"siirretään";
+        part.pixels[i] = color((g+b)/2, g, b);//"heikentää" väriä joka "poistetaan"/"siirretään";
       }
       //vihreä
       if (isGreenTransfer && g > b+5 && g > r+5) {
         color strongColor = color(0, g, 0);
         color targetPxColor = part.pixels[i - greenTransfer];
         part.pixels[i - greenTransfer] =  lerpColor(strongColor, targetPxColor, occupation);
-        //part.pixels[i] = color(r, (r+b)/2, b);
+        part.pixels[i] = color(r, (r+b)/2, b);
       }
       //keltainen
       if (isYellowTransfer && r > b+50 && g > b+50) {
         color strongColor = color(r, g, 0);
         color targetPxColor = part.pixels[i - yellowTransfer];
         part.pixels[i - yellowTransfer] = lerpColor(strongColor, targetPxColor, occupation);
-        //part.pixels[i] = color(b, b, b);
+        part.pixels[i] = color(b, b, b);
       }
       //sininen
       if (isBlueTransfer && b > r+20 && b > g+20) {
         color strongColor = color(0, 0, b);
         color targetPxColor = part.pixels[i - blueTransfer];
         part.pixels[i - blueTransfer] = lerpColor(strongColor, targetPxColor, occupation);
-        //part.pixels[i] = color(r, g, (g+r)/2);
+        part.pixels[i] = color(r, g, (g+r)/2);
       }
     }
   }
