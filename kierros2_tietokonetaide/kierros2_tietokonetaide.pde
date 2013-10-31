@@ -118,7 +118,7 @@ void keyPressed() {
   else if (keyCode == LEFT) {
     saveScreenshot();
   }
-  else {
+  else if (keyCode == RIGHT) {
     setup();
   }
 }
