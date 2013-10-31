@@ -186,11 +186,11 @@ PImage makeVertShift(int x, int y) {
 
   int c = y-(copy.width-x);
   if ( c <= 0) {
-    if (y+x < copy.height) {
+    if (y+x+1 < copy.height) {
       for (int k =x+y ; k>=0; k--) {
         for (int j = 0; j < copy.width; j++) {
           color origPixel = copy.pixels[k*copy.width+j];
-          copy.pixels[(k+1)*copy.width+j-(k-x-y)-2] = origPixel;
+          copy.pixels[(k+1)*copy.width+j-(k-x-y)-1] = origPixel;
         }
       }
     }
