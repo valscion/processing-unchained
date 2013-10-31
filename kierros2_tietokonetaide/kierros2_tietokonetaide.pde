@@ -32,7 +32,7 @@ void setupWithPicture(PImage im){
   size(img.width, img.height);
   if (frame != null) {
     frame.setResizable(true);//täytyy olla size:n jälkeen
-    frame.setSize(img.width+16, img.height+38);//jostain syystä heittää aina defaulttina 16 px vaakaa ja 38 pystyä, win7 ikkunalla ainakin
+    frame.setSize(img.width, img.height);//jostain syystä heittää aina defaulttina 16 px vaakaa ja 38 pystyä, win7 ikkunalla ainakin
   }
   glitched = true;
   clicks = 0;
@@ -116,13 +116,14 @@ void glitchifyLoop(int x, int y) {
     case 3: 
       img = makeFiltering(img); 
       break;
-    case 4:{
-      for (int i = 0; i < 100; i++) {
+    case 4:
+        img = tintImage(img);
         img = mergePixels(img);
-      }
       break;
-    }
-    case 5: clicks = 0; break;
+    case 5: 
+      clicks = 0; 
+      noTint();
+      break;
     }
   }
 }
@@ -215,15 +216,30 @@ PImage makeVertShift(int x, int y) {
 
 
 PImage mergePixels(PImage im) {
-  float x = random(im.width);
-  float y = random(im.height);
-  color c = im.get(int(x), int(y));
-  fill(c);
   noStroke();
   float pixelSize = random(50);
   image(im, 0, 0);
-  rect(x, y, pixelSize, pixelSize);
+  for (int z = 0; z < 100; z++) {
+    float x = random(im.width);
+    float y = random(im.height);
+    color c = im.get(int(x), int(y));
+    fill(c);
+    rect(x, y, pixelSize, pixelSize);
+  }
   im=get(0, 0, width, height);
+  return im;
+}
+
+PImage tintImage(PImage im) {
+  float x = random(im.width);
+  float y = random(im.height);
+  image(im, 50, 0);
+  int randr = round(random(100,255));
+  int randg = round(random(100,255));
+  int randb = round(random(100,255));
+  int randa = round(random(100));
+  tint(randr, randg, randb, randa);
+  image(im, 0, 0);
   return im;
 }
 
