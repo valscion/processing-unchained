@@ -172,7 +172,7 @@ void switchExamplePicture() {
   boolean isOld = true;
   while (isOld) {
     currentPic++;
-    if (currentPic > 0 && currentPic <= 6) {
+    if (currentPic > 0 && currentPic <= 9) {
       PImage nextExample = loadImage("example"+currentPic+".jpg");
       setupWithPicture(nextExample);
       isOld = false;
@@ -210,22 +210,25 @@ void saveScreenshot() {
 
 PImage makeFiltering(PImage im) {
   PImage newPic = im.get(0, mouseY, width, mouseY);
-  Integer[] filterNames = {INVERT,THRESHOLD,GRAY};
+  Integer[] filterNames = {GRAY,THRESHOLD,INVERT,POSTERIZE};
   image(im, 0, 0);
   if(isItTime()){
-    currentNumber = round(random(2));
+    currentNumber = round(random(3));
   }
   else{
-    newPic.filter(filterNames[currentNumber]);
+    if (currentNumber == 3) {
+      newPic.filter(filterNames[currentNumber], 4);
+    } else {
+       newPic.filter(filterNames[currentNumber]);
+    }
   }
-
   image(newPic, 0, mouseY);
   im=get(0, 0, width, height);
   return im;
 }
 
 PImage makeVertShift(int x, int y) {
-  PImage copy = org.get();
+  PImage copy = img;
   copy.loadPixels();
 
   int c = y-(copy.width-x);
