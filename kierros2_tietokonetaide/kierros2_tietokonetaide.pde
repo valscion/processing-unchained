@@ -72,7 +72,7 @@ void draw() {
     text("Tämä ohje katoaa "+textTime+" sekunnin kuluttua. \n"+
       "Painamalla nuolta ylöspäin saat uuden esimerkkikuvan. \n"+
       "Painamalla nuolta vasemmalle ohjelma tallentaa kuvankaappauksen screenshots-kansioon. \n"+
-      "Painamalla nuolta oikealle voit valita uuden kuvan itse (jpg, gif, png). \n"+
+      "Painamalla jotain muuta näppäintä voit valita uuden kuvan itse. \n"+
       "Klikkaamalla hiirellä kuvaan ilmestyy uusi häiriö.", 10, 20);
   }
 }
@@ -119,7 +119,7 @@ void keyPressed() {
   else if (keyCode == LEFT) {
     saveScreenshot();
   }
-  else if (keyCode == RIGHT) {
+  else {
     setup();
   }
 }
@@ -149,7 +149,7 @@ boolean isItTime() {
     return false;
   }
   else{
-  int randTimePeriod = int(random(500, 1000));
+  int randTimePeriod = int(random(50, 200));
   glitchTime = randTimePeriod;
   millisAtLastTrue = millis();
   return true;
@@ -190,7 +190,7 @@ PImage makeVertShift(int x, int y) {
       for (int k =x+y ; k>=0; k--) {
         for (int j = 0; j < copy.width; j++) {
           color origPixel = copy.pixels[k*copy.width+j];
-          copy.pixels[(k+1)*copy.width+j-(k-x-y)] = origPixel;
+          copy.pixels[(k+1)*copy.width+j-(k-x-y)-1] = origPixel;
         }
       }
     }
