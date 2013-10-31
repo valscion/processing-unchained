@@ -4,6 +4,8 @@ PImage img;
 int clicks;
 boolean glitched;
 int currentPic;
+int currentNumber = 0;
+
 /*
 Kun metodeissa on parametrinä kuva voidaan myöhemmin käyttää useammilla kuvilla
  samoja metodeja samanaikaisesti, kun tätä laajennetaan käyttäjän valitsemiin
@@ -168,7 +170,7 @@ boolean isItTime(){
     return false;
   }
   else{
-  int randTimePeriod = int(random(100, 1000));
+  int randTimePeriod = int(random(500, 1000));
   glitchTime = randTimePeriod;
   millisAtLastTrue = millis();
   return true;
@@ -182,25 +184,20 @@ void saveScreenshot() {
   save(nimi);
 }
 
+
 PImage makeFiltering(PImage im) {
-  int randomX = round(random(width));
-  int randomY = round(random(height));
-  int randomZ = round(random(100));
-  PImage newPic = im.get(0, randomY, width, randomY);
+  PImage newPic = im.get(0, mouseY, width, mouseY);
+  Integer[] filterNames = {INVERT,THRESHOLD,GRAY};
   image(im, 0, 0);
-  if(randomZ < 25){
-  newPic.filter(INVERT);
-  }
-  else if(randomZ < 50){
-    newPic.filter(THRESHOLD);
-  }
-  else if(randomZ < 75){
-    newPic.filter(POSTERIZE, 4);
+  if(isItTime()){
+    println("paastaanko tanne");
+    currentNumber = round(random(2));
   }
   else{
-    newPic.filter(GRAY);
+    newPic.filter(filterNames[currentNumber]);
   }
-  image(newPic, 0, randomY);
+
+  image(newPic, 0, mouseY);
   im=get(0, 0, width, height);
   return im;
 }
