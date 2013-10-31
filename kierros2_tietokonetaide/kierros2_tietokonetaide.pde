@@ -32,7 +32,7 @@ void setupWithPicture(PImage im) {
   size(img.width, img.height);
   if (frame != null) {
     frame.setResizable(true);//täytyy olla size:n jälkeen
-    frame.setSize(img.width+16, img.height+38);//jostain syystä heittää aina defaulttina 16 px vaakaa ja 38 pystyä, win7 ikkunalla ainakin
+    frame.setSize(img.width, img.height);//jostain syystä heittää aina defaulttina 16 px vaakaa ja 38 pystyä, win7 ikkunalla ainakin
   }
   glitched = true;
   clicks = 0;
@@ -63,7 +63,7 @@ PImage askForImage() {
 
 void draw() {
   glitchifyLoop(mouseX, mouseY);
-  image(img, 0, 0);
+  //image(img, 0, 0);
   if (millis()< 25000) {
     int textTime = (25000 - millis()) / 1000;
     text("Tämä ohje katoaa "+textTime+" sekunnin kuluttua. \n"+
@@ -117,6 +117,7 @@ void glitchifyLoop(int x, int y) {
       img = makeFiltering(img); 
       break;
     case 4:
+<<<<<<< HEAD
       {
         for (int i = 0; i < 100; i++) {
           img = mergePixels(img);
@@ -125,6 +126,20 @@ void glitchifyLoop(int x, int y) {
       }
     case 5: 
       clicks = 0; 
+=======
+      frameRate(10);
+      img = tintImage(img);
+      break;
+    case 5:
+      frameRate(7);
+      img = mergePixels(img);
+      break;
+    case 6: 
+      clicks = 0; 
+      break;
+    default:
+      image(img, 0, 0);
+>>>>>>> 582e1049de6c8f6db6eb87c488bf8f1e935cdfdd
       break;
     }
   }
@@ -132,6 +147,8 @@ void glitchifyLoop(int x, int y) {
 void mousePressed() {
   // glitchify(mouseX, mouseY);
   clicks++;
+  noTint();
+  frameRate(30);
 }
 
 void keyPressed() {
@@ -240,18 +257,37 @@ PImage makeVertShift(int x, int y) {
 
   return copy;
 }
-
+float pixelSize = 1;
 
 PImage mergePixels(PImage im) {
+  noStroke();
+  //float pixelSize = random(3, 30);
+  pixelSize++;
+  if (pixelSize >= 30) {
+    pixelSize = 0;
+  }
+  for (int z = 0; z < 10000; z++) {
+    float x = random(im.width);
+    float y = random(im.height);
+    color c = im.get(int(x), int(y));
+    fill(c);
+    rectMode(CENTER);
+    rect(x, y, pixelSize, pixelSize);
+  }
+  im=get(0, 0, width, height);
+  return im;
+}
+
+PImage tintImage(PImage im) {
   float x = random(im.width);
   float y = random(im.height);
-  color c = im.get(int(x), int(y));
-  fill(c);
-  noStroke();
-  float pixelSize = random(50);
+  image(im, 25, 0);
+  int randr = round(random(150,255));
+  int randg = round(random(150,255));
+  int randb = round(random(150,255));
+  int randa = round(random(255));
+  tint(randr, randg, randb, randa);
   image(im, 0, 0);
-  rect(x, y, pixelSize, pixelSize);
-  im=get(0, 0, width, height);
   return im;
 }
 
