@@ -174,7 +174,6 @@ PImage makeFiltering(PImage im) {
   else{
     newPic.filter(filterNames[currentNumber]);
   }
-
   image(newPic, 0, mouseY);
   im=get(0, 0, width, height);
   return im;
