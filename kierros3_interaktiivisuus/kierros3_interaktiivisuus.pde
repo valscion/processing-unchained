@@ -1,5 +1,5 @@
 Player p = new Player(100, 100, 20,0);
-Enemy e = new Enemy(500,400,20,20,5);
+Enemy e = new Enemy(500,400,20,20, 5);
 
 void setup() {
   size(1024, 500);
