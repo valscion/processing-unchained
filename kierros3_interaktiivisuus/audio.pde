@@ -44,7 +44,7 @@ class AudioController {
       for (int i = 0; i < avSize; i++) {
         float thisAvg = fftLin.calcAvg(minFreq + i * step, minFreq + (i+1) * step);
         averages[i] = thisAvg;
-        if (thisAvg > allAverage) {
+        if (thisAvg > (allAverage * 0.75)) {
           if (i > avSize / 2) {
             largerCount++;
           }
@@ -83,7 +83,7 @@ class AudioController {
         rect(i*w, 200, w, -rectHeight);
       }
       fill(255);
-      if (in.mix.level() * 100 > 5.0) {
+      if (in.mix.level() * 100 > 2.0) {
         smallerRingBuffer.addValue(smallerCount);
         largerRingBuffer.addValue(largerCount);
       }
@@ -91,7 +91,7 @@ class AudioController {
     }
     float diff = (largerRingBuffer.avg() - smallerRingBuffer.avg());
     text("Diff: " + diff, 10, 10);
-    rect(width - 20, height / 2 + (diff * 10), 30, 5);
+    rect(width - 20, height / 2 + (diff * 10), 20, 5);
 
   }
 
