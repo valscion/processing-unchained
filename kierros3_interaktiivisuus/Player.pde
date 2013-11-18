@@ -9,15 +9,20 @@ class Player{
     this.r =r;
 
   }
-  void draw(){
+  void draw(int delta){
+    if(this.y < height && this.y >0){
+    this.y = y+delta;
+    }
     fill(200);
+    if(this.y > height-(this.r/2)){
+      this.y = height-(this.r/2);
+    }
+    if(this.y < (this.r/2)){
+      this.y = (this.r/2);
+    }
     ellipse(x,y,r,r);
   }
 
-  void setRectSpecs(int x, int y){
-    this.x = x;
-    this.y = y;
-  }
   int getX(){
     return this.x;
   }
