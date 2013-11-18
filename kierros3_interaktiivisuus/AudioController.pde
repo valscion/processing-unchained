@@ -91,7 +91,7 @@ class AudioController {
     }
     float diff = (largerRingBuffer.avg() - smallerRingBuffer.avg());
     text("Diff: " + diff, 10, 10);
-    rect(width - 20, height / 2 + (diff * 10), 20, 5);
+    rect(width - 20, height / 2 + (diff * 5), 20, 5);
 
   }
 
