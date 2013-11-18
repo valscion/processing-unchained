@@ -1,5 +1,5 @@
 int rectX = 1024;
-int yPos = round(random(this.height));
+int rectY = round(random(this.height));
 
 void setup() {
   size(1024, 500);
@@ -19,6 +19,9 @@ rect((width - 30) / 2, (height - 30 ) / 2, 30, 30);
 }
 void drawRect(){
   fill(200);
-  rect(rectX, yPos, 50, 50);
-rectX = rectX-1;
+  rect(rectX, rectY, 50, 50);
+  rectX = rectX-5;
+  if(rectX < 0){
+    rectX = width;
+  }
 }
