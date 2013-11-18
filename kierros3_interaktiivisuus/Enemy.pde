@@ -11,6 +11,12 @@ class Enemy{
     this.y = y;
     this.width = width;
     this.height = height;
+    this.speedX = speedX;
+  }
+  void draw(){
+    x = x-speedX;
+    fill(200);
+    rect(x,y,width,height);
   }
 
   void  setRectSpecs(int x, int y){

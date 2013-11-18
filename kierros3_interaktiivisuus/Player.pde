@@ -7,8 +7,13 @@ class Player{
     this.x = x;
     this.y = y;
     this.r =r;
-    
+
   }
+  void draw(){
+    fill(200);
+    ellipse(x,y,r,r);
+  }
+
   void setRectSpecs(int x, int y){
     this.x = x;
     this.y = y;
