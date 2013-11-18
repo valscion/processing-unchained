@@ -10,3 +10,4 @@ build-tmp/
 
 # Sublime crud
 *.sublime-workspace
+tmp
