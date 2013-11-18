@@ -89,7 +89,7 @@ class AudioController {
       }
       text("Volume: " + in.mix.level() * 100, 10, 30);
     }
-    float diff = (largerRingBuffer.avg() - smallerRingBuffer.avg());
+    float diff = (smallerRingBuffer.avg() - largerRingBuffer.avg());
     text("Diff: " + diff, 10, 10);
     rect(width - 20, height / 2 + (diff * 5), 20, 5);
 
