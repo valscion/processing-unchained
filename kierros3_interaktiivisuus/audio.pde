@@ -6,10 +6,14 @@ class AudioController {
   AudioInput in;
   FFT fftLin;
   float spectrumScale = 4;
+  RingBuffer smallerRingBuffer;
+  RingBuffer largerRingBuffer;
 
   AudioController() {
     minim = new Minim(this);
     in = minim.getLineIn();
+    smallerRingBuffer = new RingBuffer(15);
+    largerRingBuffer = new RingBuffer(15);
     setupFFT();
   }
 
@@ -79,10 +83,15 @@ class AudioController {
         rect(i*w, 200, w, -rectHeight);
       }
       fill(255);
-      int diff = (largerCount - smallerCount);
-      rect(width - 20, diff * 10, 30, 5);
-      text("Diff: " + diff, 10, 10);
+      if (in.mix.level() * 100 > 5.0) {
+        smallerRingBuffer.addValue(smallerCount);
+        largerRingBuffer.addValue(largerCount);
+      }
+      text("Volume: " + in.mix.level() * 100, 10, 30);
     }
+    float diff = (largerRingBuffer.avg() - smallerRingBuffer.avg());
+    text("Diff: " + diff, 10, 10);
+    rect(width - 20, height / 2 + (diff * 10), 30, 5);
 
   }
 
