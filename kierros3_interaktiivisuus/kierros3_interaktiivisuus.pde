@@ -32,14 +32,14 @@ boolean checkEnemyPlayerCollision(Enemy e, Player p){
   int distanceX = abs(p.getX() - e.getX());
   int distanceY = abs(p.getY() - e.getY());
   
-  if (distanceX > (e.width/2 + p.r)) { return false; }
-  if (distanceY > (e.height/2 + p.r)) { return false; }
+  if (distanceX > (e.width/2 + p.getR())) { return false; }
+  if (distanceY > (e.height/2 + p.getR())) { return false; }
   
   if (distanceX <= (e.width/2)) { return true; } 
   if (distanceY <= (e.height/2)) { return true; }
   
-  float cornerDistance_sq = (distanceX - e.width/2)^2 +
-    (distanceY - e.height/2)^2;
+  float cornerDistance_sq = (distanceX - e.width/2)*(distanceX - e.width/2) +
+    (distanceY - e.height/2)*(distanceY - e.height/2);
   
-  return (cornerDistance_sq <= (p.r^2));
-}}
+  return (cornerDistance_sq <= (p.getR()*p.getR()));
+}
