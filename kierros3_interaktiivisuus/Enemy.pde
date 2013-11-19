@@ -1,12 +1,12 @@
 class Enemy{
-  int x;
-  int y;
-  int width;
-  int height;
-  int speedX;
-  int speedY;
+  float x;
+  float y;
+  float width;
+  float height;
+  float speedX;
+  float speedY;
 
-  Enemy(int x, int y, int width, int height, int speedX){
+  Enemy(float x, float y, float width, float height, float speedX){
     this.x = x;
     this.y = y;
     this.width = width;
@@ -38,15 +38,11 @@ class Enemy{
     }
   }
 
-  void  setRectSpecs(int x, int y){
-    this.x = x;
-    this.y = y;
-  }
-  int getX(){
+  float getX(){
     return this.x;
   }
 
-  int getY(){
+  float getY(){
     return this.y;
   }
 }

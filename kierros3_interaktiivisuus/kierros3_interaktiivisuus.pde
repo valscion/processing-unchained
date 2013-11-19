@@ -46,5 +46,7 @@ boolean checkEnemyPlayerCollision(Enemy e, Player p){
 }
 
 void inspectList(LinkedList l){
-
+  for(int i = 0; i <l.size(); i ++){
+    
+  }
 }
