@@ -14,6 +14,7 @@ class GameState extends State {
 
   @Override
   void draw() {
+    effects.draw();
     ellipseMode(CENTER);
     rectMode(CORNER);
 
