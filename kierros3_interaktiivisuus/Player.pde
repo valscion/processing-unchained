@@ -3,6 +3,7 @@ class Player{
   float x;
   float y;
   int speedY;
+
   Player(float x, float y, float r, float speedY){
     this.x = x;
     this.y = y;

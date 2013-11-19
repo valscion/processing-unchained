@@ -1,6 +1,9 @@
+import java.util.List;
+import java.util.LinkedList;
 AudioController audioController;
 Player p = new Player(100, 100, 20,0);
 Enemy e = new Enemy(500,400,20,20,5);
+List<Enemy> enemies = new LinkedList<Enemy>();
 
 void setup() {
   size(1024, 500);
@@ -40,4 +43,8 @@ boolean checkEnemyPlayerCollision(Enemy e, Player p){
     (distanceY - e.height/2)*(distanceY - e.height/2);
 
   return (cornerDistance_sq <= (p.getR()*p.getR()));
+}
+
+void inspectList(LinkedList l){
+
 }
