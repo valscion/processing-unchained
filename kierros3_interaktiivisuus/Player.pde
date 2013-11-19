@@ -1,15 +1,16 @@
 class Player{
-  int r;
-  int x;
-  int y;
+  float r;
+  float x;
+  float y;
   int speedY;
-  Player(int x, int y, int r, int speedY){
+
+  Player(float x, float y, float r, float speedY){
     this.x = x;
     this.y = y;
     this.r =r;
 
   }
-  void draw(int delta){
+  void draw(float delta){
     if(this.y < height && this.y >0){
     this.y = y+delta;
     }
@@ -23,14 +24,14 @@ class Player{
     ellipse(x,y,r,r);
   }
 
-  int getX(){
+  float getX(){
     return this.x;
   }
 
-  int getY(){
+  float getY(){
     return this.y;
   }
-  int getR(){
+  float getR(){
     return this.r;
   }
 }
