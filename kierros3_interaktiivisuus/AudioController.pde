@@ -33,12 +33,10 @@ class AudioController {
     fftLin = new FFT( in.bufferSize(), in.sampleRate() );
   }
 
-  void draw() {
+  void update() {
     // perform a forward FFT on the samples in mics' mix buffer
     fftLin.forward( in.mix );
 
-    // draw the linear averages
-    noStroke();
     {
       // Average amplitude of all the frequencies to be measured
       float allAverage = fftLin.calcAvg(MIN_FREQ, MIN_FREQ + AVERAGES_COUNT*FREQ_STEP);
@@ -49,6 +47,8 @@ class AudioController {
       for (int i = 0; i < AVERAGES_COUNT; i++) {
         float thisAvg = fftLin.calcAvg(MIN_FREQ + i * FREQ_STEP, MIN_FREQ + (i+1) * FREQ_STEP);
         AVERAGES_ARR[i] = thisAvg;
+        // Store the value of this frequency band to largerCount or smallerCount
+        // if it's amplitude is stronger than 3/4 of the average amplitude
         if (thisAvg > (allAverage * 0.75)) {
           if (i > AVERAGES_COUNT / 2) {
             largerCount++;
@@ -58,34 +58,6 @@ class AudioController {
           }
         }
       }
-      // Find the strongest frequency band from the averages spectrum for
-      // debugging purposes
-      int strongestIndex = 0;
-      {
-        float tmpStrongest = 0.0;
-        for (int i = 0; i < AVERAGES_COUNT; i++) {
-          if (AVERAGES_ARR[i] > tmpStrongest) {
-            tmpStrongest = AVERAGES_ARR[i];
-            strongestIndex = i;
-          }
-        }
-      }
-
-      // Draw the rectangles showing the measured averages
-      float height23 = 2 * height / 3;
-      int w = int( width / AVERAGES_ARR.length );
-      for(int i = 0; i < AVERAGES_ARR.length; i++) {
-        if ( i == strongestIndex ) {
-          fill(255, 0, 0);
-        }
-        else {
-            fill(255);
-        }
-        // draw a rectangle for each average, multiply the value by spectrumScale so we can see it better
-        float rectHeight = AVERAGES_ARR[i]*spectrumScale;
-        rect(i*w, 200, w, -rectHeight);
-      }
-      fill(255);
 
       // If mic input is large enough, store the current smaller and larger frequencies count
       // to a ring buffer in order to be able to smooth the movement of controls
@@ -93,10 +65,53 @@ class AudioController {
         smallerRingBuffer.addValue(smallerCount);
         largerRingBuffer.addValue(largerCount);
       }
-      text("Volume: " + in.mix.level() * 100, 10, 30);
     }
+  }
+
+  void drawDebug() {
+    noStroke();
+    // Find the strongest frequency band from the averages spectrum for
+    // debugging purposes
+    int strongestIndex = 0;
+    {
+      float tmpStrongest = 0.0;
+      for (int i = 0; i < AVERAGES_COUNT; i++) {
+        if (AVERAGES_ARR[i] > tmpStrongest) {
+          tmpStrongest = AVERAGES_ARR[i];
+          strongestIndex = i;
+        }
+      }
+    }
+
+    // Draw the rectangles showing the measured averages
+    float height23 = 2 * height / 3;
+    int w = int( width / AVERAGES_ARR.length );
+    for(int i = 0; i < AVERAGES_ARR.length; i++) {
+      if ( i == strongestIndex ) {
+        fill(255, 0, 0);
+      }
+      else {
+        fill(255);
+      }
+      // draw a rectangle for each average, multiply the value by spectrumScale so we can see it better
+      float rectHeight = AVERAGES_ARR[i]*spectrumScale;
+      rect(i*w, 200, w, -rectHeight);
+    }
+    fill(255);
+    text("Volume: " + in.mix.level() * 100, 10, 30);
+
+    float speed = speed();
+    text("Speed: " + speed, 10, 10);
+    float yChange = speed * ((height - 5) / 2);
+    rect(width - 20, height / 2 + yChange, 20, 5);
+  }
+
+  // Returns the value of sound frequency which can be used to control various
+  // things. The speed value will be in range [-1, 1]
+  float speed() {
     float diff = (smallerRingBuffer.avg() - largerRingBuffer.avg());
-    text("Diff: " + diff, 10, 10);
-    rect(width - 20, height / 2 + (diff * 5), 20, 5);
+    float clamped = constrain(diff, -40, 40);
+    float mappedValue = map(clamped, -40, 40, -1, 1);
+    return mappedValue;
   }
 }
