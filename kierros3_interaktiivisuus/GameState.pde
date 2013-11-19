@@ -20,7 +20,7 @@ class GameState extends State {
     p.draw(playerSpeed);
     this.goThroughEnemyList(enemies);
     audioController.update();
-    audioController.drawDebug();
+    //audioController.drawDebug();
   }
 
   boolean checkEnemyPlayerCollision(Enemy e, Player p){
