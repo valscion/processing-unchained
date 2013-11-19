@@ -4,20 +4,25 @@ AudioController audioController;
 StateMachine stateMachine = new StateMachine();
 
 void setup() {
-  size(1024, 500);
-  background(50);
+  try {
+    size(1024, 500);
+    background(50);
 
 
-  // Alustetaan piirtomoodit, niin tiedetään miten asiat piirtyvät.
-  // Näitä ei tule muuttaa myöhemmin!
-  ellipseMode(CENTER);
-  rectMode(CORNER);
-  audioController = new AudioController();
+    // Alustetaan piirtomoodit, niin tiedetään miten asiat piirtyvät.
+    // Näitä ei tule muuttaa myöhemmin!
+    ellipseMode(CENTER);
+    rectMode(CORNER);
+    audioController = new AudioController();
 
-  stateMachine.addState(new GameState());
-
-  stateMachine.changeState(GameState.class);
-  stateMachine.setup();
+    stateMachine.addState(new GameState());
+    stateMachine.changeState(GameState.class);
+    stateMachine.setup();
+  }
+  catch (Throwable t) {
+    t.printStackTrace();
+    exit();
+  }
 }
 
 void draw() {
