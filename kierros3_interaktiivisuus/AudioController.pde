@@ -5,12 +5,14 @@ class AudioController {
   Minim minim;
   AudioInput in;
   FFT fftLin;
-  float spectrumScale = 4;
   RingBuffer smallerRingBuffer;
   RingBuffer largerRingBuffer;
 
+  // The lower bound limit of microphones loudness
+  float minimumVolume = 2.0;
+
   // ----------------
-  // Values controlling highest frequency pick
+  // Constants controlling highest frequency pick
   // ----------------
   // How many averages will be counted
   private final int AVERAGES_COUNT = 150;
@@ -59,16 +61,21 @@ class AudioController {
       }
     }
 
-    // If mic input is large enough, store the current smaller and larger frequencies count
-    // to a ring buffer in order to be able to smooth the movement of controls
-    if (in.mix.level() * 100 > 2.0) {
+    if (isSoundLoudEnough()) {
+      // Store the current smaller and larger frequencies count to a ring buffer
+      // in order to be able to smooth the movement of controls
       smallerRingBuffer.addValue(smallerCount);
       largerRingBuffer.addValue(largerCount);
     }
   }
 
+  boolean isSoundLoudEnough() {
+    return (in.mix.level() * 100 > minimumVolume);
+  }
+
   void drawDebug() {
     noStroke();
+    float spectrumScale = 4;
     // Find the strongest frequency band from the averages spectrum for
     // debugging purposes
     int strongestIndex = 0;
