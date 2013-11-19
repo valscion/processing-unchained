@@ -1,6 +1,6 @@
 AudioController audioController;
 Player p = new Player(100, 100, 20,0);
-Enemy e = new Enemy(500,400,20,20, 5);
+Enemy e = new Enemy(500,400,20,20,5);
 
 void setup() {
   size(1024, 500);
@@ -20,7 +20,6 @@ void draw() {
 
   background(50);
   //rect((width - 30) / 2, (height - 30 ) / 2, 30, 30);
-
   p.draw(5);
   e.draw();
   audioController.draw();
@@ -28,8 +27,8 @@ void draw() {
 
 boolean checkEnemyPlayerCollision(Enemy e, Player p){
 
-  int distanceX = abs(p.getX() - e.getX());
-  int distanceY = abs(p.getY() - e.getY());
+  float distanceX = abs(p.getX() - e.getX());
+  float distanceY = abs(p.getY() - e.getY());
 
   if (distanceX > (e.width/2 + p.getR())) { return false; }
   if (distanceY > (e.height/2 + p.getR())) { return false; }
