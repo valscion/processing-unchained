@@ -45,16 +45,17 @@ public void draw() {
 
   background(50);
   //rect((width - 30) / 2, (height - 30 ) / 2, 30, 30);
-    p.draw(0);
-    this.goThroughEnemyList(enemies);
-    audioController.draw();
+  p.draw(audioController.speed()*10);
+  this.goThroughEnemyList(enemies);
+  audioController.update();
+  audioController.drawDebug();
 }
 
 public boolean checkEnemyPlayerCollision(Enemy e, Player p){
-  
+
   float distanceX = abs(p.getX() - e.getX());
   float distanceY = abs(p.getY() - e.getY());
-  
+
   if (distanceX > (e.width/2 + p.getR())) { return false; }
   if (distanceY > (e.height/2 + p.getR())) { return false; }
 
@@ -74,7 +75,7 @@ public void goThroughEnemyList(LinkedList l){
       if(this.checkEnemyPlayerCollision(e, this.p)){
         e.setInactive();
       }
-    }  
+    }
     e.draw();
   }
 }
@@ -85,9 +86,24 @@ class AudioController {
   Minim minim;
   AudioInput in;
   FFT fftLin;
-  float spectrumScale = 4;
   RingBuffer smallerRingBuffer;
   RingBuffer largerRingBuffer;
+
+  // The lower bound limit of microphones loudness
+  float minimumVolume = 2.0f;
+
+  // ----------------
+  // Constants controlling highest frequency pick
+  // ----------------
+  // How many averages will be counted
+  private final int AVERAGES_COUNT = 150;
+  // The array to store all the averages. This needs to be initialized only once
+  // and the values can be replaced
+  private final float AVERAGES_ARR[] = new float[AVERAGES_COUNT];
+  // Lowest frequency from which we start analyzing the sound
+  private final float MIN_FREQ = 30;
+  // The frequency step between calculated averages
+  private final float FREQ_STEP = 4;
 
   AudioController() {
     minim = new Minim(this);
@@ -100,77 +116,108 @@ class AudioController {
     fftLin = new FFT( in.bufferSize(), in.sampleRate() );
   }
 
-  public void draw() {
+  // Updates the frequency values. This should be called in every frame.
+  public void update() {
     // perform a forward FFT on the samples in mics' mix buffer
     fftLin.forward( in.mix );
 
-    // draw the linear averages
-    noStroke();
-    {
-      int avSize = 150;
-      float averages[] = new float[avSize];
-      // Lowest frequency from which we start analyzing the sound
-      float minFreq = 30;
-      // The frequency step between calculated averages
-      float step = 4;
-      // Average amplitude of all the frequencies to be measured
-      float allAverage = fftLin.calcAvg(minFreq, minFreq + avSize*step);
-      // Count of frequencies which are louder than the average and either smaller
-      // or higher than the middle of analyzed frequency
-      int smallerCount = 0;
-      int largerCount = 0;
-      for (int i = 0; i < avSize; i++) {
-        float thisAvg = fftLin.calcAvg(minFreq + i * step, minFreq + (i+1) * step);
-        averages[i] = thisAvg;
-        if (thisAvg > (allAverage * 0.75f)) {
-          if (i > avSize / 2) {
-            largerCount++;
-          }
-          else {
-            smallerCount++;
-          }
-        }
-      }
-      // Find the strongest frequency band from the averages spectrum for
-      // debugging purposes
-      int strongestIndex = 0;
-      {
-        float tmpStrongest = 0.0f;
-        for (int i = 0; i < avSize; i++) {
-          if (averages[i] > tmpStrongest) {
-            tmpStrongest = averages[i];
-            strongestIndex = i;
-          }
-        }
-      }
+    // Average amplitude of all the frequencies to be measured
+    float allAverage = fftLin.calcAvg(MIN_FREQ, MIN_FREQ + AVERAGES_COUNT*FREQ_STEP);
 
-      // Draw the rectangles showing the measured averages
-      float height23 = 2 * height / 3;
-      int w = PApplet.parseInt( width / averages.length );
-      for(int i = 0; i < averages.length; i++) {
-        if ( i == strongestIndex ) {
-          fill(255, 0, 0);
+    // Count of frequencies which are louder than the average and either smaller
+    // or higher than the middle of analyzed frequency
+    int smallerCount = 0;
+    int largerCount = 0;
+    for (int i = 0; i < AVERAGES_COUNT; i++) {
+      float thisAvg = fftLin.calcAvg(MIN_FREQ + i * FREQ_STEP, MIN_FREQ + (i+1) * FREQ_STEP);
+      AVERAGES_ARR[i] = thisAvg;
+      // Store the value of this frequency band to largerCount or smallerCount
+      // if it's amplitude is stronger than 3/4 of the average amplitude
+      if (thisAvg > (allAverage * 0.75f)) {
+        if (i > AVERAGES_COUNT / 2) {
+          largerCount++;
         }
         else {
-            fill(255);
+          smallerCount++;
         }
-        // draw a rectangle for each average, multiply the value by spectrumScale so we can see it better
-        float rectHeight = averages[i]*spectrumScale;
-        rect(i*w, 200, w, -rectHeight);
       }
-      fill(255);
-
-      // If mic input is large enough, store the current smaller and larger frequencies count
-      // to a ring buffer in order to be able to smooth the movement of controls
-      if (in.mix.level() * 100 > 2.0f) {
-        smallerRingBuffer.addValue(smallerCount);
-        largerRingBuffer.addValue(largerCount);
-      }
-      text("Volume: " + in.mix.level() * 100, 10, 30);
     }
+
+    if (isSoundLoudEnough()) {
+      // Store the current smaller and larger frequencies count to a ring buffer
+      // in order to be able to smooth the movement of controls
+      smallerRingBuffer.addValue(smallerCount);
+      largerRingBuffer.addValue(largerCount);
+    }
+  }
+
+  // Checks whether the current volume should be counted as loud enough
+  public boolean isSoundLoudEnough() {
+    float currentVolume = getCurrentSoundVolume();
+    return (currentVolume > minimumVolume);
+  }
+
+  // Gets the current sound volume
+  public float getCurrentSoundVolume() {
+    return in.mix.level() * 100;
+  }
+
+  // Sets the new sound limit. If the sound coming from the microphone is more
+  // quiet than the value in here, it will not be registered.
+  public void setSoundLimit(float newLimit) {
+    if (newLimit <= 0.0f) {
+      throw new IllegalArgumentException("Incorrect sound limit");
+    }
+    minimumVolume = newLimit;
+  }
+
+  // Draws some debug info to the screen
+  public void drawDebug() {
+    noStroke();
+    float spectrumScale = 4;
+    // Find the strongest frequency band from the averages spectrum for
+    // debugging purposes
+    int strongestIndex = 0;
+    {
+      float tmpStrongest = 0.0f;
+      for (int i = 0; i < AVERAGES_COUNT; i++) {
+        if (AVERAGES_ARR[i] > tmpStrongest) {
+          tmpStrongest = AVERAGES_ARR[i];
+          strongestIndex = i;
+        }
+      }
+    }
+
+    // Draw the rectangles showing the measured averages
+    float height23 = 2 * height / 3;
+    int w = PApplet.parseInt( width / AVERAGES_ARR.length );
+    for(int i = 0; i < AVERAGES_ARR.length; i++) {
+      if ( i == strongestIndex ) {
+        fill(255, 0, 0);
+      }
+      else {
+        fill(255);
+      }
+      // draw a rectangle for each average, multiply the value by spectrumScale so we can see it better
+      float rectHeight = AVERAGES_ARR[i]*spectrumScale;
+      rect(i*w, 200, w, -rectHeight);
+    }
+    fill(255);
+    text("Volume: " + in.mix.level() * 100, 10, 30);
+
+    float speed = speed();
+    text("Speed: " + speed, 10, 10);
+    float yChange = speed * ((height - 5) / 2);
+    rect(width - 20, height / 2 + yChange, 20, 5);
+  }
+
+  // Returns the value of sound frequency which can be used to control various
+  // things. The speed value will be in range [-1, 1]
+  public float speed() {
     float diff = (smallerRingBuffer.avg() - largerRingBuffer.avg());
-    text("Diff: " + diff, 10, 10);
-    rect(width - 20, height / 2 + (diff * 5), 20, 5);
+    float clamped = constrain(diff, -40, 40);
+    float mappedValue = map(clamped, -40, 40, -1, 1);
+    return mappedValue;
   }
 }
 class Enemy{

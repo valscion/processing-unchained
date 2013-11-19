@@ -24,7 +24,7 @@ void draw() {
 
   background(50);
   //rect((width - 30) / 2, (height - 30 ) / 2, 30, 30);
-  p.draw(0);
+  p.draw(audioController.speed()*10);
   this.goThroughEnemyList(enemies);
   audioController.update();
   audioController.drawDebug();
