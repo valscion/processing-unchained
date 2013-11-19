@@ -3,7 +3,7 @@ import java.util.LinkedList;
 AudioController audioController;
 Player p = new Player(100, 100, 20,0);
 Enemy e = new Enemy(500,400,20,20,5);
-List<Enemy> enemies = new LinkedList<Enemy>();
+LinkedList<Enemy> enemies = new LinkedList<Enemy>();
 
 void setup() {
   size(1024, 500);
@@ -17,17 +17,16 @@ void setup() {
 
   // Alustetaan audiojutut
   audioController = new AudioController();
+  enemies.addLast(e);
 }
 
 void draw() {
 
   background(50);
   //rect((width - 30) / 2, (height - 30 ) / 2, 30, 30);
-  if(checkEnemyPlayerCollision(e,p) == false){
-    p.draw(5);
-    e.draw();
+    p.draw();
+    this.goThroughEnemyList(enemies);
     audioController.draw();
-  }
 }
 
 boolean checkEnemyPlayerCollision(Enemy e, Player p){
@@ -47,7 +46,7 @@ boolean checkEnemyPlayerCollision(Enemy e, Player p){
   return (cornerDistance_sq <= (p.getR()*p.getR()));
 }
 
-void inspectList(LinkedList l){
+void goThroughEnemyList(LinkedList l){
   for(int i = 0; i <l.size(); i ++){
     Enemy e = (Enemy) l.get(i);
     if(e.isActive()){
@@ -55,5 +54,6 @@ void inspectList(LinkedList l){
         e.setInactive();
       }
     }  
+    e.draw();
   }
 }
