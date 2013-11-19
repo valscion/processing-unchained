@@ -49,9 +49,10 @@ class GameState extends State {
     return millis() -startTime;
   }
 
-  void goThroughEnemyList(LinkedList l){
-    for(int i = 0; i <l.size(); i ++){
-      Enemy e = (Enemy) l.get(i);
+  void goThroughEnemyList(List<Enemy> enemyList){
+    Iterator<Enemy> iter = enemyList.iterator();
+    while (iter.hasNext()) {
+      Enemy e = iter.next();
       if(e.isActive()){
         if(gameTime() < 10000){
           e.setSpeed(2);
