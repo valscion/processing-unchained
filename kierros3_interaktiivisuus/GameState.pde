@@ -12,6 +12,9 @@ class GameState extends State {
 
   @Override
   void draw() {
+    ellipseMode(CENTER);
+    rectMode(CORNER);
+
     background(50);
     float playerSpeed = utils.pxPerSec(audioController.speed() * 500);
     p.draw(playerSpeed);
