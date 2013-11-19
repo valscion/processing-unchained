@@ -37,34 +37,33 @@ class AudioController {
     // perform a forward FFT on the samples in mics' mix buffer
     fftLin.forward( in.mix );
 
-    {
-      // Average amplitude of all the frequencies to be measured
-      float allAverage = fftLin.calcAvg(MIN_FREQ, MIN_FREQ + AVERAGES_COUNT*FREQ_STEP);
-      // Count of frequencies which are louder than the average and either smaller
-      // or higher than the middle of analyzed frequency
-      int smallerCount = 0;
-      int largerCount = 0;
-      for (int i = 0; i < AVERAGES_COUNT; i++) {
-        float thisAvg = fftLin.calcAvg(MIN_FREQ + i * FREQ_STEP, MIN_FREQ + (i+1) * FREQ_STEP);
-        AVERAGES_ARR[i] = thisAvg;
-        // Store the value of this frequency band to largerCount or smallerCount
-        // if it's amplitude is stronger than 3/4 of the average amplitude
-        if (thisAvg > (allAverage * 0.75)) {
-          if (i > AVERAGES_COUNT / 2) {
-            largerCount++;
-          }
-          else {
-            smallerCount++;
-          }
+    // Average amplitude of all the frequencies to be measured
+    float allAverage = fftLin.calcAvg(MIN_FREQ, MIN_FREQ + AVERAGES_COUNT*FREQ_STEP);
+
+    // Count of frequencies which are louder than the average and either smaller
+    // or higher than the middle of analyzed frequency
+    int smallerCount = 0;
+    int largerCount = 0;
+    for (int i = 0; i < AVERAGES_COUNT; i++) {
+      float thisAvg = fftLin.calcAvg(MIN_FREQ + i * FREQ_STEP, MIN_FREQ + (i+1) * FREQ_STEP);
+      AVERAGES_ARR[i] = thisAvg;
+      // Store the value of this frequency band to largerCount or smallerCount
+      // if it's amplitude is stronger than 3/4 of the average amplitude
+      if (thisAvg > (allAverage * 0.75)) {
+        if (i > AVERAGES_COUNT / 2) {
+          largerCount++;
+        }
+        else {
+          smallerCount++;
         }
       }
+    }
 
-      // If mic input is large enough, store the current smaller and larger frequencies count
-      // to a ring buffer in order to be able to smooth the movement of controls
-      if (in.mix.level() * 100 > 2.0) {
-        smallerRingBuffer.addValue(smallerCount);
-        largerRingBuffer.addValue(largerCount);
-      }
+    // If mic input is large enough, store the current smaller and larger frequencies count
+    // to a ring buffer in order to be able to smooth the movement of controls
+    if (in.mix.level() * 100 > 2.0) {
+      smallerRingBuffer.addValue(smallerCount);
+      largerRingBuffer.addValue(largerCount);
     }
   }
 
