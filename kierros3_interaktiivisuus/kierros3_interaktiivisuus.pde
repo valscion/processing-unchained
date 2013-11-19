@@ -18,7 +18,7 @@ void setup() {
 }
 
 void draw() {
-
+  utils.updateFPSTimer();
   background(50);
   //rect((width - 30) / 2, (height - 30 ) / 2, 30, 30);
   gameState.draw();
