@@ -53,7 +53,9 @@ class AudioController {
       // Store the value of this frequency band to largerCount or smallerCount
       // if it's amplitude is stronger than 3/4 of the average amplitude
       if (thisAvg > (allAverage * 0.75)) {
-        if (i > AVERAGES_COUNT / 2) {
+        // It's easier to create higher sounds than deeper sounds, so the midpoint
+        // is not in the middle but a little above it.
+        if (i > AVERAGES_COUNT * 0.6) {
           largerCount++;
         }
         else {
