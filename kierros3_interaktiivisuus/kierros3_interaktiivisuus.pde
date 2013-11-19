@@ -1,7 +1,10 @@
 import java.util.List;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.HashMap;
 AudioController audioController;
 StateMachine stateMachine = new StateMachine();
+Map<String, PFont> fonts = new HashMap<String, PFont>();
 
 void setup() {
   try {
@@ -9,6 +12,10 @@ void setup() {
     background(50);
 
     audioController = new AudioController();
+
+    fonts.put("size16", loadFont("Roboto-Medium-16.vlw"));
+    fonts.put("size32", loadFont("Roboto-Medium-32.vlw"));
+    fonts.put("size64", loadFont("Roboto-Medium-64.vlw"));
 
     stateMachine.addState(new GameState());
     stateMachine.addState(new CalibrateState());

@@ -11,9 +11,9 @@ class CalibrateState extends State {
     background(0);
     fill(255);
     textAlign(CENTER, TOP);
-    textSize(64);
+    textFont(fonts.get("size64"), 64);
     text("Calibrate your microphone", width/2, 10);
-    textSize(16);
+    textFont(fonts.get("size16"), 16);
     text("When the circle below turns RED, it means your", width/2, 120);
     text("voice is loud enough and it is registered.", width/2, 150);
     text("To setup the limit to your current volume,", width/2, 200);
@@ -24,7 +24,7 @@ class CalibrateState extends State {
     if (timeWhenLimitSet > 0 && timeDiff < 1500) {
       float mappedValue = map(timeDiff, 1500, 0, 0, 1);
       fill(mappedValue * 255);
-      textSize(32);
+      textFont(fonts.get("size32"), 32);
       text("SOUND LEVEL SET", width/2, 300);
     }
 
@@ -39,7 +39,7 @@ class CalibrateState extends State {
 
     float soundVolume = audioController.getCurrentSoundVolume();
 
-    textSize(16);
+    textFont(fonts.get("size16"), 16);
     text("Volume now", width/2, 450);
     text(soundVolume, width/2, 466);
     text("Current limit: " + audioController.getSoundLimit(), width/2, 482);
