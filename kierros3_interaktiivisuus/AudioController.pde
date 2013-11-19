@@ -90,6 +90,11 @@ class AudioController {
     minimumVolume = newLimit;
   }
 
+  // Gets the current sound limit
+  float getSoundLimit() {
+    return minimumVolume;
+  }
+
   // Draws some debug info to the screen
   void drawDebug() {
     noStroke();
