@@ -32,6 +32,6 @@ class Player{
     return this.y;
   }
   float getR(){
-    return this.r;
+    return this.r/2;
   }
 }
