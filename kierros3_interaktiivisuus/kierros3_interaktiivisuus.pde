@@ -15,6 +15,8 @@ void setup() {
   audioController = new AudioController();
 
   stateMachine.addState(new GameState());
+
+  stateMachine.changeState(GameState.class);
   stateMachine.setup();
 }
 

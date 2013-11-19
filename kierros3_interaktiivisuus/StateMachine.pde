@@ -4,13 +4,14 @@ import java.util.Iterator;
 
 class StateMachine {
   List<State> states = new LinkedList<State>();
-  Class<?> currentState = null;
+  String currentState = null;
 
   void addState(State state) {
     states.add(state);
-    if (currentState == null) {
-      currentState = state.getClass();
-    }
+  }
+
+  void changeState(Class<?> stateClass) {
+    currentState = stateClass.getName();
   }
 
   void setup() {
@@ -18,6 +19,7 @@ class StateMachine {
     while (iter.hasNext()) {
       State state = iter.next();
       state.setup();
+      println("state.getClass().getName(): "+state.getClass().getName());
     }
   }
 
@@ -26,7 +28,7 @@ class StateMachine {
     State selectedState = null;
     while (iter.hasNext()) {
       State state = iter.next();
-      if (state.getClass() == currentState) {
+      if (state.getClass().getName() == currentState) {
         selectedState = state;
       }
     }
