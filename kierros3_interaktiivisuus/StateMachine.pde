@@ -34,7 +34,9 @@ class StateMachine {
 
   void draw() {
     State currentState = getCurrentState();
+    pushStyle();
     currentState.draw();
+    popStyle();
   }
   // --------------------------------------------------------
   // Private methods
