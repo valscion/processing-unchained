@@ -5,6 +5,7 @@ class Enemy{
   float height;
   float speedX;
   float speedY;
+  boolean active;
 
   Enemy(float x, float y, float width, float height, float speedX){
     this.x = x;
@@ -12,16 +13,19 @@ class Enemy{
     this.width = width;
     this.height = height;
     this.speedX = speedX;
+    this.active = true;
   }
   void draw(){
-    setSpeed();
-    x = x-speedX;
-    if(x<0){
-      x = 1000;
-      y = round(random(500));
+    if(this.active){
+      setSpeed();
+      x = x-speedX;
+      if(x<0){
+        x = 1000;
+        y = round(random(500));
+      }
+      fill(200);
+      rect(x,y,width,height);
     }
-    fill(200);
-    rect(x,y,width,height);
   }
   void setSpeed(){
     if(millis() < 10000){
@@ -40,7 +44,12 @@ class Enemy{
       speedX = 11;
     }
   }
-
+  void setInactive(){
+    this.active = false;
+  }
+  boolean isActive(){
+    return this.active;
+  }
   float getX(){
     return this.x;
   }

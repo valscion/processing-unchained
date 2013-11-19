@@ -24,17 +24,17 @@ void draw() {
   background(50);
   //rect((width - 30) / 2, (height - 30 ) / 2, 30, 30);
   if(checkEnemyPlayerCollision(e,p) == false){
-  p.draw(5);
-  e.draw();
-  audioController.draw();
-}
+    p.draw(5);
+    e.draw();
+    audioController.draw();
+  }
 }
 
 boolean checkEnemyPlayerCollision(Enemy e, Player p){
-
+  
   float distanceX = abs(p.getX() - e.getX());
   float distanceY = abs(p.getY() - e.getY());
-
+  
   if (distanceX > (e.width/2 + p.getR())) { return false; }
   if (distanceY > (e.height/2 + p.getR())) { return false; }
 
@@ -49,6 +49,11 @@ boolean checkEnemyPlayerCollision(Enemy e, Player p){
 
 void inspectList(LinkedList l){
   for(int i = 0; i <l.size(); i ++){
-    
+    Enemy e = (Enemy) l.get(i);
+    if(e.isActive()){
+      if(this.checkEnemyPlayerCollision(e, this.p)){
+        e.setInactive();
+      }
+    }  
   }
 }
