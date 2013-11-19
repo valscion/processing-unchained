@@ -70,7 +70,19 @@ class AudioController {
   }
 
   boolean isSoundLoudEnough() {
-    return (in.mix.level() * 100 > minimumVolume);
+    float currentVolume = getCurrentSoundVolume();
+    return (currentVolume > minimumVolume);
+  }
+
+  float getCurrentSoundVolume() {
+    return in.mix.level() * 100;
+  }
+
+  void setSoundLimit(float newLimit) {
+    if (newLimit <= 0.0) {
+      throw new IllegalArgumentException("Incorrect sound limit");
+    }
+    minimumVolume = newLimit;
   }
 
   void drawDebug() {
