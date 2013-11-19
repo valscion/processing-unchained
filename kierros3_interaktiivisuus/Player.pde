@@ -2,17 +2,18 @@ class Player{
   float r;
   float x;
   float y;
-  int speedY;
+  float speedY = 0;
+  final float SPEED_FACTOR = 300.0;
+  int timeWhenSpeedSet = 0;
 
   Player(float x, float y, float r, float speedY){
     this.x = x;
     this.y = y;
-    this.r =r;
-
+    this.r = r;
   }
-  void draw(float delta){
+  void draw(){
     if(this.y < height && this.y >0){
-    this.y = y+delta;
+      this.y = y + this.speedY * SPEED_FACTOR;
     }
     fill(200);
     if(this.y > height-(this.r/2)){
@@ -22,6 +23,13 @@ class Player{
       this.y = (this.r/2);
     }
     ellipse(x,y,r,r);
+
+    // Muuta vauhtia hitaasti nollaa kohti, kun viime nopeuden asetuksesta on
+    // kulunut yli 100ms
+    if (millis() - this.timeWhenSpeedSet > 100) {
+      int diff = millis() - this.timeWhenSpeedSet;
+      this.speedY = utils.tweenWeighted(this.speedY, 0, 20);
+    }
   }
 
   float getX(){
@@ -33,5 +41,11 @@ class Player{
   }
   float getR(){
     return this.r/2;
+  }
+
+  // Sets the new speed, which is clamped between -1...1
+  void setSpeed(float newSpeed) {
+    this.timeWhenSpeedSet = millis();
+    this.speedY = constrain(newSpeed, -1, 1);
   }
 }

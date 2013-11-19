@@ -15,4 +15,10 @@ class Utils {
   float pxPerSec(float px) {
     return px * delta * 0.001;
   }
+
+  // Weighted average tweening
+  // http://sol.gfxile.net/interpolation/#c7
+  float tweenWeighted(float currentValue, float targetValue, int slowdownFactor) {
+    return ((currentValue * (slowdownFactor - 1)) + targetValue) / slowdownFactor;
+  }
 }
