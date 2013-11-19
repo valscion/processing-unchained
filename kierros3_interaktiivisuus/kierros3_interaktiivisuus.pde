@@ -7,8 +7,8 @@ StateMachine stateMachine = new StateMachine();
 Map<String, PFont> fonts = new HashMap<String, PFont>();
 
 void setup() {
+  size(1024, 500, P3D);
   try {
-    size(1024, 500);
     background(50);
 
     audioController = new AudioController();
