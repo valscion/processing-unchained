@@ -17,7 +17,7 @@ class Enemy{
   }
   void draw(){
     if(this.active){
-      setSpeed();
+      //setSpeed();
       x = x-speedX;
       if(x<0){
         x = 1000;
@@ -27,22 +27,8 @@ class Enemy{
       rect(x,y,width,height);
     }
   }
-  void setSpeed(){
-    if(millis() < 10000){
-      speedX = 3;
-    }
-    else if(millis() < 20000){
-      speedX = 6;
-    }
-    else if(millis() < 30000){
-      speedX = 7;
-    }
-    else if(millis() < 40000){
-      speedX = 9;
-    }
-    else if(millis() < 50000){
-      speedX = 11;
-    }
+  void setSpeed(int speed){
+    this.speedX = speed;
   }
   void setInactive(){
     this.active = false;
