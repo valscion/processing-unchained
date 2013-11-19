@@ -1,12 +1,13 @@
 class GameState extends State {
   Player p = new Player(100, 100, 20,0);
-  Enemy e = new Enemy(500,400,20,20,5);
   LinkedList<Enemy> enemies = new LinkedList<Enemy>();
   int startTime = 0;
+  int timeSinceLastEnemyAdded = 0;
+  int timeBetweenNewEnemies = 2000;
 
   @Override
   void startState() {
-    enemies.addLast(e);
+    enemies.clear();
     startGame();
   }
 
@@ -21,6 +22,7 @@ class GameState extends State {
       p.setSpeed(playerSpeed);
     }
     p.draw();
+    this.addEnemiesIfNeeded();
     this.goThroughEnemyList(enemies);
     audioController.update();
     //audioController.drawDebug();
@@ -47,6 +49,16 @@ class GameState extends State {
   }
   int gameTime(){
     return millis() -startTime;
+  }
+
+  void addEnemiesIfNeeded() {
+    int diff = millis() - timeSinceLastEnemyAdded;
+    if (diff > timeBetweenNewEnemies) {
+      timeSinceLastEnemyAdded = millis();
+      float startY = random(0, height - 20);
+      Enemy e = new Enemy(width, startY, 20, 20, 5);
+      enemies.addLast(e);
+    }
   }
 
   void goThroughEnemyList(List<Enemy> enemyList){
