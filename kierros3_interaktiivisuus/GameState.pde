@@ -10,7 +10,8 @@ class GameState {
   }
 
   void draw() {
-    p.draw(audioController.speed()*10);
+    float playerSpeed = utils.pxPerSec(audioController.speed() * 500);
+    p.draw(playerSpeed);
     this.goThroughEnemyList(enemies);
     audioController.update();
     audioController.drawDebug();
