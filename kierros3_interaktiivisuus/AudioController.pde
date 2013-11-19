@@ -13,12 +13,14 @@ class AudioController {
   // Values controlling highest frequency pick
   // ----------------
   // How many averages will be counted
-  private final int avSize = 150;
-  private final float averages[] = new float[avSize];
+  private final int AVERAGES_COUNT = 150;
+  // The array to store all the averages. This needs to be initialized only once
+  // and the values can be replaced
+  private final float AVERAGES_ARR[] = new float[AVERAGES_COUNT];
   // Lowest frequency from which we start analyzing the sound
-  private final float minFreq = 30;
+  private final float MIN_FREQ = 30;
   // The frequency step between calculated averages
-  private final float step = 4;
+  private final float FREQ_STEP = 4;
 
   AudioController() {
     minim = new Minim(this);
@@ -39,16 +41,16 @@ class AudioController {
     noStroke();
     {
       // Average amplitude of all the frequencies to be measured
-      float allAverage = fftLin.calcAvg(minFreq, minFreq + avSize*step);
+      float allAverage = fftLin.calcAvg(MIN_FREQ, MIN_FREQ + AVERAGES_COUNT*FREQ_STEP);
       // Count of frequencies which are louder than the average and either smaller
       // or higher than the middle of analyzed frequency
       int smallerCount = 0;
       int largerCount = 0;
-      for (int i = 0; i < avSize; i++) {
-        float thisAvg = fftLin.calcAvg(minFreq + i * step, minFreq + (i+1) * step);
-        averages[i] = thisAvg;
+      for (int i = 0; i < AVERAGES_COUNT; i++) {
+        float thisAvg = fftLin.calcAvg(MIN_FREQ + i * FREQ_STEP, MIN_FREQ + (i+1) * FREQ_STEP);
+        AVERAGES_ARR[i] = thisAvg;
         if (thisAvg > (allAverage * 0.75)) {
-          if (i > avSize / 2) {
+          if (i > AVERAGES_COUNT / 2) {
             largerCount++;
           }
           else {
@@ -61,9 +63,9 @@ class AudioController {
       int strongestIndex = 0;
       {
         float tmpStrongest = 0.0;
-        for (int i = 0; i < avSize; i++) {
-          if (averages[i] > tmpStrongest) {
-            tmpStrongest = averages[i];
+        for (int i = 0; i < AVERAGES_COUNT; i++) {
+          if (AVERAGES_ARR[i] > tmpStrongest) {
+            tmpStrongest = AVERAGES_ARR[i];
             strongestIndex = i;
           }
         }
@@ -71,8 +73,8 @@ class AudioController {
 
       // Draw the rectangles showing the measured averages
       float height23 = 2 * height / 3;
-      int w = int( width / averages.length );
-      for(int i = 0; i < averages.length; i++) {
+      int w = int( width / AVERAGES_ARR.length );
+      for(int i = 0; i < AVERAGES_ARR.length; i++) {
         if ( i == strongestIndex ) {
           fill(255, 0, 0);
         }
@@ -80,7 +82,7 @@ class AudioController {
             fill(255);
         }
         // draw a rectangle for each average, multiply the value by spectrumScale so we can see it better
-        float rectHeight = averages[i]*spectrumScale;
+        float rectHeight = AVERAGES_ARR[i]*spectrumScale;
         rect(i*w, 200, w, -rectHeight);
       }
       fill(255);
