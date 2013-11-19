@@ -24,9 +24,9 @@ void draw() {
 
   background(50);
   //rect((width - 30) / 2, (height - 30 ) / 2, 30, 30);
-    p.draw(0);
-    this.goThroughEnemyList(enemies);
-    audioController.update();
+  p.draw(0);
+  this.goThroughEnemyList(enemies);
+  audioController.update();
   audioController.drawDebug();
 }
 
@@ -54,7 +54,7 @@ void goThroughEnemyList(LinkedList l){
       if(this.checkEnemyPlayerCollision(e, this.p)){
         e.setInactive();
       }
-    }  
+    }
     e.draw();
   }
 }
