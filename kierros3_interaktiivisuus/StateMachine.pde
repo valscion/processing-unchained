@@ -4,14 +4,23 @@ import java.util.Iterator;
 
 class StateMachine {
   List<State> states = new LinkedList<State>();
-  String currentState = null;
+  String currentStateName = null;
 
   void addState(State state) {
     states.add(state);
   }
 
   void changeState(Class<?> stateClass) {
-    currentState = stateClass.getName();
+    String newStateName = stateClass.getName();
+    if (newStateName != currentStateName) {
+      State newState = findStateByName(newStateName);
+      if (currentStateName != null) {
+        State oldState = getCurrentState();
+        oldState.endState();
+      }
+      newState.startState();
+      currentStateName = newStateName;
+    }
   }
 
   void setup() {
@@ -24,19 +33,33 @@ class StateMachine {
   }
 
   void draw() {
+    State currentState = getCurrentState();
+    currentState.draw();
+  }
+  // --------------------------------------------------------
+  // Private methods
+  // --------------------------------------------------------
+
+  private State findStateByName(String stateName) {
     Iterator<State> iter = states.iterator();
     State selectedState = null;
     while (iter.hasNext()) {
       State state = iter.next();
-      if (state.getClass().getName() == currentState) {
+      if (state.getClass().getName() == stateName) {
         selectedState = state;
       }
     }
     if (selectedState != null) {
-      selectedState.draw();
+      return selectedState;
     }
     else {
-      throw new RuntimeException("No state selected!");
+      String err = String.format("No state found with name %s!", stateName);
+      throw new RuntimeException(err);
     }
   }
+
+  private State getCurrentState() {
+    return findStateByName(currentStateName);
+  }
+
 }

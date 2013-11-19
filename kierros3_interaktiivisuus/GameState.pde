@@ -5,7 +5,7 @@ class GameState extends State {
   int startTime = 0;
 
   @Override
-  void setup() {
+  void startState() {
     enemies.addLast(e);
     startGame();
   }
