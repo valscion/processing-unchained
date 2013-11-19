@@ -9,6 +9,17 @@ class AudioController {
   RingBuffer smallerRingBuffer;
   RingBuffer largerRingBuffer;
 
+  // ----------------
+  // Values controlling highest frequency pick
+  // ----------------
+  // How many averages will be counted
+  private final int avSize = 150;
+  private final float averages[] = new float[avSize];
+  // Lowest frequency from which we start analyzing the sound
+  private final float minFreq = 30;
+  // The frequency step between calculated averages
+  private final float step = 4;
+
   AudioController() {
     minim = new Minim(this);
     in = minim.getLineIn();
@@ -27,12 +38,6 @@ class AudioController {
     // draw the linear averages
     noStroke();
     {
-      int avSize = 150;
-      float averages[] = new float[avSize];
-      // Lowest frequency from which we start analyzing the sound
-      float minFreq = 30;
-      // The frequency step between calculated averages
-      float step = 4;
       // Average amplitude of all the frequencies to be measured
       float allAverage = fftLin.calcAvg(minFreq, minFreq + avSize*step);
       // Count of frequencies which are louder than the average and either smaller
