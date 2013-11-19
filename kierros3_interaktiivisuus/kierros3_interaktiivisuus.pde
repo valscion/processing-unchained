@@ -19,7 +19,7 @@ void setup() {
 void draw() {
 
   background(50);
-  rect((width - 30) / 2, (height - 30 ) / 2, 30, 30);
+  //rect((width - 30) / 2, (height - 30 ) / 2, 30, 30);
 
   p.draw(5);
   e.draw();
