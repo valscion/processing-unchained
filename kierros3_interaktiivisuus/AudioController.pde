@@ -35,6 +35,7 @@ class AudioController {
     fftLin = new FFT( in.bufferSize(), in.sampleRate() );
   }
 
+  // Updates the frequency values. This should be called in every frame.
   void update() {
     // perform a forward FFT on the samples in mics' mix buffer
     fftLin.forward( in.mix );
@@ -69,15 +70,19 @@ class AudioController {
     }
   }
 
+  // Checks whether the current volume should be counted as loud enough
   boolean isSoundLoudEnough() {
     float currentVolume = getCurrentSoundVolume();
     return (currentVolume > minimumVolume);
   }
 
+  // Gets the current sound volume
   float getCurrentSoundVolume() {
     return in.mix.level() * 100;
   }
 
+  // Sets the new sound limit. If the sound coming from the microphone is more
+  // quiet than the value in here, it will not be registered.
   void setSoundLimit(float newLimit) {
     if (newLimit <= 0.0) {
       throw new IllegalArgumentException("Incorrect sound limit");
@@ -85,6 +90,7 @@ class AudioController {
     minimumVolume = newLimit;
   }
 
+  // Draws some debug info to the screen
   void drawDebug() {
     noStroke();
     float spectrumScale = 4;
