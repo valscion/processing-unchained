@@ -25,8 +25,8 @@ class GameState extends State {
 
   boolean checkEnemyPlayerCollision(Enemy e, Player p){
 
-    float distanceX = abs(p.getX() - e.getX());
-    float distanceY = abs(p.getY() - e.getY());
+    float distanceX = abs(p.getX() - p.getR() - e.getX());
+    float distanceY = abs(p.getY() - p.getR() - e.getY());
 
     if (distanceX > (e.width/2 + p.getR())) { return false; }
     if (distanceY > (e.height/2 + p.getR())) { return false; }
