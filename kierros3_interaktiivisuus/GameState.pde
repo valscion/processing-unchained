@@ -4,6 +4,7 @@ class GameState extends State {
   int startTime = 0;
   int timeSinceLastEnemyAdded = 0;
   int timeBetweenNewEnemies = 2000;
+  EffectSystem effects = new EffectSystem();
 
   @Override
   void startState() {
@@ -79,6 +80,7 @@ class GameState extends State {
           e.setSpeed(10);
         }
         if(this.checkEnemyPlayerCollision(e, this.p)){
+          effects.onPlayerHit(e, this.p);
           e.setInactive();
         }
       }
