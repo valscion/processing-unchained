@@ -16,7 +16,7 @@ class GameState extends State {
     rectMode(CORNER);
 
     background(50);
-    float playerSpeed = utils.pxPerSec(audioController.speed() * 500);
+    float playerSpeed = utils.pxPerSec(audioController.soundValue() * 500);
     p.draw(playerSpeed);
     this.goThroughEnemyList(enemies);
     audioController.update();

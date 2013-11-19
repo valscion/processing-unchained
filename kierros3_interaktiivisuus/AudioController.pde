@@ -129,15 +129,15 @@ class AudioController {
     fill(255);
     text("Volume: " + in.mix.level() * 100, 10, 30);
 
-    float speed = speed();
-    text("Speed: " + speed, 10, 10);
-    float yChange = speed * ((height - 5) / 2);
+    float soundValue = soundValue();
+    text("soundValue: " + soundValue, 10, 10);
+    float yChange = soundValue * ((height - 5) / 2);
     rect(width - 20, height / 2 + yChange, 20, 5);
   }
 
   // Returns the value of sound frequency which can be used to control various
-  // things. The speed value will be in range [-1, 1]
-  float speed() {
+  // things. The value will be in range [-1, 1]
+  float soundValue() {
     float diff = (smallerRingBuffer.avg() - largerRingBuffer.avg());
     float clamped = constrain(diff, -40, 40);
     float mappedValue = map(clamped, -40, 40, -1, 1);
