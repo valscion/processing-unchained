@@ -25,9 +25,11 @@ void setup() {
 void draw() {
 
   background(50);
-    p.draw(4);
-    this.goThroughEnemyList(enemies);
-    audioController.draw();
+  //rect((width - 30) / 2, (height - 30 ) / 2, 30, 30);
+  p.draw(audioController.speed()*10);
+  this.goThroughEnemyList(enemies);
+  audioController.update();
+  audioController.drawDebug();
 }
 
 boolean checkEnemyPlayerCollision(Enemy e, Player p){
