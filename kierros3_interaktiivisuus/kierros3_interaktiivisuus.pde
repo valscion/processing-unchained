@@ -1,7 +1,7 @@
 import java.util.List;
 import java.util.LinkedList;
 AudioController audioController;
-GameState gameState = new GameState();
+StateMachine stateMachine = new StateMachine();
 
 void setup() {
   size(1024, 500);
@@ -14,12 +14,13 @@ void setup() {
   rectMode(CORNER);
   audioController = new AudioController();
 
-  gameState.setup();
+  stateMachine.addState(new GameState());
+  stateMachine.setup();
 }
 
 void draw() {
   utils.updateFPSTimer();
   background(50);
   //rect((width - 30) / 2, (height - 30 ) / 2, 30, 30);
-  gameState.draw();
+  stateMachine.draw();
 }

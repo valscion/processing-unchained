@@ -1,14 +1,16 @@
-class GameState {
+class GameState extends State {
   Player p = new Player(100, 100, 20,0);
   Enemy e = new Enemy(500,400,20,20,5);
   LinkedList<Enemy> enemies = new LinkedList<Enemy>();
   int startTime = 0;
 
+  @Override
   void setup() {
     enemies.addLast(e);
     startGame();
   }
 
+  @Override
   void draw() {
     float playerSpeed = utils.pxPerSec(audioController.speed() * 500);
     p.draw(playerSpeed);
