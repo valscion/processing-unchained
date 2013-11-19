@@ -23,9 +23,11 @@ void draw() {
 
   background(50);
   //rect((width - 30) / 2, (height - 30 ) / 2, 30, 30);
+  if(checkEnemyPlayerCollision(e,p) == false){
   p.draw(5);
   e.draw();
   audioController.draw();
+}
 }
 
 boolean checkEnemyPlayerCollision(Enemy e, Player p){

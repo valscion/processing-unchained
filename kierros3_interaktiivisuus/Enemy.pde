@@ -36,6 +36,9 @@ class Enemy{
     else if(millis() < 40000){
       speedX = 9;
     }
+    else if(millis() < 50000){
+      speedX = 11;
+    }
   }
 
   float getX(){
