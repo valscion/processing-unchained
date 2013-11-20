@@ -6,8 +6,9 @@ class Enemy{
   float speedX;
   float speedY;
   boolean active;
-
-  Enemy(float x, float y, float width, float height, float speedX){
+  PImage pic;
+  Enemy(float x, float y, float width, float height, float speedX, PImage pic){
+    this.pic = pic;
     this.x = x;
     this.y = y;
     this.width = width;
@@ -24,8 +25,10 @@ class Enemy{
         y = round(random(500));
       }
       fill(200);
-      rect(x,y,width,height);
-    }
+      
+      image(pic, x,y,width,height);
+   
+   }
   }
   void setSpeed(int speed){
     this.speedX = speed;
