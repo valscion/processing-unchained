@@ -3,7 +3,7 @@ class GameState extends State {
   LinkedList<Enemy> enemies = new LinkedList<Enemy>();
   int startTime = 0;
   int timeSinceLastEnemyAdded = 0;
-  int timeBetweenNewEnemies = 2000;
+  int timeBetweenNewEnemies = 200;
   EffectSystem effects = new EffectSystem();
   BackgroundPicture bgp;
   @Override
@@ -16,11 +16,11 @@ class GameState extends State {
 
   @Override
   void draw() {
+    //background(50);
     effects.draw();
     ellipseMode(CENTER);
     rectMode(CORNER);
 
-    //    background(50);
     bgp.draw();
     if (audioController.isSoundLoudEnough()) {
       float playerSpeed = utils.pxPerSec(audioController.soundValue());
