@@ -15,12 +15,12 @@ class GameState extends State {
 
   @Override
   void draw() {
-    background(50);
+    //background(50);
     effects.draw();
     ellipseMode(CENTER);
     rectMode(CORNER);
 
-    //bgp.draw();
+    bgp.draw();
     if (audioController.isSoundLoudEnough()) {
       float playerSpeed = utils.pxPerSec(audioController.soundValue());
       p.setSpeed(playerSpeed);
