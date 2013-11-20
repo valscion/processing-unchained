@@ -1,3 +1,5 @@
+import ddf.minim.AudioPlayer;
+
 class GameState extends State {
   Player p = new Player(100, 100, 20,0);
   LinkedList<Enemy> enemies = new LinkedList<Enemy>();
@@ -5,11 +7,20 @@ class GameState extends State {
   int timeSinceLastEnemyAdded = 0;
   int timeBetweenNewEnemies = 200;
   EffectSystem effects = new EffectSystem();
+  AudioPlayer player = minim.loadFile("game_13.mp3");
+
   @Override
   void startState() {
     enemies.clear();
     p.lives = 10;
+    player.rewind();
+    player.loop();
     startGame();
+  }
+
+  @Override
+  void endState() {
+    player.pause();
   }
 
   @Override
