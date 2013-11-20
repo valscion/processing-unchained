@@ -19,6 +19,7 @@ void setup() {
 
     stateMachine.addState(new GameState());
     stateMachine.addState(new CalibrateState());
+    stateMachine.addState(new GameOverState());
     stateMachine.changeState(CalibrateState.class);
     stateMachine.setup();
   }

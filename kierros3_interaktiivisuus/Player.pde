@@ -5,12 +5,17 @@ class Player{
   float speedY = 0;
   final float SPEED_FACTOR = 300.0;
   int timeWhenSpeedSet = 0;
+  int lives;
 
   Player(float x, float y, float r, float speedY){
     this.x = x;
     this.y = y;
     this.r = r;
   }
+  void enemyHit(){
+    this.lives = this.lives-1;
+  }
+
   void draw(){
     if(this.y < height && this.y >0){
       this.y = y + this.speedY * SPEED_FACTOR;

@@ -10,6 +10,7 @@ class GameState extends State {
   void startState() {
     enemies.clear();
     bgp = new BackgroundPicture();
+    p.lives = 10;
     startGame();
   }
 
@@ -86,6 +87,10 @@ class GameState extends State {
         if(this.checkEnemyPlayerCollision(e, this.p)){
           effects.onPlayerHit(e, this.p);
           e.setInactive();
+          this.p.enemyHit();
+          if(this.p.lives == 0){
+            stateMachine.changeState(GameOverState.class);
+          }
         }
       }
       e.draw();
