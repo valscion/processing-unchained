@@ -14,11 +14,11 @@ class GameState extends State {
 
   @Override
   void draw() {
+    background(50);
     effects.draw();
     ellipseMode(CENTER);
     rectMode(CORNER);
 
-    background(50);
     if (audioController.isSoundLoudEnough()) {
       float playerSpeed = utils.pxPerSec(audioController.soundValue());
       p.setSpeed(playerSpeed);
@@ -60,6 +60,7 @@ class GameState extends State {
       float startY = random(0, height - 20);
       Enemy e = new Enemy(width, startY, 20, 20, 5);
       enemies.addLast(e);
+      effects.onNewEnemy(e);
     }
   }
 
