@@ -142,10 +142,13 @@ void combineGlitches(int num){
       img = colorTransfer(img, mouseX, mouseY);
       break;
     case 4:
-
+      img = colorTransfer(img, mouseX, mouseY);
+      img = makeFiltering(img);
       break;
-    case 5:
-
+    default :
+      frameRate(10);
+      img = tintImage(img);
+      img = mergePixels(img);
       break;
   }
 }
