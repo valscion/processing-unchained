@@ -8,6 +8,8 @@ class GameState extends State {
   int timeBetweenNewEnemies = 200;
   EffectSystem effects = new EffectSystem();
   AudioPlayer player = minim.loadFile("game_13.mp3");
+  BackgroundPicture bgp;
+  PImage pic;
 
   @Override
   void startState() {
@@ -16,6 +18,9 @@ class GameState extends State {
     player.rewind();
     player.loop();
     startGame();
+    bgp  = new BackgroundPicture();
+    pic = loadImage("asteroid.png");
+
   }
 
   @Override
@@ -31,6 +36,7 @@ class GameState extends State {
     effects.draw();
     ellipseMode(CENTER);
     rectMode(CORNER);
+    bgp.draw();
 
 
     if (audioController.isSoundLoudEnough()) {
@@ -72,7 +78,7 @@ class GameState extends State {
     if (diff > timeBetweenNewEnemies) {
       timeSinceLastEnemyAdded = millis();
       float startY = random(0, height - 20);
-      Enemy e = new Enemy(width, startY, 20, 20, 5);
+      Enemy e = new Enemy(width, startY, 20, 20, 5,pic);
       enemies.addLast(e);
       effects.onNewEnemy(e);
     }
