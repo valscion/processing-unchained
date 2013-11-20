@@ -5,23 +5,20 @@ class GameState extends State {
   int timeSinceLastEnemyAdded = 0;
   int timeBetweenNewEnemies = 200;
   EffectSystem effects = new EffectSystem();
-  BackgroundPicture bgp;
   @Override
   void startState() {
     enemies.clear();
-    bgp = new BackgroundPicture();
     p.lives = 10;
     startGame();
   }
 
   @Override
   void draw() {
-    //background(50);
+    background(50);
     effects.draw();
     ellipseMode(CENTER);
     rectMode(CORNER);
 
-    bgp.draw();
     if (audioController.isSoundLoudEnough()) {
       float playerSpeed = utils.pxPerSec(audioController.soundValue());
       p.setSpeed(playerSpeed);
