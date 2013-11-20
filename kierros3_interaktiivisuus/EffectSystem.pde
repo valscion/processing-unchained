@@ -1,3 +1,7 @@
+import java.util.List;
+import java.util.LinkedList;
+import java.util.Iterator;
+
 // Neat effects
 class EffectSystem {
   // Player hit effects
@@ -5,20 +9,17 @@ class EffectSystem {
   int hitEffectDuration = 1000;
   float hitEffectMagnitude = 10.0;
   // New enemy effects
-  int timeLastEnemyAdded = 0;
-  int enemyEffectDuration = 200;
-  float enemyEffectMagnitude = 100.0;
-  float enemyEffectCurrentValue = 0;
-  float enemyEffectX, enemyEffectY;
+  List<NewEnemyEffect> newEnemyEffects = new LinkedList<NewEnemyEffect>();
 
   void onPlayerHit(Enemy enemy, Player player) {
     timeLastPlayerHit = millis();
   }
 
   void onNewEnemy(Enemy enemy) {
-    timeLastEnemyAdded = millis();
-    enemyEffectX = width;
-    enemyEffectY = enemy.getY() + enemy.height / 2;
+    float enemyEffectX = width;
+    float enemyEffectY = enemy.getY() + enemy.height / 2;
+    NewEnemyEffect newEffect = new NewEnemyEffect(enemyEffectX, enemyEffectY);
+    newEnemyEffects.add(newEffect);
   }
 
   void draw() {
@@ -47,20 +48,41 @@ class EffectSystem {
   }
 
   void drawNewEnemyEffect() {
-    int diffSinceAdded = millis() - timeLastEnemyAdded;
-    if (diffSinceAdded < enemyEffectDuration) {
-      enemyEffectCurrentValue = 1.0;
-      timeLastEnemyAdded = 0;
+    Iterator<NewEnemyEffect> iter = newEnemyEffects.iterator();
+    while (iter.hasNext()) {
+      NewEnemyEffect effect = iter.next();
+      if (effect.isVisible()) {
+        effect.draw();
+      }
+      else {
+        // Remove effects that have faded away
+        iter.remove();
+      }
     }
-    enemyEffectCurrentValue = utils.tweenWeighted(enemyEffectCurrentValue, 0.0, 10);
-    flashCircle(enemyEffectCurrentValue, enemyEffectX, enemyEffectY);
   }
 
-  void flashCircle(float mappedValue, float x, float y) {
-    ellipseMode(CENTER);
-    fill(mappedValue * 255, mappedValue * 50, mappedValue * 50);
-    noStroke();
-    float size = mappedValue * enemyEffectMagnitude;
-    ellipse(x, y, size, size);
+  class NewEnemyEffect {
+    float effectMagnitude = 100.0;
+    float currentValue = 0.0;
+    float effectX, effectY;
+
+    NewEnemyEffect(float startX, float startY) {
+      effectX = startX;
+      effectY = startY;
+      currentValue = 1.0;
+    }
+
+    void draw() {
+      currentValue = utils.tweenWeighted(currentValue, 0.0, 10);
+      ellipseMode(CENTER);
+      fill(currentValue * 255, currentValue * 50, currentValue * 50);
+      noStroke();
+      float size = currentValue * effectMagnitude;
+      ellipse(effectX, effectY, size, size);
+    }
+
+    boolean isVisible() {
+      return (currentValue > 0.001);
+    }
   }
 }
