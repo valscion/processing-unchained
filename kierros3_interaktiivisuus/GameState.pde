@@ -1,3 +1,5 @@
+import ddf.minim.AudioPlayer;
+
 class GameState extends State {
   Player p = new Player(100, 100, 20,0);
   LinkedList<Enemy> enemies = new LinkedList<Enemy>();
@@ -5,24 +7,32 @@ class GameState extends State {
   int timeSinceLastEnemyAdded = 0;
   int timeBetweenNewEnemies = 200;
   EffectSystem effects = new EffectSystem();
-  BackgroundPicture bgp;
-  PImage pic;
+  AudioPlayer player = minim.loadFile("game_13.mp3");
+
   @Override
   void startState() {
     enemies.clear();
     p.lives = 10;
+    player.rewind();
+    player.loop();
     startGame();
-    bgp  = new BackgroundPicture();
-    pic = loadImage("asteroid.png");
+  }
+
+  @Override
+  void endState() {
+    player.pause();
   }
 
   @Override
   void draw() {
-    //background(50);
+    background(50);
+    textFont(fonts.get("size16"), 20);
+    text("Lives: " + p.lives, width/20, 50);
     effects.draw();
     ellipseMode(CENTER);
     rectMode(CORNER);
-    bgp.draw();
+
+
     if (audioController.isSoundLoudEnough()) {
       float playerSpeed = utils.pxPerSec(audioController.soundValue());
       p.setSpeed(playerSpeed);
@@ -62,7 +72,7 @@ class GameState extends State {
     if (diff > timeBetweenNewEnemies) {
       timeSinceLastEnemyAdded = millis();
       float startY = random(0, height - 20);
-      Enemy e = new Enemy(width, startY, 20, 20, 5,pic);
+      Enemy e = new Enemy(width, startY, 20, 20, 5);
       enemies.addLast(e);
       effects.onNewEnemy(e);
     }
