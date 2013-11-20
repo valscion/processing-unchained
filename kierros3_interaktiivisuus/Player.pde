@@ -6,11 +6,13 @@ class Player{
   final float SPEED_FACTOR = 300.0;
   int timeWhenSpeedSet = 0;
   int lives;
+  PImage ppic;
 
   Player(float x, float y, float r, float speedY){
     this.x = x;
     this.y = y;
     this.r = r;
+    this.ppic = loadImage("spaceship.png");
   }
   void enemyHit(){
     this.lives = this.lives-1;
@@ -27,8 +29,10 @@ class Player{
     if(this.y < (this.r/2)){
       this.y = (this.r/2);
     }
-    ellipse(x,y,r,r);
-
+    imageMode(CENTER);
+    //ellipse(x,y,r,r);
+    image(ppic, x,y,r,r);
+    imageMode(CORNER);
     // Muuta vauhtia hitaasti nollaa kohti, kun viime nopeuden asetuksesta on
     // kulunut yli 100ms
     if (millis() - this.timeWhenSpeedSet > 100) {

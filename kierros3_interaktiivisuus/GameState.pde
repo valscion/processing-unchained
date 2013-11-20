@@ -1,7 +1,7 @@
 import ddf.minim.AudioPlayer;
 
 class GameState extends State {
-  Player p = new Player(100, 100, 20,0);
+  Player p = new Player(100, 100, 25,0);
   LinkedList<Enemy> enemies = new LinkedList<Enemy>();
   int startTime = 0;
   int timeSinceLastEnemyAdded = 0;
