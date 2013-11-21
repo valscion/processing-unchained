@@ -28,7 +28,6 @@ class Enemy{
       }
       translate(x,y);
       fill(200);
-      System.out.println(speedX);
       rotate(multip*radians(2));
       image(pic, -width/2,-height/2,width,height);
       popMatrix();

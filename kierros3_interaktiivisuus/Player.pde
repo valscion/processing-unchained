@@ -29,10 +29,15 @@ class Player{
     if(this.y < (this.r/2)){
       this.y = (this.r/2);
     }
+    pushMatrix();
+    translate(x,y);
+    if(speedY != 0){
+      rotate(radians(20)*speedY*100);
+    }  
     imageMode(CENTER);
-    //ellipse(x,y,r,r);
-    image(ppic, x,y,r,r);
+    image(ppic, 0,0,r,r);
     imageMode(CORNER);
+    popMatrix();
     // Muuta vauhtia hitaasti nollaa kohti, kun viime nopeuden asetuksesta on
     // kulunut yli 100ms
     if (millis() - this.timeWhenSpeedSet > 100) {
