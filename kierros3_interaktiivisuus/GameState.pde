@@ -5,7 +5,7 @@ class GameState extends State {
   LinkedList<Enemy> enemies = new LinkedList<Enemy>();
   int startTime = 0;
   int timeSinceLastEnemyAdded = 0;
-  int timeBetweenNewEnemies = 200;
+  int timeBetweenNewEnemies = 1000;
   EffectSystem effects = new EffectSystem();
   AudioPlayer player = minim.loadFile("game_13.mp3");
   BackgroundPicture bgp;
