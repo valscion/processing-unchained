@@ -31,12 +31,13 @@ class GameState extends State {
   @Override
   void draw() {
     background(50);
-    textFont(fonts.get("size16"), 20);
-    text("Lives: " + p.lives, width/20, 50);
     effects.draw();
     ellipseMode(CENTER);
     rectMode(CORNER);
     bgp.draw();
+    fill(255);
+    textFont(fonts.get("size16"), 20);
+    text("Lives: " + p.lives, width/20, 50);
 
 
     if (audioController.isSoundLoudEnough()) {
