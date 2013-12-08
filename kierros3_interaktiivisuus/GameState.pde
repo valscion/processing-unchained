@@ -89,19 +89,10 @@ class GameState extends State {
     Iterator<Enemy> iter = enemyList.iterator();
     while (iter.hasNext()) {
       Enemy e = iter.next();
+      int gameRanTime = gameTime();
+      float speed = gameRanTime * 0.0002;
       if(e.isActive()){
-        if(gameTime() < 10000){
-          e.setSpeed(2);
-        }
-        else if(gameTime() < 20000){
-          e.setSpeed(4);
-        }
-        else if(gameTime() < 30000){
-          e.setSpeed(6);
-        }
-        else if(gameTime() < 40000){
-          e.setSpeed(10);
-        }
+        e.setSpeed(speed);
         if(this.checkEnemyPlayerCollision(e, this.p)){
           effects.onPlayerHit(e, this.p);
           e.setInactive();

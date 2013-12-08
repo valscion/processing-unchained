@@ -29,7 +29,7 @@ class Enemy{
       multip ++;
    }
   }
-  void setSpeed(int speed){
+  void setSpeed(float speed){
     this.speedX = speed;
   }
   void setInactive(){
