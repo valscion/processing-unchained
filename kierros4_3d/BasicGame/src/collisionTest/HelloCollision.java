@@ -14,6 +14,8 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Matrix3f;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -27,11 +29,13 @@ public class HelloCollision extends SimpleApplication
         implements ActionListener {
  
   private Spatial sceneModel;
+  private Spatial sceneModel2;
   private BulletAppState bulletAppState;
   private RigidBodyControl landscape;
+  private RigidBodyControl landscape2;
   private CharacterControl player;
   private Vector3f walkDirection = new Vector3f();
-  private boolean left = false, right = false, up = false, down = false;
+  private boolean left = false, right = false, up = false, down = false, keyE = false;
  
   //Temporary vectors used on each frame.
   //They here to avoid instanciating new vectors on each frame
@@ -47,7 +51,8 @@ public class HelloCollision extends SimpleApplication
     /** Set up Physics */
     bulletAppState = new BulletAppState();
     stateManager.attach(bulletAppState);
-    //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+    //tässä oli kommentit että debugi pois päältä
+    bulletAppState.getPhysicsSpace().enableDebug(assetManager);
  
     // We re-use the flyby camera for rotation, while positioning is handled by physics
     viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
@@ -58,14 +63,20 @@ public class HelloCollision extends SimpleApplication
     // We load the scene from the zip file and adjust its size.
     assetManager.registerLocator("town.zip", ZipLocator.class);
     sceneModel = assetManager.loadModel("main.scene");
-    sceneModel.setLocalScale(2f);
+    sceneModel2 = assetManager.loadModel("main.scene");
+    sceneModel.setLocalScale(0.5f);
+    sceneModel2.setLocalScale(2f);
  
     // We set up collision detection for the scene by creating a
     // compound collision shape and a static RigidBodyControl with mass zero.
     CollisionShape sceneShape =
             CollisionShapeFactory.createMeshShape((Node) sceneModel);
+    CollisionShape sceneShape2 =
+            CollisionShapeFactory.createMeshShape((Node) sceneModel2);
     landscape = new RigidBodyControl(sceneShape, 0);
+    landscape2 = new RigidBodyControl(sceneShape2, 0);
     sceneModel.addControl(landscape);
+    sceneModel2.addControl(landscape2);
  
     // We set up collision detection for the player by creating
     // a capsule collision shape and a CharacterControl.
@@ -82,7 +93,9 @@ public class HelloCollision extends SimpleApplication
     // We attach the scene and the player to the rootnode and the physics space,
     // to make them appear in the game world.
     rootNode.attachChild(sceneModel);
+    rootNode.attachChild(sceneModel2);
     bulletAppState.getPhysicsSpace().add(landscape);
+    bulletAppState.getPhysicsSpace().add(landscape2);
     bulletAppState.getPhysicsSpace().add(player);
   }
  
@@ -111,6 +124,8 @@ public class HelloCollision extends SimpleApplication
     inputManager.addListener(this, "Up");
     inputManager.addListener(this, "Down");
     inputManager.addListener(this, "Jump");
+    inputManager.addMapping("RotateWorld", new KeyTrigger(KeyInput.KEY_E));
+    inputManager.addListener(this, "RotateWorld");
   }
  
   /** These are our custom actions triggered by key presses.
@@ -126,9 +141,20 @@ public class HelloCollision extends SimpleApplication
       down = isPressed;
     } else if (binding.equals("Jump")) {
       if (isPressed) { player.jump(); }
+    } else if(binding.equals("RotateWorld")) {
+        //sceneModel2.rotate(1,0,0);/*(float)Math.toRadians(90)*/
+        this.rotateWorld(1);
     }
   }
  
+  private void rotateWorld(float radians){
+      sceneModel2.rotate(radians,0,0);/*(float)Math.toRadians(90)*/
+      //Quaternion fysiikkaRot = landscape.getPhysicsRotation();
+      //fysiikkaRot = fysiikkaRot.normalizeLocal();
+      
+      //landscape2.setPhysicsRotation(fysiikkaRot);
+  }
+  
   /**
    * This is the main event loop--walking happens here.
    * We check in which direction the player is walking by interpreting
