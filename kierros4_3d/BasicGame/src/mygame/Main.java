@@ -11,12 +11,13 @@ import com.jme3.scene.shape.Box;
 /**
  * test
  * @author normenhansen
- */
+ 
 public class Main extends SimpleApplication {
 
     public static void main(String[] args) {
         Main app = new Main();
         app.start();
+        
     }
 
     @Override
@@ -40,4 +41,4 @@ public class Main extends SimpleApplication {
     public void simpleRender(RenderManager rm) {
         //TODO: add render code
     }
-}
+}*/
