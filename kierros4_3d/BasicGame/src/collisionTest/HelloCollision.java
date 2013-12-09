@@ -36,7 +36,8 @@ public class HelloCollision extends SimpleApplication
   private CharacterControl player;
   private Vector3f walkDirection = new Vector3f();
   private boolean left = false, right = false, up = false, down = false, keyE = false;
- 
+  private float xRotation = 0f;
+  
   //Temporary vectors used on each frame.
   //They here to avoid instanciating new vectors on each frame
   private Vector3f camDir = new Vector3f();
@@ -143,15 +144,22 @@ public class HelloCollision extends SimpleApplication
       if (isPressed) { player.jump(); }
     } else if(binding.equals("RotateWorld")) {
         //sceneModel2.rotate(1,0,0);/*(float)Math.toRadians(90)*/
-        this.rotateWorld(1);
+        this.rotateWorld(0.1f);
     }
   }
  
   private void rotateWorld(float radians){
-      sceneModel2.rotate(radians,0,0);/*(float)Math.toRadians(90)*/
+      //sceneModel2.rotate(radians,0,0);/*(float)Math.toRadians(90)*/
+      
       //Quaternion fysiikkaRot = landscape.getPhysicsRotation();
       //fysiikkaRot = fysiikkaRot.normalizeLocal();
-      
+      xRotation += radians;
+      if (xRotation > 2){
+          xRotation = 0;
+      }
+      landscape2.setPhysicsRotation(new Quaternion(xRotation,1f,1f,1f));
+              //.setPhysicsLocation(player.getViewDirection());
+              //.setPhysicsRotation(player.getViewDirection()); 
       //landscape2.setPhysicsRotation(fysiikkaRot);
   }
   
