@@ -1,26 +1,45 @@
+import ddf.minim.AudioPlayer;
+
 class GameState extends State {
-  Player p = new Player(100, 100, 20,0);
+  Player p = new Player(100, 100, 25,0);
   LinkedList<Enemy> enemies = new LinkedList<Enemy>();
   int startTime = 0;
   int timeSinceLastEnemyAdded = 0;
-  int timeBetweenNewEnemies = 2000;
+  int timeBetweenNewEnemies = 1000;
   EffectSystem effects = new EffectSystem();
+  AudioPlayer player = minim.loadFile("game_13.mp3");
   BackgroundPicture bgp;
+  PImage pic;
+
   @Override
   void startState() {
     enemies.clear();
-    bgp = new BackgroundPicture();
+    p.lives = 10;
+    player.rewind();
+    player.loop();
     startGame();
+    bgp  = new BackgroundPicture();
+    pic = loadImage("asteroid.png");
+
+  }
+
+  @Override
+  void endState() {
+    player.pause();
   }
 
   @Override
   void draw() {
+    background(50);
     effects.draw();
     ellipseMode(CENTER);
     rectMode(CORNER);
-
-    //    background(50);
     bgp.draw();
+    fill(255);
+    textFont(fonts.get("size16"), 20);
+    text("Lives: " + p.lives, width/20, 50);
+
+
     if (audioController.isSoundLoudEnough()) {
       float playerSpeed = utils.pxPerSec(audioController.soundValue());
       p.setSpeed(playerSpeed);
@@ -60,7 +79,7 @@ class GameState extends State {
     if (diff > timeBetweenNewEnemies) {
       timeSinceLastEnemyAdded = millis();
       float startY = random(0, height - 20);
-      Enemy e = new Enemy(width, startY, 20, 20, 5);
+      Enemy e = new Enemy(width, startY, 20, 20, 5,pic);
       enemies.addLast(e);
       effects.onNewEnemy(e);
     }
@@ -70,22 +89,17 @@ class GameState extends State {
     Iterator<Enemy> iter = enemyList.iterator();
     while (iter.hasNext()) {
       Enemy e = iter.next();
+      int gameRanTime = gameTime();
+      float speed = gameRanTime * 0.0002;
       if(e.isActive()){
-        if(gameTime() < 10000){
-          e.setSpeed(2);
-        }
-        else if(gameTime() < 20000){
-          e.setSpeed(4);
-        }
-        else if(gameTime() < 30000){
-          e.setSpeed(6);
-        }
-        else if(gameTime() < 40000){
-          e.setSpeed(10);
-        }
+        e.setSpeed(speed);
         if(this.checkEnemyPlayerCollision(e, this.p)){
           effects.onPlayerHit(e, this.p);
           e.setInactive();
+          this.p.enemyHit();
+          if(this.p.lives == 0){
+            stateMachine.changeState(GameOverState.class);
+          }
         }
       }
       e.draw();

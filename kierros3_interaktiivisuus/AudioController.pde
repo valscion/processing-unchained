@@ -2,7 +2,6 @@ import ddf.minim.analysis.*;
 import ddf.minim.*;
 
 class AudioController {
-  Minim minim;
   AudioInput in;
   FFT fftLin;
   RingBuffer smallerRingBuffer;
@@ -25,7 +24,6 @@ class AudioController {
   private final float FREQ_STEP = 4;
 
   AudioController() {
-    minim = new Minim(this);
     in = minim.getLineIn();
     smallerRingBuffer = new RingBuffer(15);
     largerRingBuffer = new RingBuffer(15);

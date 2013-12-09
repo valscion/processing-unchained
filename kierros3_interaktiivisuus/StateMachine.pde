@@ -23,6 +23,12 @@ class StateMachine {
     }
   }
 
+  State getState(Class<?> stateClass) {
+    String stateName = stateClass.getName();
+    State state = findStateByName(stateName);
+    return state;
+  }
+
   void setup() {
     Iterator<State> iter = states.iterator();
     while (iter.hasNext()) {

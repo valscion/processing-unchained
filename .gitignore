@@ -5,9 +5,10 @@
 *.war
 *.ear
 
-# Processing temporary files
+# Processing temporary and build files
 build-tmp/
 output/
+application.*/
 
 # Sublime crud
 *.sublime-workspace

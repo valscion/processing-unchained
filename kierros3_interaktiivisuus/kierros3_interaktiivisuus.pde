@@ -6,10 +6,13 @@ AudioController audioController;
 StateMachine stateMachine = new StateMachine();
 Map<String, PFont> fonts = new HashMap<String, PFont>();
 
+import ddf.minim.*;
+Minim minim;
+
 void setup() {
   size(1024, 500, P3D);
   try {
-    background(50);
+    minim = new Minim(this);
 
     audioController = new AudioController();
 
@@ -19,6 +22,7 @@ void setup() {
 
     stateMachine.addState(new GameState());
     stateMachine.addState(new CalibrateState());
+    stateMachine.addState(new GameOverState());
     stateMachine.changeState(CalibrateState.class);
     stateMachine.setup();
   }
