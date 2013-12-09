@@ -13,3 +13,5 @@ application.*/
 # Sublime crud
 *.sublime-workspace
 tmp
+/kierros4_3d/BasicGame/nbproject/private/
+/kierros4_3d/BasicGame/build/
