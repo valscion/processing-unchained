@@ -121,7 +121,7 @@ public class Main extends SimpleApplication implements ActionListener {
 
     private void initMaze() {
         sceneModel = assetManager.loadModel("Models/boksi/boksi.j3o");
-        //sceneModel.setLocalScale(100f);//vähän turha ilmottaa 
+        sceneModel.setLocalScale(100f); // Mallit on 10mm luokassa kun maailma on 1m luokassa.
         CollisionShape sceneShape = CollisionShapeFactory.createMeshShape((Node) sceneModel);
         landscape = new RigidBodyControl(sceneShape, 0);//massaksi 1000 niin tippuu alas
         sceneModel.addControl(landscape);
