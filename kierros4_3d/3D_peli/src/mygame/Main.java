@@ -76,6 +76,8 @@ public class Main extends SimpleApplication implements ActionListener {
         setUpKeys();
     }
 
+
+
     private void initLights(){
         /** A white ambient light source. */ 
         AmbientLight ambient = new AmbientLight();
@@ -108,6 +110,11 @@ public class Main extends SimpleApplication implements ActionListener {
         bulletAppState.getPhysicsSpace().add(landscape);
     }
     
+    private void respawn(){
+        bulletAppState.getPhysicsSpace().remove(this.player);
+        this.initPlayer();
+    }
+
     private void initPlayer(){
             // We set up collision detection for the player by creating
     // a capsule collision shape and a CharacterControl.
@@ -118,7 +125,7 @@ public class Main extends SimpleApplication implements ActionListener {
     player = new CharacterControl(capsuleShape, 0.05f);
     player.setJumpSpeed(20);
     player.setFallSpeed(30);
-    player.setGravity(30);
+    player.setGravity(10);
     player.setPhysicsLocation(new Vector3f(0, 100, 0));
 //pelaaja vielä siihen maaailmaankin...
         bulletAppState.getPhysicsSpace().add(player);
@@ -140,6 +147,8 @@ public class Main extends SimpleApplication implements ActionListener {
     inputManager.addListener(this, "Jump");
     inputManager.addMapping("RotateWorld", new KeyTrigger(KeyInput.KEY_E));
     inputManager.addListener(this, "RotateWorld");
+    inputManager.addMapping("Respawn", new KeyTrigger(KeyInput.KEY_R));
+    inputManager.addListener(this, "Respawn");
 
   }
    /** These are our custom actions triggered by key presses.
@@ -157,6 +166,8 @@ public class Main extends SimpleApplication implements ActionListener {
       if (isPressed) { player.jump(); }
     } else if(binding.equals("RotateWorld")) {
         this.rotateWorld(1f);
+    } else if(binding.equals("Respawn")) {
+        this.respawn();
     }
   }
   
@@ -189,7 +200,7 @@ public class Main extends SimpleApplication implements ActionListener {
       if (xRotation > 10){
           xRotation = 1;
       }
-      landscape.setPhysicsRotation(new Quaternion(3f,xRotation,3f,3f));
+      landscape.setPhysicsRotation(new Quaternion(3f,-xRotation,3f,3f));
   }
     
     @Override
