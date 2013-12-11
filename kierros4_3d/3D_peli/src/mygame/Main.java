@@ -103,8 +103,8 @@ public class Main extends SimpleApplication implements ActionListener {
     }
 
     private void initMaze() {
-        sceneModel = assetManager.loadModel("Scenes/tyhjaMantu.j3o");
-        sceneModel.setLocalScale(1f);//vähän turha ilmottaa
+        sceneModel = assetManager.loadModel("Models/boksi/boksi.j3o");
+        //sceneModel.setLocalScale(100f);//vähän turha ilmottaa 
         CollisionShape sceneShape = CollisionShapeFactory.createMeshShape((Node) sceneModel);
         landscape = new RigidBodyControl(sceneShape, 0);//massaksi 1000 niin tippuu alas
         sceneModel.addControl(landscape);
@@ -128,7 +128,7 @@ public class Main extends SimpleApplication implements ActionListener {
         player.setJumpSpeed(20);
         player.setFallSpeed(30);
         player.setGravity(10);
-        player.setPhysicsLocation(new Vector3f(0, 100, 0));
+        player.setPhysicsLocation(new Vector3f(50, 150, -50));
         //pelaaja vielä siihen maaailmaankin...
         bulletAppState.getPhysicsSpace().add(player);
     }
