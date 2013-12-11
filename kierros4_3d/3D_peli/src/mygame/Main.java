@@ -196,6 +196,7 @@ public class Main extends SimpleApplication implements ActionListener {
    * 
    */
   private void rotateWorld(float rotationFloat){
+      
       xRotation += rotationFloat;
       if (xRotation > 10){
           xRotation = 1;
@@ -203,6 +204,15 @@ public class Main extends SimpleApplication implements ActionListener {
       landscape.setPhysicsRotation(new Quaternion(3f,-xRotation,3f,3f));
   }
     
+ /*Täytyy tehdä tällänen jolla saadaan helposti oikeenlainen Quaternion
+  * @param kolme jotain arvoa
+  * @return sitä vastaava Quaternion
+  */
+ private Quaternion giveQFromDegree(float degreeX, float degreeY, float degreeZ){
+     //logiikka TODO
+     return new Quaternion(3f,-degreeY,3f,3f);
+ }
+         
     @Override
     public void simpleRender(RenderManager rm) {
         //TODO: add render code
