@@ -201,6 +201,9 @@ public class Main extends SimpleApplication implements ActionListener {
       if (xRotation > 10){
           xRotation = 1;
       }
+      //TODO
+      //Quaternion tempQ = this.giveQFromDegree(90, 88, 65);
+      //landscape.setPhysicsRotation(tempQ);
       landscape.setPhysicsRotation(new Quaternion(3f,-xRotation,3f,3f));
   }
     
