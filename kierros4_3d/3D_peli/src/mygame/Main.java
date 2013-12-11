@@ -35,11 +35,14 @@ import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Matrix3f;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Mesh;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.debug.Arrow;
 
 /**
  * test
@@ -60,6 +63,7 @@ public class Main extends SimpleApplication implements ActionListener {
     private Vector3f camDir = new Vector3f();
     private Vector3f camLeft = new Vector3f();
     private Vector3f walkDirection = new Vector3f();
+      private Spatial arrow;
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -72,10 +76,12 @@ public class Main extends SimpleApplication implements ActionListener {
         this.initMaze();
         this.initPlayer();
         this.initLights();
+        this.initGravityArrow();
         // We re-use the flyby camera for rotation, while positioning is handled by physics
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
         flyCam.setMoveSpeed(100);
         setupKeys();
+       
     }
 
     private void initLights() {
@@ -198,7 +204,9 @@ public class Main extends SimpleApplication implements ActionListener {
         }
         player.setWalkDirection(walkDirection);
         cam.setLocation(player.getPhysicsLocation());
+        this.updateGravityArrow();
     }
+  
 
     /*Pyöräyttää landscapea
      * 
@@ -228,4 +236,24 @@ public class Main extends SimpleApplication implements ActionListener {
     public void simpleRender(RenderManager rm) {
         //TODO: add render code
     }
+    
+    public void initGravityArrow(){
+        Arrow helpArrow = new Arrow(Vector3f.UNIT_Y);
+         helpArrow.setLineWidth(10);
+        arrow = new Geometry("Box", helpArrow);
+          Material mat1 = new Material(assetManager, 
+                "Common/MatDefs/Misc/Unshaded.j3md");
+        mat1.setColor("Color", ColorRGBA.White);
+        arrow.setMaterial(mat1);
+        rootNode.attachChild(arrow);
+        
+    }
+     public void updateGravityArrow(){     
+        Vector3f vectorDifference = new Vector3f(cam.getLocation().subtract(arrow.getWorldTranslation()));
+        arrow.setLocalTranslation(vectorDifference.addLocal(arrow.getLocalTranslation()));
+        // Move it to the bottom right of the screen
+        arrow.move(cam.getDirection().mult(3));
+        arrow.move(cam.getUp().mult(-0.8f));
+        arrow.move(cam.getLeft().mult(-1f));
+     }
 }
