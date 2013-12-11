@@ -75,7 +75,7 @@ public class Main extends SimpleApplication implements ActionListener {
         // We re-use the flyby camera for rotation, while positioning is handled by physics
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
         flyCam.setMoveSpeed(100);
-        setUpKeys();
+        setupKeys();
     }
 
     private void initLights() {
@@ -137,7 +137,7 @@ public class Main extends SimpleApplication implements ActionListener {
      * We over-write some navigational key mappings here, so we can add
      * physics-controlled walking and jumping:
      */
-    private void setUpKeys() {
+    private void setupKeys() {
         inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
         inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_D));
         inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_W));
