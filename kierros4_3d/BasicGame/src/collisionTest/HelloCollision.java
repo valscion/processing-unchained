@@ -13,6 +13,7 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
+import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Matrix3f;
 import com.jme3.math.Quaternion;
@@ -60,13 +61,24 @@ public class HelloCollision extends SimpleApplication
     flyCam.setMoveSpeed(100);
     setUpKeys();
     setUpLight();
- 
+ /*
+            Spatial teapot = assetManager.loadModel("Models/Teapot/Teapot.obj");
+        Material mat_default = new Material( 
+            assetManager, "Common/MatDefs/Misc/ShowNormals.j3md");
+        teapot.setMaterial(mat_default);
+        rootNode.attachChild(teapot);
+   */ 
+    //ladataan tuolta valmis obj filu
+    //sceneModel2 = assetManager.loadModel("Models/cube.obj");
+    
     // We load the scene from the zip file and adjust its size.
     assetManager.registerLocator("town.zip", ZipLocator.class);
     sceneModel = assetManager.loadModel("main.scene");
-    sceneModel2 = assetManager.loadModel("main.scene");
+    sceneModel2 = assetManager.loadModel("palikoita.blend");
     sceneModel.setLocalScale(0.5f);
     sceneModel2.setLocalScale(2f);
+    //cubeModel = assetManager.loadModel("models/cube.obj");
+    //cubeModel.setLocalScale(1000f);
  
     // We set up collision detection for the scene by creating a
     // compound collision shape and a static RigidBodyControl with mass zero.
@@ -157,7 +169,7 @@ public class HelloCollision extends SimpleApplication
       if (xRotation > 2){
           xRotation = 0;
       }
-      landscape2.setPhysicsRotation(new Quaternion(xRotation,1f,1f,1f));
+      landscape2.setPhysicsRotation(new Quaternion(0f,-xRotation/8,xRotation/3,0f));
               //.setPhysicsLocation(player.getViewDirection());
               //.setPhysicsRotation(player.getViewDirection()); 
       //landscape2.setPhysicsRotation(fysiikkaRot);

@@ -1,0 +1,10 @@
+diff a/kierros2_tietokonetaide/kierros2_tietokonetaide.pde b/kierros2_tietokonetaide/kierros2_tietokonetaide.pde	(rejected hunks)
+@@ -149,7 +149,7 @@
+     return false;
+   }
+   else{
+-  int randTimePeriod = int(random(500, 1000));
++  int randTimePeriod = int(random(50, 200));
+   glitchTime = randTimePeriod;
+   millisAtLastTrue = millis();
+   return true;
