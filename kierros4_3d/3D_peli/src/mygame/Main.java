@@ -42,7 +42,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 /**
  * test
- * @author normenhansen
+ * @author normenhansen ja Django unchained
  */
 public class Main extends SimpleApplication implements ActionListener {
     private Spatial sceneModel;
@@ -77,10 +77,15 @@ public class Main extends SimpleApplication implements ActionListener {
     }
 
     private void initLights(){
-            /** A white ambient light source. */ 
-            AmbientLight ambient = new AmbientLight();
-            ambient.setColor(ColorRGBA.White);
-            rootNode.addLight(ambient); 
+        /** A white ambient light source. */ 
+        AmbientLight ambient = new AmbientLight();
+        ambient.setColor(ColorRGBA.White);
+        rootNode.addLight(ambient); 
+
+        DirectionalLight dl = new DirectionalLight();
+        dl.setColor(ColorRGBA.White);
+        dl.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
+        rootNode.addLight(dl);
     }
     
     private void initPhysics(){
@@ -91,24 +96,7 @@ public class Main extends SimpleApplication implements ActionListener {
         bulletAppState.getPhysicsSpace().enableDebug(assetManager);
     }
     
-      /** We over-write some navigational key mappings here, so we can
-   * add physics-controlled walking and jumping: */
-  private void setUpKeys() {
-    inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
-    inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_D));
-    inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_W));
-    inputManager.addMapping("Down", new KeyTrigger(KeyInput.KEY_S));
-    inputManager.addMapping("Jump", new KeyTrigger(KeyInput.KEY_SPACE));
-    inputManager.addMapping("RotateWorld", new KeyTrigger(KeyInput.KEY_E));
-    inputManager.addListener(this, "Left");
-    inputManager.addListener(this, "Right");
-    inputManager.addListener(this, "Up");
-    inputManager.addListener(this, "Down");
-    inputManager.addListener(this, "Jump");
-    inputManager.addMapping("RotateWorld", new KeyTrigger(KeyInput.KEY_E));
-    inputManager.addListener(this, "RotateWorld");
 
-  }
     
     private void initMaze(){
         sceneModel = assetManager.loadModel("Scenes/tyhjaMantu.j3o");
@@ -131,9 +119,29 @@ public class Main extends SimpleApplication implements ActionListener {
     player.setJumpSpeed(20);
     player.setFallSpeed(30);
     player.setGravity(30);
-    player.setPhysicsLocation(new Vector3f(0, 10, 0));
+    player.setPhysicsLocation(new Vector3f(0, 100, 0));
+//pelaaja vielä siihen maaailmaankin...
+        bulletAppState.getPhysicsSpace().add(player);
     }
-    
+
+      /** We over-write some navigational key mappings here, so we can
+   * add physics-controlled walking and jumping: */
+  private void setUpKeys() {
+    inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
+    inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_D));
+    inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_W));
+    inputManager.addMapping("Down", new KeyTrigger(KeyInput.KEY_S));
+    inputManager.addMapping("Jump", new KeyTrigger(KeyInput.KEY_SPACE));
+    inputManager.addMapping("RotateWorld", new KeyTrigger(KeyInput.KEY_E));
+    inputManager.addListener(this, "Left");
+    inputManager.addListener(this, "Right");
+    inputManager.addListener(this, "Up");
+    inputManager.addListener(this, "Down");
+    inputManager.addListener(this, "Jump");
+    inputManager.addMapping("RotateWorld", new KeyTrigger(KeyInput.KEY_E));
+    inputManager.addListener(this, "RotateWorld");
+
+  }
    /** These are our custom actions triggered by key presses.
    * We do not walk yet, we just keep track of the direction the user pressed. */
   public void onAction(String binding, boolean isPressed, float tpf) {
@@ -148,7 +156,7 @@ public class Main extends SimpleApplication implements ActionListener {
     } else if (binding.equals("Jump")) {
       if (isPressed) { player.jump(); }
     } else if(binding.equals("RotateWorld")) {
-        this.rotateWorld(0.1f);
+        this.rotateWorld(1f);
     }
   }
   
@@ -178,11 +186,11 @@ public class Main extends SimpleApplication implements ActionListener {
    */
   private void rotateWorld(float rotationFloat){
       xRotation += rotationFloat;
-      if (xRotation > 2){
-          xRotation = 0;
+      if (xRotation > 10){
+          xRotation = 1;
       }
-      landscape.setPhysicsRotation(new Quaternion(0f,-xRotation/8,xRotation/3,0f));
-  }    
+      landscape.setPhysicsRotation(new Quaternion(3f,xRotation,3f,3f));
+  }
     
     @Override
     public void simpleRender(RenderManager rm) {
