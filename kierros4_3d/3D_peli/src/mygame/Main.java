@@ -44,7 +44,7 @@ import com.jme3.scene.Spatial;
  * test
  * @author normenhansen
  */
-public class Main extends SimpleApplication {
+public class Main extends SimpleApplication implements ActionListener {
     private Spatial sceneModel;
     private RigidBodyControl landscape;
     private BulletAppState bulletAppState;
