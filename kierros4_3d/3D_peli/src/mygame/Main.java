@@ -33,6 +33,7 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
+import com.jme3.light.SpotLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
@@ -64,6 +65,9 @@ public class Main extends SimpleApplication implements ActionListener {
     private Vector3f camLeft = new Vector3f();
     private Vector3f walkDirection = new Vector3f();
       private Spatial arrow;
+    
+    // Flashlight
+    private SpotLight flashLight;
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -81,21 +85,28 @@ public class Main extends SimpleApplication implements ActionListener {
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
         flyCam.setMoveSpeed(100);
         setupKeys();
-       
     }
 
     private void initLights() {
         /**
          * A white ambient light source.
          */
-        AmbientLight ambient = new AmbientLight();
-        ambient.setColor(ColorRGBA.White);
-        rootNode.addLight(ambient);
-
+        //AmbientLight ambient = new AmbientLight();
+        //ambient.setColor(ColorRGBA.White.mult(0.1f));
+        //rootNode.addLight(ambient);
+/*
         DirectionalLight dl = new DirectionalLight();
-        dl.setColor(ColorRGBA.White);
+        dl.setColor(ColorRGBA.White.mult(0.1f));
         dl.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
         rootNode.addLight(dl);
+       */ 
+        flashLight = new SpotLight();
+        flashLight.setColor(ColorRGBA.White);
+        flashLight.setPosition(player.getPhysicsLocation());
+        flashLight.setDirection(player.getViewDirection());
+        flashLight.setSpotOuterAngle(10f);
+        //flashLight.setSpotOuterAngle(20f);
+        rootNode.addLight(flashLight);
     }
 
     private void initPhysics() {
@@ -105,7 +116,7 @@ public class Main extends SimpleApplication implements ActionListener {
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
         //tässä oli kommentit että debugi pois päältä
-        bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+        //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
     }
 
     private void initMaze() {
@@ -134,7 +145,7 @@ public class Main extends SimpleApplication implements ActionListener {
         player.setJumpSpeed(20);
         player.setFallSpeed(30);
         player.setGravity(10);
-        player.setPhysicsLocation(new Vector3f(50, 150, -50));
+        player.setPhysicsLocation(new Vector3f(50, 100, -50));
         //pelaaja vielä siihen maaailmaankin...
         bulletAppState.getPhysicsSpace().add(player);
     }
@@ -203,10 +214,12 @@ public class Main extends SimpleApplication implements ActionListener {
             walkDirection.addLocal(camDir.negate());
         }
         player.setWalkDirection(walkDirection);
+        player.setViewDirection(camDir);
         cam.setLocation(player.getPhysicsLocation());
+        flashLight.setPosition(player.getPhysicsLocation());
+        flashLight.setDirection(player.getViewDirection());
         this.updateGravityArrow();
     }
-  
 
     /*Pyöräyttää landscapea
      * 
