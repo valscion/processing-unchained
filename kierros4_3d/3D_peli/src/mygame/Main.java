@@ -40,11 +40,14 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+
 /**
  * test
+ *
  * @author normenhansen ja Django unchained
  */
 public class Main extends SimpleApplication implements ActionListener {
+
     private Spatial sceneModel;
     private RigidBodyControl landscape;
     private BulletAppState bulletAppState;
@@ -57,15 +60,14 @@ public class Main extends SimpleApplication implements ActionListener {
     private Vector3f camDir = new Vector3f();
     private Vector3f camLeft = new Vector3f();
     private Vector3f walkDirection = new Vector3f();
-    
+
     public static void main(String[] args) {
         Main app = new Main();
         app.start();
     }
 
-
     @Override
-    public void simpleInitApp() { 
+    public void simpleInitApp() {
         this.initPhysics();
         this.initMaze();
         this.initPlayer();
@@ -76,102 +78,109 @@ public class Main extends SimpleApplication implements ActionListener {
         setUpKeys();
     }
 
-
-
-    private void initLights(){
-        /** A white ambient light source. */ 
+    private void initLights() {
+        /**
+         * A white ambient light source.
+         */
         AmbientLight ambient = new AmbientLight();
         ambient.setColor(ColorRGBA.White);
-        rootNode.addLight(ambient); 
+        rootNode.addLight(ambient);
 
         DirectionalLight dl = new DirectionalLight();
         dl.setColor(ColorRGBA.White);
         dl.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
         rootNode.addLight(dl);
     }
-    
-    private void initPhysics(){
-        /** Set up Physics */
+
+    private void initPhysics() {
+        /**
+         * Set up Physics
+         */
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
         //tässä oli kommentit että debugi pois päältä
         bulletAppState.getPhysicsSpace().enableDebug(assetManager);
     }
-    
 
-    
-    private void initMaze(){
+    private void initMaze() {
         sceneModel = assetManager.loadModel("Scenes/tyhjaMantu.j3o");
-        sceneModel.setLocalScale(1f);//vähän turha ilmottaa 
+        sceneModel.setLocalScale(1f);//vähän turha ilmottaa
         CollisionShape sceneShape = CollisionShapeFactory.createMeshShape((Node) sceneModel);
         landscape = new RigidBodyControl(sceneShape, 0);//massaksi 1000 niin tippuu alas
         sceneModel.addControl(landscape);
         rootNode.attachChild(sceneModel);
         bulletAppState.getPhysicsSpace().add(landscape);
     }
-    
-    private void respawn(){
+
+    private void respawn() {
         bulletAppState.getPhysicsSpace().remove(this.player);
         this.initPlayer();
     }
 
-    private void initPlayer(){
-            // We set up collision detection for the player by creating
-    // a capsule collision shape and a CharacterControl.
-    // The CharacterControl offers extra settings for
-    // size, stepheight, jumping, falling, and gravity.
-    // We also put the player in its starting position.
-    CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 6f, 1);
-    player = new CharacterControl(capsuleShape, 0.05f);
-    player.setJumpSpeed(20);
-    player.setFallSpeed(30);
-    player.setGravity(10);
-    player.setPhysicsLocation(new Vector3f(0, 100, 0));
-//pelaaja vielä siihen maaailmaankin...
+    private void initPlayer() {
+        // We set up collision detection for the player by creating
+        // a capsule collision shape and a CharacterControl.
+        // The CharacterControl offers extra settings for
+        // size, stepheight, jumping, falling, and gravity.
+        // We also put the player in its starting position.
+        CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 6f, 1);
+        player = new CharacterControl(capsuleShape, 0.05f);
+        player.setJumpSpeed(20);
+        player.setFallSpeed(30);
+        player.setGravity(10);
+        player.setPhysicsLocation(new Vector3f(0, 100, 0));
+        //pelaaja vielä siihen maaailmaankin...
         bulletAppState.getPhysicsSpace().add(player);
     }
 
-      /** We over-write some navigational key mappings here, so we can
-   * add physics-controlled walking and jumping: */
-  private void setUpKeys() {
-    inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
-    inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_D));
-    inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_W));
-    inputManager.addMapping("Down", new KeyTrigger(KeyInput.KEY_S));
-    inputManager.addMapping("Jump", new KeyTrigger(KeyInput.KEY_SPACE));
-    inputManager.addMapping("RotateWorld", new KeyTrigger(KeyInput.KEY_E));
-    inputManager.addListener(this, "Left");
-    inputManager.addListener(this, "Right");
-    inputManager.addListener(this, "Up");
-    inputManager.addListener(this, "Down");
-    inputManager.addListener(this, "Jump");
-    inputManager.addMapping("RotateWorld", new KeyTrigger(KeyInput.KEY_E));
-    inputManager.addListener(this, "RotateWorld");
-    inputManager.addMapping("Respawn", new KeyTrigger(KeyInput.KEY_R));
-    inputManager.addListener(this, "Respawn");
+    /**
+     * We over-write some navigational key mappings here, so we can add
+     * physics-controlled walking and jumping:
+     */
+    private void setUpKeys() {
+        inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
+        inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_D));
+        inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_W));
+        inputManager.addMapping("Down", new KeyTrigger(KeyInput.KEY_S));
+        inputManager.addMapping("Jump", new KeyTrigger(KeyInput.KEY_SPACE));
+        inputManager.addMapping("RotateWorld", new KeyTrigger(KeyInput.KEY_E));
+        inputManager.addListener(this, "Left");
+        inputManager.addListener(this, "Right");
+        inputManager.addListener(this, "Up");
+        inputManager.addListener(this, "Down");
+        inputManager.addListener(this, "Jump");
+        inputManager.addMapping("RotateWorld", new KeyTrigger(KeyInput.KEY_E));
+        inputManager.addListener(this, "RotateWorld");
+        inputManager.addMapping("Respawn", new KeyTrigger(KeyInput.KEY_R));
+        inputManager.addListener(this, "Respawn");
 
-  }
-   /** These are our custom actions triggered by key presses.
-   * We do not walk yet, we just keep track of the direction the user pressed. */
-  public void onAction(String binding, boolean isPressed, float tpf) {
-    if (binding.equals("Left")) {
-      left = isPressed;
-    } else if (binding.equals("Right")) {
-      right= isPressed;
-    } else if (binding.equals("Up")) {
-      up = isPressed;
-    } else if (binding.equals("Down")) {
-      down = isPressed;
-    } else if (binding.equals("Jump")) {
-      if (isPressed) { player.jump(); }
-    } else if(binding.equals("RotateWorld")) {
-        this.rotateWorld(1f);
-    } else if(binding.equals("Respawn")) {
-        this.respawn();
     }
-  }
-  
-  @Override
+
+    /**
+     * These are our custom actions triggered by key presses. We do not walk
+     * yet, we just keep track of the direction the user pressed.
+     */
+    public void onAction(String binding, boolean isPressed, float tpf) {
+        if (binding.equals("Left")) {
+            left = isPressed;
+        } else if (binding.equals("Right")) {
+            right = isPressed;
+        } else if (binding.equals("Up")) {
+            up = isPressed;
+        } else if (binding.equals("Down")) {
+            down = isPressed;
+        } else if (binding.equals("Jump")) {
+            if (isPressed) {
+                player.jump();
+            }
+        } else if (binding.equals("RotateWorld")) {
+            this.rotateWorld(1f);
+        } else if (binding.equals("Respawn")) {
+            this.respawn();
+        }
+    }
+
+    @Override
     public void simpleUpdate(float tpf) {
         camDir.set(cam.getDirection()).multLocal(0.6f);
         camLeft.set(cam.getLeft()).multLocal(0.4f);
@@ -191,31 +200,31 @@ public class Main extends SimpleApplication implements ActionListener {
         player.setWalkDirection(walkDirection);
         cam.setLocation(player.getPhysicsLocation());
     }
-  
-  /*Pyöräyttää landscapea
-   * 
-   */
-  private void rotateWorld(float rotationFloat){
-      
-      xRotation += rotationFloat;
-      if (xRotation > 10){
-          xRotation = 1;
-      }
-      //TODO
-      //Quaternion tempQ = this.giveQFromDegree(90, 88, 65);
-      //landscape.setPhysicsRotation(tempQ);
-      landscape.setPhysicsRotation(new Quaternion(3f,-xRotation,3f,3f));
-  }
-    
- /*Täytyy tehdä tällänen jolla saadaan helposti oikeenlainen Quaternion
-  * @param kolme jotain arvoa
-  * @return sitä vastaava Quaternion
-  */
- private Quaternion giveQFromDegree(float degreeX, float degreeY, float degreeZ){
-     //logiikka TODO
-     return new Quaternion(3f,-degreeY,3f,3f);
- }
-         
+
+    /*Pyöräyttää landscapea
+     * 
+     */
+    private void rotateWorld(float rotationFloat) {
+
+        xRotation += rotationFloat;
+        if (xRotation > 10) {
+            xRotation = 1;
+        }
+        //TODO
+        //Quaternion tempQ = this.giveQFromDegree(90, 88, 65);
+        //landscape.setPhysicsRotation(tempQ);
+        landscape.setPhysicsRotation(new Quaternion(3f, -xRotation, 3f, 3f));
+    }
+
+    /*Täytyy tehdä tällänen jolla saadaan helposti oikeenlainen Quaternion
+     * @param kolme jotain arvoa
+     * @return sitä vastaava Quaternion
+     */
+    private Quaternion giveQFromDegree(float degreeX, float degreeY, float degreeZ) {
+        //logiikka TODO
+        return new Quaternion(3f, -degreeY, 3f, 3f);
+    }
+
     @Override
     public void simpleRender(RenderManager rm) {
         //TODO: add render code
