@@ -21,3 +21,4 @@ tmp
 *~.skp
 # Blender...
 *.blend*
+/kierros4_3d/3D_peli/dist/
