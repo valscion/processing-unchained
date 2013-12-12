@@ -28,6 +28,12 @@ import com.jme3.util.SkyFactory;
 import java.text.DecimalFormat;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
+import com.jme3.niftygui.NiftyJmeDisplay;
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.elements.Element;
+import de.lessvoid.nifty.elements.render.TextRenderer;
+import de.lessvoid.nifty.screen.Screen;
+import de.lessvoid.nifty.screen.ScreenController;
 
 /**
  * Pohjana on käytetty "collisionTest" valmista testiluokkaa, jonka author:normenhansen
@@ -63,6 +69,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private static final String GOAL = "maali";
     private Node goalNode;
     private int currentLevel;
+    public Nifty nifty;
+    private NiftyJmeDisplay niftyDisplay;
     
     public static void main(String[] args) {
         Main app = new Main();
@@ -88,6 +96,11 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
         flyCam.setMoveSpeed(100);
         setupKeys();
+        this.niftyDisplay = new NiftyJmeDisplay(
+                assetManager, inputManager, audioRenderer, guiViewPort);
+        nifty = niftyDisplay.getNifty();
+        nifty.fromXml("Interface/screen.xml", "start");
+        guiViewPort.addProcessor(niftyDisplay);
     }
 
     private void initLights() {
@@ -244,6 +257,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             }
         } else if (binding.equals("Respawn")) {
             this.respawn();
+            if(guiViewPort.getProcessors().contains(niftyDisplay))
+            guiViewPort.removeProcessor(niftyDisplay);
         }
     }
 
