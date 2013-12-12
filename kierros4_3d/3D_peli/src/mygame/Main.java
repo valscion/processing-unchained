@@ -68,7 +68,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private static final String PLAYER = "pelaaja";
     private static final String GOAL = "maali";
     private static final String GROUND = "maa";
+    private static final String ARROW = "temminokanalla";
     private Node goalNode;
+    private Node arrowNode;
     private Node groundNode;
     private int currentLevel;
 
@@ -230,16 +232,28 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     }
 
     public void initRotationGfx() {
+        arrowNode = new Node(ARROW);
+        Spatial arrowSpatial = assetManager.loadModel("Models/temminokanalla.j3o");
+        arrowSpatial.scale(0.1f);
+        Vector3f arrowPosition = new Vector3f(40, 85, -35);
+        arrowNode.attachChild(arrowSpatial);
+        arrowNode.setLocalTranslation(50, 100, -50);
+        rootNode.attachChild(arrowNode);
+        
+        /*
         Box helpBox = new Box(0.1f, 0.1f, -10f);
+        Spatial arrowSpatial = new Geometry("Box", helpBox);assetManager.loadModel("Models/temminokanalla.j3o");
         arrow = new Geometry("Box", helpBox);
         Material mat1 = new Material(assetManager,
                 "Common/MatDefs/Misc/Unshaded.j3md");
         mat1.setColor("Color", ColorRGBA.Blue);
         arrow.setMaterial(mat1);
+        arrow.set
         arrow.setShadowMode(RenderQueue.ShadowMode.Off);
         arrow.setCullHint(Spatial.CullHint.Never);
         arrow.setLocalTranslation(50, 100, -50);
         rootNode.attachChild(arrow);
+        */
     }
 
     /**
@@ -470,8 +484,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         Vector3f location = cam.getLocation().clone();
         location.addLocal(0f, -0.5f, 0f);
         Vector3f lookLocation = location.add(this.lookDirection());
-        arrow.setLocalTranslation(location);
-        arrow.lookAt(lookLocation, UpAxisDir.unitVector(playerControl.getUpAxis()));
+        arrowNode.getChild(0).setLocalTranslation(location);
+        arrowNode.updateGeometricState();
+        arrowNode.lookAt(lookLocation, UpAxisDir.unitVector(playerControl.getUpAxis()));
     }
 
     public void updateHUD() {
