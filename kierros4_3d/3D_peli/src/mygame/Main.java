@@ -27,8 +27,10 @@ import com.jme3.util.SkyFactory;
 import java.text.DecimalFormat;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
+import com.jme3.math.Quaternion;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.shape.Box;
+import com.jme3.ui.Picture;
 
 /**
  * Pohjana on käytetty "collisionTest" valmista testiluokkaa, jonka
@@ -71,6 +73,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private Node goalNode;
     private Node groundNode;
     private int currentLevel;
+    private CameraRotator cameraRotator;
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -100,6 +103,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         // We re-use the flyby camera for rotation, while positioning is handled by physics
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
         flyCam.setMoveSpeed(100);
+        
+        this.cameraRotator = new CameraRotator(this.cam, this.playerControl);
     }
 
     private void initPhysics() {
@@ -217,6 +222,13 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         timeText.setLocalTranslation(0, settings.getHeight(), 0); // position
         guiNode.attachChild(timeText);
         this.initDebugText();
+
+        Picture pic = new Picture("QA-picture");
+        pic.setImage(assetManager, "Textures/keys.png", true);
+        pic.setHeight(80f);
+        pic.setWidth(152f);
+        pic.setPosition(settings.getWidth() / 2 - 76f, settings.getHeight() - 80f);
+        guiNode.attachChild(pic);
     }
 
     private void initDebugText() {
@@ -267,6 +279,40 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     // END GAME INITIALIZE
     // -------------------------------------------------------------------------
     //
+    
+    @Override
+    public void simpleUpdate(float tpf) {
+        camDir.set(cam.getDirection()).multLocal(0.6f);
+        camLeft.set(cam.getLeft()).multLocal(0.4f);
+        walkDirection.set(0, 0, 0);
+        if (left) {
+            walkDirection.addLocal(camLeft);
+        }
+        if (right) {
+            walkDirection.addLocal(camLeft.negate());
+        }
+        if (up) {
+            walkDirection.addLocal(camDir);
+        }
+        if (down) {
+            walkDirection.addLocal(camDir.negate());
+        }
+        playerControl.setWalkDirection(walkDirection);
+        playerControl.setViewDirection(camDir);
+        cam.setLocation(playerControl.getPhysicsLocation());
+        flashLight.setPosition(playerControl.getPhysicsLocation());
+        flashLight.setDirection(playerControl.getViewDirection());
+        this.updateRotationGfx();
+        this.updateHUD();
+        this.cameraRotator.update(tpf);
+    }
+    
+    @Override
+    public void simpleRender(RenderManager rm) {
+        //TODO: add render code
+    }
+
+    
     private void respawn() {
         this.startTime = timer.getTimeInSeconds();
         bulletAppState.getPhysicsSpace().remove(this.playerControl);
@@ -300,32 +346,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         } else if (binding.equals("Respawn")) {
             this.respawn();
         }
-    }
-
-    @Override
-    public void simpleUpdate(float tpf) {
-        camDir.set(cam.getDirection()).multLocal(0.6f);
-        camLeft.set(cam.getLeft()).multLocal(0.4f);
-        walkDirection.set(0, 0, 0);
-        if (left) {
-            walkDirection.addLocal(camLeft);
-        }
-        if (right) {
-            walkDirection.addLocal(camLeft.negate());
-        }
-        if (up) {
-            walkDirection.addLocal(camDir);
-        }
-        if (down) {
-            walkDirection.addLocal(camDir.negate());
-        }
-        playerControl.setWalkDirection(walkDirection);
-        playerControl.setViewDirection(camDir);
-        cam.setLocation(playerControl.getPhysicsLocation());
-        flashLight.setPosition(playerControl.getPhysicsLocation());
-        flashLight.setDirection(playerControl.getViewDirection());
-        this.updateRotationGfx();
-        this.updateHUD();
     }
 
     /**
@@ -369,8 +389,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         }
 
         // Rotate camera based on up axis and look direction
-        cam.lookAtDirection(dirVector, upVector);
-        cam.update();
+        Quaternion targetRotation = new Quaternion();
+        targetRotation.fromAngleAxis(FastMath.HALF_PI, upVector);
+        cameraRotator.rotateTo(targetRotation);
     }
 
     /**
@@ -464,11 +485,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     
     private void playCollisionSound(){
         this.collisionSound.play();
-    }
-
-    @Override
-    public void simpleRender(RenderManager rm) {
-        //TODO: add render code
     }
 
     public void updateRotationGfx() {
