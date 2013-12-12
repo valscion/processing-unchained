@@ -23,6 +23,8 @@ import com.jme3.scene.shape.Box;
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.ZipLocator;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.collision.PhysicsCollisionEvent;
+import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.CharacterControl;
@@ -51,14 +53,15 @@ import com.jme3.scene.debug.Arrow;
  *
  * @author normenhansen ja Django unchained
  */
-public class Main extends SimpleApplication implements ActionListener {
+public class Main extends SimpleApplication implements ActionListener, PhysicsCollisionListener {
 
     private Spatial sceneModel;
     private RigidBodyControl landscape;
     private BulletAppState bulletAppState;
     //näppäimille
     private boolean left = false, right = false, up = false, down = false, keyE = false;
-    private CharacterControl player;
+    private CharacterControl playerControl;
+    private Node playerNode;
     //Temporary vectors used on each frame.
     //They here to avoid instanciating new vectors on each frame
     private Vector3f camDir = new Vector3f();
@@ -67,6 +70,8 @@ public class Main extends SimpleApplication implements ActionListener {
     private Spatial arrow;
     // Flashlight
     private SpotLight flashLight;
+    private static final String PLAYER = "pelaaja";
+    private static final String GOAL = "maali";
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -101,8 +106,8 @@ public class Main extends SimpleApplication implements ActionListener {
          */
         flashLight = new SpotLight();
         flashLight.setColor(ColorRGBA.White);
-        flashLight.setPosition(player.getPhysicsLocation());
-        flashLight.setDirection(player.getViewDirection());
+        flashLight.setPosition(playerControl.getPhysicsLocation());
+        flashLight.setDirection(playerControl.getViewDirection());
         flashLight.setSpotOuterAngle(10f);
         //flashLight.setSpotOuterAngle(20f);
         rootNode.addLight(flashLight);
@@ -129,24 +134,40 @@ public class Main extends SimpleApplication implements ActionListener {
     }
 
     private void respawn() {
-        bulletAppState.getPhysicsSpace().remove(this.player);
+        bulletAppState.getPhysicsSpace().remove(this.playerControl);
+        //en tiedä onko tarpeellisia, ainakin järkevän oloista poistaa pelaaja
+        rootNode.removeControl(playerControl);
+        rootNode.detachChild(playerNode);
         this.initPlayer();
     }
 
     private void initPlayer() {
-        // We set up collision detection for the player by creating
-        // a capsule collision shape and a CharacterControl.
-        // The CharacterControl offers extra settings for
-        // size, stepheight, jumping, falling, and gravity.
-        // We also put the player in its starting position.
+        //pelaajan rankamalli
         CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 6f, 1);
-        player = new CharacterControl(capsuleShape, 0.05f);
+        playerControl = new CharacterControl(capsuleShape, 0.05f);
+        //pelaajan alkusijainnin määrittävä vektori
+        Vector3f playerStartPosition = new Vector3f(50, 100, -50);
+        //pelaajaan vaikuttavat voimat
         //player.setJumpSpeed(20);
         //player.setFallSpeed(30);
-        player.setGravity(10);
-        player.setPhysicsLocation(new Vector3f(50, 100, -50));
+        playerControl.setGravity(10);
+        //pelaajan aloitussijainti
+        playerControl.setPhysicsLocation(playerStartPosition);
         //pelaaja vielä siihen maaailmaankin...
-        bulletAppState.getPhysicsSpace().add(player);
+        bulletAppState.getPhysicsSpace().add(playerControl);
+        playerNode = new Node(PLAYER);
+        playerNode.setLocalTranslation(playerStartPosition);
+        /*TODO jos halutaan pelaajalle joku model pelaajalle
+        playerSpatial = assetManager.loadModel("Models/karhu/karhu.mesh.j3o");
+        playerSpatial.scale(8.0f);
+        playerSpatial.setShadowMode(ShadowMode.CastAndReceive);
+        playerSpatial.setLocalTranslation(0.0f, -1.7f, 0.0f);
+        playerNode.attachChild(playerSpatial);
+        */
+        //pelaaja ohjaa nodeaan
+        playerNode.addControl(playerControl);
+        //pelaajan node maailmaan
+        rootNode.attachChild(playerNode);
     }
 
     private void setDebugText(String text) {
@@ -155,7 +176,7 @@ public class Main extends SimpleApplication implements ActionListener {
         hudText.setName("DEBUG_TEXT");
         hudText.setSize(guiFont.getCharSet().getRenderedSize());
         hudText.setColor(ColorRGBA.Black);
-        hudText.setText("Player up axis: " + player.getUpAxis());
+        hudText.setText("Player up axis: " + playerControl.getUpAxis());
         hudText.setLocalTranslation(300, hudText.getLineHeight(), 0);
         guiNode.attachChild(hudText);
     }
@@ -197,7 +218,7 @@ public class Main extends SimpleApplication implements ActionListener {
             down = isPressed;
         } else if (binding.equals("Jump")) {
             if (isPressed) {
-                player.jump();
+                playerControl.jump();
             }
         } else if (binding.equals("RotateWorld")) {
             if (!isPressed) {
@@ -225,11 +246,11 @@ public class Main extends SimpleApplication implements ActionListener {
         if (down) {
             walkDirection.addLocal(camDir.negate());
         }
-        player.setWalkDirection(walkDirection);
-        player.setViewDirection(camDir);
-        cam.setLocation(player.getPhysicsLocation());
-        flashLight.setPosition(player.getPhysicsLocation());
-        flashLight.setDirection(player.getViewDirection());
+        playerControl.setWalkDirection(walkDirection);
+        playerControl.setViewDirection(camDir);
+        cam.setLocation(playerControl.getPhysicsLocation());
+        flashLight.setPosition(playerControl.getPhysicsLocation());
+        flashLight.setDirection(playerControl.getViewDirection());
         this.updateGravityArrow();
     }
 
@@ -238,13 +259,13 @@ public class Main extends SimpleApplication implements ActionListener {
      */
     private void rotatePlayerUpAxis() {
         // Rotate the player up axis on Z-Y axis
-        int currentUp = player.getUpAxis();
+        int currentUp = playerControl.getUpAxis();
         int newUp = currentUp;
         if (currentUp == UpAxisDir.Y) {
             newUp = UpAxisDir.Z;
         } else if (currentUp == UpAxisDir.Z) {
             newUp = UpAxisDir.Y;
-            player.setGravity(-player.getGravity());
+            playerControl.setGravity(-playerControl.getGravity());
         }
         // TODO: Rotate camera 90 degrees on the X axis always
         //Quaternion rotateQ = new Quaternion();
@@ -252,8 +273,28 @@ public class Main extends SimpleApplication implements ActionListener {
         //Quaternion newCameraRotation = rotateQ.mult(cam.getRotation());
         //cam.setRotation(newCameraRotation);
 
-        player.setUpAxis(newUp);
-        this.setDebugText("Player up axis: " + player.getUpAxis());
+        playerControl.setUpAxis(newUp);
+        this.setDebugText("Player up axis: " + playerControl.getUpAxis());
+    }
+
+   public void collision(PhysicsCollisionEvent event) {
+       
+        if (FastMath.nextRandomFloat() < 0.3f) {
+            if (event.getNodeA().getName().equals(PLAYER)) {
+                handlePlayerCollision(event.getNodeB().getName(), event);
+            } else if (event.getNodeB().getName().equals(PLAYER)) {
+                handlePlayerCollision(event.getNodeA().getName(), event);
+            }
+        }
+    }
+
+    private void handlePlayerCollision(String objectName, PhysicsCollisionEvent event) {
+        if (objectName.equals(GOAL)) {
+            this.stop();
+        } 
+        /*else if (objectName.equals(ICE)) {
+            this.kaveleJaalla();
+        }*/
     }
 
     private class UpAxisDir {
