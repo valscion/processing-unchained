@@ -163,9 +163,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         Vector3f playerStartPosition = new Vector3f(50, 100, -50);
         //pelaajaan vaikuttavat voimat
         flyCam.setMoveSpeed(PLAYERSPEED);
-        playerControl.setJumpSpeed(20);
-        playerControl.setFallSpeed(60);
-        playerControl.setGravity(30);
+        playerControl.setJumpSpeed(PLAYERSPEED/2);
+        playerControl.setFallSpeed(PLAYERSPEED*2);
+        playerControl.setGravity(PLAYERSPEED);
         //pelaajan aloitussijainti
         playerControl.setPhysicsLocation(playerStartPosition);
         //pelaaja vielä siihen maaailmaankin...
