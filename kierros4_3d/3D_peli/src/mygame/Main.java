@@ -188,7 +188,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         hudText.setName("DEBUG_TEXT");
         hudText.setSize(guiFont.getCharSet().getRenderedSize());
         hudText.setColor(ColorRGBA.Black);
-        hudText.setText("Player up axis: " + playerControl.getUpAxis());
+        hudText.setText(text);
         hudText.setLocalTranslation(300, hudText.getLineHeight(), 0);
         guiNode.attachChild(hudText);
     }
@@ -278,11 +278,11 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         Vector3f dirVector = this.lookDirection();
         if (currentUp == UpAxisDir.Y) {
             newUp = UpAxisDir.X;
-            upVector = Vector3f.UNIT_X;
+            upVector = UpAxisDir.unitVector(newUp);
             playerControl.setGravity(-playerControl.getGravity());
         } else if (currentUp == UpAxisDir.X) {
             newUp = UpAxisDir.Y;
-            upVector = Vector3f.UNIT_Y;
+            upVector = UpAxisDir.unitVector(newUp);
         } else {
             throw new RuntimeException("Incorrect up axis, can't rotate!");
         }
@@ -295,15 +295,15 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         cam.lookAtDirection(dirVector, upVector);
 
         playerControl.setUpAxis(newUp);
-        this.setDebugText("Player up axis: " + playerControl.getUpAxis());
+        this.setDebugText("Player up axis: " + UpAxisDir.string(playerControl.getUpAxis()));
     }
 
     private Vector3f lookDirection() {
         return new Vector3f(0f, 0f, -1f); // Away from me
     }
 
-   public void collision(PhysicsCollisionEvent event) {
-       
+    public void collision(PhysicsCollisionEvent event) {
+
         if (FastMath.nextRandomFloat() < 0.3f) {
             if (event.getNodeA().getName().equals(PLAYER)) {
                 handlePlayerCollision(event.getNodeB().getName(), event);
@@ -322,11 +322,37 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
          }*/
     }
 
-    private class UpAxisDir {
+    private static class UpAxisDir {
 
         public final static int X = 0;
         public final static int Y = 1;
         public final static int Z = 2;
+
+        public static Vector3f unitVector(int dir) {
+            switch (dir) {
+                case X:
+                    return Vector3f.UNIT_X;
+                case Y:
+                    return Vector3f.UNIT_Y;
+                case Z:
+                    return Vector3f.UNIT_Z;
+                default:
+                    throw new IllegalArgumentException("Weird axis direction");
+            }
+        }
+
+        public static String string(int dir) {
+            switch (dir) {
+                case X:
+                    return "X";
+                case Y:
+                    return "Y";
+                case Z:
+                    return "Z";
+                default:
+                    throw new IllegalArgumentException("Weird axis direction");
+            }
+        }
     }
 
     /*Täytyy tehdä tällänen jolla saadaan helposti oikeenlainen Quaternion
