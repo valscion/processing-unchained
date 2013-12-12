@@ -550,7 +550,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
                     this.lookDirection().toString());
             ((BitmapText) guiNode.getChild("DEBUG_TEXT")).setText(debugText);
             if (showqe) {
-                System.out.println("Pitäisi poistua");
                 keyPicture.removeFromParent();
                 keyPicture = new Picture("QA-picture");
                 keyPicture.setImage(assetManager, "Textures/keys.png", true);
@@ -559,7 +558,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
                 keyPicture.setPosition(settings.getWidth() / 2 - 76f, settings.getHeight() - 80f);
                 guiNode.attachChild(keyPicture);
             } else {
-                System.out.println("Täälläkin käydään");
                 if (keyPicture != null) {
                     keyPicture.removeFromParent();
                 }
