@@ -80,6 +80,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private static final String PLAYER = "pelaaja";
     private static final String GOAL = "maali";
     private static final String GROUND = "maa";
+    private static final int PLAYERSPEED = 30;
     private Node goalNode;
     private Node groundNode;
     private int currentLevel;
@@ -115,7 +116,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.initKeys();
         // We re-use the flyby camera for rotation, while positioning is handled by physics
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
-        flyCam.setMoveSpeed(100);
         this.niftyDisplay = new NiftyJmeDisplay(
                 assetManager, inputManager, audioRenderer, guiViewPort);
         nifty = niftyDisplay.getNifty();
@@ -162,8 +162,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         //pelaajan alkusijainnin määrittävä vektori
         Vector3f playerStartPosition = new Vector3f(50, 100, -50);
         //pelaajaan vaikuttavat voimat
+        flyCam.setMoveSpeed(PLAYERSPEED);
         playerControl.setJumpSpeed(20);
-        playerControl.setFallSpeed(30);
+        playerControl.setFallSpeed(60);
         playerControl.setGravity(30);
         //pelaajan aloitussijainti
         playerControl.setPhysicsLocation(playerStartPosition);
@@ -290,7 +291,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         hudText.setName("DEBUG_TEXT");
         hudText.setSize(guiFont.getCharSet().getRenderedSize());
         hudText.setColor(ColorRGBA.Black);
-        hudText.setLocalTranslation(300, hudText.getLineHeight() * 2, 0);
+        hudText.setLocalTranslation(300, hudText.getLineHeight() * 3, 0);
         guiNode.attachChild(hudText);
     }
 
@@ -459,11 +460,19 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.cameraRotator.rotateToReflectNewPlayerUpAxis(playerControl);
         int playerUpAxis = playerControl.getUpAxis();
         Vector3f newUpVector = UpAxisDir.unitVector(playerUpAxis);
-        boolean isGravityFlipped = playerControl.getGravity() < 0;
-        if (isGravityFlipped && playerUpAxis == UpAxisDir.Y) {
-            newUpVector.multLocal(-1f);
+        boolean isGravityFlipped = (playerControl.getGravity() < 0);
+        if (isGravityFlipped) {
+            newUpVector.x = isZero(newUpVector.x) ? 0 : -1;
+            newUpVector.y = isZero(newUpVector.y) ? 0 : -1;
+            newUpVector.z = isZero(newUpVector.z) ? 0 : -1;
+            System.out.println("Painovoima flipattu!");
         }
+        System.out.println("Kameran akseli kääntyy! " + newUpVector.toString());
         flyCam.setUpVector(newUpVector);
+    }
+
+    private boolean isZero(float f) {
+        return (Math.abs(f) < 0.0001f);
     }
 
     /**
@@ -528,7 +537,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
 
     public void updateRotationGfx() {
         Vector3f location = cam.getLocation().clone();
-        location.addLocal(0f, -0.5f, 0f);
         Vector3f lookLocation = location.add(this.lookDirection());
         arrow.setLocalTranslation(location);
         arrow.lookAt(lookLocation, UpAxisDir.unitVector(playerControl.getUpAxis()));
@@ -545,9 +553,10 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
                 DecimalFormat hf = new DecimalFormat("00");
                 timeText.setText(hf.format(currentMinutes) + ":" + df.format(currentTime % 60));
             }
-            String debugText = String.format("Player up axis: %s\nLook vector: %s",
+            String debugText = String.format("Player up axis: %s\nLook vector: %s\nGravity: %.2f",
                     UpAxisDir.string(playerControl.getUpAxis()),
-                    this.lookDirection().toString());
+                    this.lookDirection().toString(),
+                    this.playerControl.getGravity());
             ((BitmapText) guiNode.getChild("DEBUG_TEXT")).setText(debugText);
             if (showqe) {
                 keyPicture.removeFromParent();

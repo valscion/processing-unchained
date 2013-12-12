@@ -15,11 +15,11 @@ public class UpAxisDir {
     public static Vector3f unitVector(int dir) {
         switch (dir) {
             case X:
-                return Vector3f.UNIT_X;
+                return Vector3f.UNIT_X.clone();
             case Y:
-                return Vector3f.UNIT_Y;
+                return Vector3f.UNIT_Y.clone();
             case Z:
-                return Vector3f.UNIT_Z;
+                return Vector3f.UNIT_Z.clone();
             default:
                 throw new IllegalArgumentException("Weird axis direction");
         }
