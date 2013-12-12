@@ -80,6 +80,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private static final String PLAYER = "pelaaja";
     private static final String GOAL = "maali";
     private static final String GROUND = "maa";
+    private static final int PLAYERSPEED = 30;
     private Node goalNode;
     private Node groundNode;
     private int currentLevel;
@@ -115,7 +116,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.initKeys();
         // We re-use the flyby camera for rotation, while positioning is handled by physics
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
-        flyCam.setMoveSpeed(100);
         this.niftyDisplay = new NiftyJmeDisplay(
                 assetManager, inputManager, audioRenderer, guiViewPort);
         nifty = niftyDisplay.getNifty();
@@ -162,8 +162,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         //pelaajan alkusijainnin määrittävä vektori
         Vector3f playerStartPosition = new Vector3f(50, 100, -50);
         //pelaajaan vaikuttavat voimat
+        flyCam.setMoveSpeed(PLAYERSPEED);
         playerControl.setJumpSpeed(20);
-        playerControl.setFallSpeed(30);
+        playerControl.setFallSpeed(60);
         playerControl.setGravity(30);
         //pelaajan aloitussijainti
         playerControl.setPhysicsLocation(playerStartPosition);
