@@ -42,6 +42,9 @@ import com.jme3.scene.debug.Arrow;
 import com.jme3.texture.Texture;
 import com.jme3.util.SkyFactory;
 import java.text.DecimalFormat;
+import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.collision.PhysicsCollisionEvent;
+import com.jme3.bullet.collision.PhysicsCollisionListener;
 
 /**
  * test
@@ -121,7 +124,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
         //tässä oli kommentit että debugi pois päältä
-        //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+        bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+        //kuuntelee tormauksia
+        bulletAppState.getPhysicsSpace().addCollisionListener(this);
     }
 
     private void initMaze() {
@@ -187,9 +192,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         goalNode = new Node(GOAL);
         Spatial goalSpatial = assetManager.loadModel("Scenes/nyyppataso.j3o");
         goalSpatial.scale(1.0f);
-
+        
         CollisionShape goalShape =
-                CollisionShapeFactory.createMeshShape((Node) goalSpatial);
+                CollisionShapeFactory.createMeshShape(goalSpatial);
         RigidBodyControl goalControl = new RigidBodyControl(goalShape, 0);
         goalNode.addControl(goalControl);
         bulletAppState.getPhysicsSpace().add(goalControl);
@@ -318,8 +323,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         return new Vector3f(0f, 0f, -1f); // Away from me
     }
 
-   public void collision(PhysicsCollisionEvent event) {
-       
+    public void collision(PhysicsCollisionEvent event) {
+        //System.out.println("TÖRMÄYS");
+        //vähentää syntyvää laskentaa kolmasosaan, ei suurta vaikutusta toteutukseen
         if (FastMath.nextRandomFloat() < 0.3f) {
             if (event.getNodeA().getName().equals(PLAYER)) {
                 handlePlayerCollision(event.getNodeB().getName(), event);
@@ -331,7 +337,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
 
     private void handlePlayerCollision(String objectName, PhysicsCollisionEvent event) {
         if (objectName.equals(GOAL)) {
-            this.stop();
+            //Pelaaja voittaa pelin
+            System.out.println("VOITTO");
+            //this.stop(); //sammuttaa pelin
         } 
         /*else if (objectName.equals(ICE)) {
             this.kaveleJaalla();
