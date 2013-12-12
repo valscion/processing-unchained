@@ -73,14 +73,16 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private static final String PLAYER = "pelaaja";
     private static final String GOAL = "maali";
     private Node goalNode;
+    private int currentLevel;
     
     public static void main(String[] args) {
         Main app = new Main();
         app.start();
     }
-
+    
     @Override
     public void simpleInitApp() {
+        this.currentLevel = 0;
         this.initPhysics();
         this.initMaze();
         this.initSkyBox();
@@ -338,14 +340,27 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private void handlePlayerCollision(String objectName, PhysicsCollisionEvent event) {
         if (objectName.equals(GOAL)) {
             //Pelaaja voittaa pelin
-            System.out.println("VOITTO");
-            //this.stop(); //sammuttaa pelin
+            System.out.println("Pelaaja paasee maaliin!");
+            this.nextLevel();
         } 
         /*else if (objectName.equals(ICE)) {
             this.kaveleJaalla();
         }*/
     }
 
+    private void nextLevel(){
+        this.currentLevel++;
+        System.out.println("Pelaaja siirtyy seuraavaan kenttaan");
+        if(currentLevel == 1){
+            this.playerWon();
+        }
+    }
+    private void playerWon(){
+        System.out.println("Pelaaja voittaa pelin!");
+        //soittaa musiikkia tai jotain
+        //this.stop();
+    }
+            
     private class UpAxisDir {
 
         public final static int X = 0;
