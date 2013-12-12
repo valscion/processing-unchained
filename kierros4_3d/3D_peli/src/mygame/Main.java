@@ -342,15 +342,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
          }*/
     }
 
-    /*Täytyy tehdä tällänen jolla saadaan helposti oikeenlainen Quaternion
-     * @param kolme jotain arvoa
-     * @return sitä vastaava Quaternion
-     */
-    private Quaternion giveQFromDegree(float degreeX, float degreeY, float degreeZ) {
-        //logiikka TODO
-        return new Quaternion(3f, -degreeY, 3f, 3f);
-    }
-
     @Override
     public void simpleRender(RenderManager rm) {
         //TODO: add render code
