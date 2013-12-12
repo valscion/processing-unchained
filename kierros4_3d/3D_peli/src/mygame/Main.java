@@ -160,9 +160,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         //pelaajan alkusijainnin määrittävä vektori
         Vector3f playerStartPosition = new Vector3f(50, 100, -50);
         //pelaajaan vaikuttavat voimat
-        //player.setJumpSpeed(20);
-        //player.setFallSpeed(30);
-        playerControl.setGravity(10);
+        playerControl.setJumpSpeed(20);
+        playerControl.setFallSpeed(30);
+        playerControl.setGravity(30);
         //pelaajan aloitussijainti
         playerControl.setPhysicsLocation(playerStartPosition);
         //pelaaja vielä siihen maaailmaankin...
