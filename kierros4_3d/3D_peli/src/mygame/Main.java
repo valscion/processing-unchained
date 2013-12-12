@@ -30,6 +30,7 @@ import com.jme3.bullet.collision.PhysicsCollisionListener;
 import com.jme3.math.Quaternion;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.shape.Box;
+import com.jme3.ui.Picture;
 
 /**
  * Pohjana on käytetty "collisionTest" valmista testiluokkaa, jonka
@@ -222,6 +223,13 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         timeText.setLocalTranslation(0, settings.getHeight(), 0); // position
         guiNode.attachChild(timeText);
         this.initDebugText();
+
+        Picture pic = new Picture("QA-picture");
+        pic.setImage(assetManager, "Textures/keys.png", true);
+        pic.setHeight(80f);
+        pic.setWidth(152f);
+        pic.setPosition(settings.getWidth() / 2 - 76f, settings.getHeight() - 80f);
+        guiNode.attachChild(pic);
     }
 
     private void initDebugText() {
