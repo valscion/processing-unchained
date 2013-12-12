@@ -78,6 +78,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private AudioNode youWinSound;
     private AudioNode rotationSound;
     private float startTime;
+    private boolean timerOn;
     private boolean isQEPressed;
     private static final String PLAYER = "pelaaja";
     private static final String GOAL = "maali";
@@ -348,6 +349,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         //en tiedä onko tarpeellisia, ainakin järkevän oloista poistaa pelaaja
         rootNode.removeControl(playerControl);
         rootNode.detachChild(playerNode);
+        this.timerOn = true;
         this.initPlayer();
     }
 
@@ -536,10 +538,11 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         //this.stop();
     }
 
-   private void playCollisionSound() {
+    private void playCollisionSound() {
         this.collisionSound.play();
     }
-    private void playYouWinSound(){
+
+    private void playYouWinSound() {
         this.youWinSound.play();
     }
 
@@ -557,16 +560,19 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
 
     public void updateHUD(boolean showqe) {
         if (!guiViewPort.getProcessors().contains(niftyDisplay)) {
-            this.updateRotationGfx();
-            float currentTime = timer.getTimeInSeconds() - this.startTime;
-            int currentMinutes = (int) currentTime / 60;
-            DecimalFormat df = new DecimalFormat("00.0");
-            DecimalFormat hf = new DecimalFormat("00");
-            timeText.setText(hf.format(currentMinutes) + ":" + df.format(currentTime % 60));
-
+            
+                this.updateRotationGfx();
+                if (timerOn) {
+                float currentTime = timer.getTimeInSeconds() - this.startTime;
+                int currentMinutes = (int) currentTime / 60;
+                DecimalFormat df = new DecimalFormat("00.0");
+                DecimalFormat hf = new DecimalFormat("00");
+                timeText.setText(hf.format(currentMinutes) + ":" + df.format(currentTime % 60));
+            }
             String debugText = String.format("Player up axis: %s\nLook vector: %s",
                     UpAxisDir.string(playerControl.getUpAxis()),
                     this.lookDirection().toString());
+
             ((BitmapText) guiNode.getChild("DEBUG_TEXT")).setText(debugText);
             if (showqe) {
                 System.out.println("Pitäisi poistua");
@@ -579,8 +585,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
                 guiNode.attachChild(keyPicture);
             } else {
                 System.out.println("Täälläkin käydään");
-                if(keyPicture != null){
-                keyPicture.removeFromParent();
+                if (keyPicture != null) {
+                    keyPicture.removeFromParent();
                 }
                 keyPicture = new Picture("QA-picture");
                 keyPicture.setImage(assetManager, "Textures/allkeys.png", true);
