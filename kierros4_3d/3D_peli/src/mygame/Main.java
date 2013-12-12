@@ -198,7 +198,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         collisionSound.setPositional(false);
         collisionSound.setLooping(false);
         //TODO päivitä vielä oikea
-        youWinSound = new AudioNode(assetManager, "Sound/collision.wav", false);
+        youWinSound = new AudioNode(assetManager, "Sound/you_win.ogg", false);
         youWinSound.setPositional(false);
         youWinSound.setLooping(false);
     }
@@ -508,7 +508,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private void nextLevel() {
         this.currentLevel++;
         System.out.println("Pelaaja siirtyy seuraavaan kenttaan");
-        this.playCollisionSound();
+        this.playYouWinSound();
         //this.playYouWinSound();
         if (currentLevel == 1) {
             this.playerWon();
