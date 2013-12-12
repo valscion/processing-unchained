@@ -553,9 +553,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
                 DecimalFormat hf = new DecimalFormat("00");
                 timeText.setText(hf.format(currentMinutes) + ":" + df.format(currentTime % 60));
             }
-            String debugText = String.format("Player up axis: %s\nLook vector: %s\nGravity: %.2f",
+            String debugText = String.format("Player up axis: %s\nPlayer up vector: %s\nGravity: %.2f",
                     UpAxisDir.string(playerControl.getUpAxis()),
-                    this.lookDirection().toString(),
+                    UpAxisDir.unitVector(playerControl.getUpAxis()).toString(),
                     this.playerControl.getGravity());
             ((BitmapText) guiNode.getChild("DEBUG_TEXT")).setText(debugText);
             if (showqe) {
