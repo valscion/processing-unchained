@@ -170,12 +170,12 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         playerNode = new Node(PLAYER);
         playerNode.setLocalTranslation(playerStartPosition);
         /*TODO jos halutaan pelaajalle joku model pelaajalle
-        playerSpatial = assetManager.loadModel("Models/karhu/karhu.mesh.j3o");
-        playerSpatial.scale(8.0f);
-        playerSpatial.setShadowMode(ShadowMode.CastAndReceive);
-        playerSpatial.setLocalTranslation(0.0f, -1.7f, 0.0f);
-        playerNode.attachChild(playerSpatial);
-        */
+         playerSpatial = assetManager.loadModel("Models/karhu/karhu.mesh.j3o");
+         playerSpatial.scale(8.0f);
+         playerSpatial.setShadowMode(ShadowMode.CastAndReceive);
+         playerSpatial.setLocalTranslation(0.0f, -1.7f, 0.0f);
+         playerNode.attachChild(playerSpatial);
+         */
         //pelaaja ohjaa nodeaan
         playerNode.addControl(playerControl);
         //pelaajan node maailmaan
@@ -316,10 +316,10 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private void handlePlayerCollision(String objectName, PhysicsCollisionEvent event) {
         if (objectName.equals(GOAL)) {
             this.stop();
-        } 
+        }
         /*else if (objectName.equals(ICE)) {
-            this.kaveleJaalla();
-        }*/
+         this.kaveleJaalla();
+         }*/
     }
 
     private class UpAxisDir {
@@ -362,21 +362,23 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         arrow.move(cam.getUp().mult(-0.8f));
         arrow.move(cam.getLeft().mult(-1f));
     }
-    public void initHUD(){
-    this.initGravityArrow();
-    timeText = new BitmapText(guiFont, false); 
-    timeText.setSize(30);      // font size
-    timeText.setColor(ColorRGBA.White);
-    timeText.setLocalTranslation(0, settings.getHeight(), 0); // position
-    guiNode.attachChild(timeText);
-    
+
+    public void initHUD() {
+        this.initGravityArrow();
+        timeText = new BitmapText(guiFont, false);
+        timeText.setSize(30);      // font size
+        timeText.setColor(ColorRGBA.White);
+        timeText.setLocalTranslation(0, settings.getHeight(), 0); // position
+        guiNode.attachChild(timeText);
+
     }
-    public void updateHUD(){
-    this.updateGravityArrow();
-    float currentTime = timer.getTimeInSeconds()-this.startTime;
-    int currentMinutes = (int)currentTime/60;
-    DecimalFormat df = new DecimalFormat("00.0");
-    DecimalFormat hf = new DecimalFormat("00");
-    timeText.setText(hf.format(currentMinutes)+":"+df.format(currentTime%60));
+
+    public void updateHUD() {
+        this.updateGravityArrow();
+        float currentTime = timer.getTimeInSeconds() - this.startTime;
+        int currentMinutes = (int) currentTime / 60;
+        DecimalFormat df = new DecimalFormat("00.0");
+        DecimalFormat hf = new DecimalFormat("00");
+        timeText.setText(hf.format(currentMinutes) + ":" + df.format(currentTime % 60));
     }
 }
