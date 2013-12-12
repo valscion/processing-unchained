@@ -21,10 +21,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.audio.AudioNode;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
-<<<<<<< HEAD
-=======
 import com.jme3.bullet.collision.PhysicsCollisionListener;
->>>>>>> e3f2635c5609da0868dcf9ea565cac99a49a416d
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.CharacterControl;
@@ -90,11 +87,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.initPlayer();
         this.initLights();
         this.initHUD();
-<<<<<<< HEAD
         this.initSounds();
-=======
         this.initGravityArrow();
->>>>>>> e3f2635c5609da0868dcf9ea565cac99a49a416d
         // We re-use the flyby camera for rotation, while positioning is handled by physics
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
         flyCam.setMoveSpeed(100);
@@ -398,10 +392,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
       music.setLooping(true);
       music.setVolume(0.1f);
       music.play(); 
-      wind = new AudioNode(assetManager, "Sound/wind.wav",false);
-      wind.setDirectional(false);
-      wind.setPositional(false);
-      wind.play();
     }
     
     public void updateSounds(){
