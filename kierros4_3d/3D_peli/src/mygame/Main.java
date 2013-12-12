@@ -296,7 +296,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             }
         } else if (binding.equals("RotateWorld")) {
             if (!isPressed) {
-                this.rotatePlayerUpAxis();
+                this.rotateWorld();
             }
         } else if (binding.equals("Respawn")) {
             this.respawn();
@@ -329,6 +329,14 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.updateHUD();
     }
 
+    /**
+     * Pyöräyttää maailmaa
+     */
+    private void rotateWorld() {
+        this.rotatePlayerUpAxis();
+        this.rotateCamera();
+    }
+
     /*
      * Pyöräyttää pelaajan ylöspäin suuntautuvaa akselia, vaihtaen sen suuntaa
      */
@@ -337,7 +345,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         int currentUp = playerControl.getUpAxis();
         int newUp = currentUp;
 
-        Vector3f dirVector = this.lookDirection();
         if (currentUp == UpAxisDir.Y) {
             newUp = UpAxisDir.X;
             playerControl.setGravity(-playerControl.getGravity());
@@ -347,7 +354,15 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             throw new RuntimeException("Incorrect up axis, can't rotate!");
         }
 
-        Vector3f upVector = UpAxisDir.unitVector(newUp);
+        playerControl.setUpAxis(newUp);
+    }
+
+    /**
+     * Pyöräytä kamera sopimaan käännettyyn maailmaan
+     */
+    private void rotateCamera() {
+        Vector3f dirVector = this.lookDirection();
+        Vector3f upVector = UpAxisDir.unitVector(playerControl.getUpAxis());
         boolean isGravityFlipped = playerControl.getGravity() < 0;
         if (isGravityFlipped) {
             upVector.multLocal(-1f);
@@ -357,9 +372,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         // Rotate camera based on up axis and look direction
         cam.lookAtDirection(dirVector, upVector);
         cam.update();
-
-        playerControl.setUpAxis(newUp);
-        cam.getUp();
     }
 
     /**
