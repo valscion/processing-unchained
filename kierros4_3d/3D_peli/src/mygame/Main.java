@@ -460,12 +460,12 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             if (!isZero(lookDir.z)) {
                 newUp = UpAxisDir.X;
                 if (lookDir.z < -eps) { // Z+ points to us
-                    if (clockWise) {
+                    if (!clockWise) {
                         flipGravity = true;
                     }
                 }
                 else { // Z- points to us
-                    if (!clockWise) {
+                    if (clockWise) {
                         flipGravity = true;
                     }
                 }
@@ -473,12 +473,12 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             else if (!isZero(lookDir.x)) {
                 newUp = UpAxisDir.Z;
                 if (lookDir.x < -eps) { // X+ points to us
-                    if (!clockWise) {
+                    if (clockWise) {
                         flipGravity = true;
                     }
                 }
                 else { // X- points to us
-                    if (clockWise) {
+                    if (!clockWise) {
                         flipGravity = true;
                     }
                 }
@@ -491,12 +491,12 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             if (!isZero(lookDir.y)) {
                 newUp = UpAxisDir.Z;
                 if (lookDir.y < -eps) { // Y+ points to us
-                    if (clockWise) {
+                    if (!clockWise) {
                         flipGravity = true;
                     }
                 }
                 else { // Y- points to us
-                    if (!clockWise) {
+                    if (clockWise) {
                         flipGravity = true;
                     }
                 }
@@ -504,12 +504,12 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             else if (!isZero(lookDir.z)) {
                 newUp = UpAxisDir.Y;
                 if (lookDir.z < -eps) { // Z+ points to us
-                    if (!clockWise) {
+                    if (clockWise) {
                         flipGravity = true;
                     }
                 }
                 else { // Z- points to us
-                    if (clockWise) {
+                    if (!clockWise) {
                         flipGravity = true;
                     }
                 }
@@ -522,12 +522,12 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             if (!isZero(lookDir.x)) {
                 newUp = UpAxisDir.Y;
                 if (lookDir.x < -eps) { // X+ points to us
-                    if (clockWise) {
+                    if (!clockWise) {
                         flipGravity = true;
                     }
                 }
                 else { // X- points to us
-                    if (!clockWise) {
+                    if (clockWise) {
                         flipGravity = true;
                     }
                 }
@@ -535,12 +535,12 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             else if (!isZero(lookDir.y)) {
                 newUp = UpAxisDir.X;
                 if (lookDir.y < -eps) { // Y+ points to us
-                    if (!clockWise) {
+                    if (clockWise) {
                         flipGravity = true;
                     }
                 }
                 else { // Y- points to us
-                    if (clockWise) {
+                    if (!clockWise) {
                         flipGravity = true;
                     }
                 }
