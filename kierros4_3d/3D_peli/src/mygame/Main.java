@@ -108,14 +108,14 @@ public class Main extends SimpleApplication implements ActionListener {
     }
 
     private void initSkyBox() {
-        Texture up = assetManager.loadTexture("Textures/skybox/up.png");
-        Texture down = assetManager.loadTexture("Textures/skybox/down.png");
+        Texture sky = assetManager.loadTexture("Textures/skybox/up.png");
+        Texture floor = assetManager.loadTexture("Textures/skybox/down.png");
         Texture west = assetManager.loadTexture("Textures/skybox/west.png");
         Texture east = assetManager.loadTexture("Textures/skybox/east.png");
         Texture north = assetManager.loadTexture("Textures/skybox/north.png");
         Texture south = assetManager.loadTexture("Textures/skybox/south.png");
         Spatial skybox = SkyFactory.createSky(
-                assetManager, west, east, north, south, up, down);
+                assetManager, west, east, north, south, sky, floor);
         rootNode.attachChild(skybox);
     }
 
