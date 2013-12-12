@@ -13,3 +13,6 @@ D = oikealle (sivuttain)
 Q = käännä painovoimaa vastapäivään
 E = käännä painovoimaa myötäpäivään
 R = aloita labyrintti alusta
+
+---
+skp, dae, blenderissä edit mode meshissä ja squads, tallenna blend avaa jmonkey, j3o
