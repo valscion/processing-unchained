@@ -76,6 +76,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private AudioNode youWinSound;
     private AudioNode rotationSound;
     private float startTime;
+    private boolean isQEPressed;
     private static final String PLAYER = "pelaaja";
     private static final String GOAL = "maali";
     private static final String GROUND = "maa";
@@ -100,6 +101,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     @Override
     public void simpleInitApp() {
         this.currentLevel = 0;
+        this.isQEPressed = false;
         this.initPhysics();
         this.initMaze();
         this.initSkyBox();
@@ -206,7 +208,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         //kääntymisen ääni rotationSound
         rotationSound = new AudioNode(assetManager, "Sound/suih.ogg", false);
         rotationSound.setPositional(false);
-        rotationSound.setLooping(false);    
+        rotationSound.setLooping(false);
     }
 
     private void initGoal() {
@@ -245,13 +247,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         timeText.setLocalTranslation(0, settings.getHeight(), 0); // position
         guiNode.attachChild(timeText);
         this.initDebugText();
-
-        keyPicture = new Picture("QA-picture");
-        keyPicture.setImage(assetManager, "Textures/allkeys.png", true);
-        keyPicture.setHeight(150f);
-        keyPicture.setWidth(150f);
-        keyPicture.setPosition(settings.getWidth() / 2 - 75f, settings.getHeight() - 150f);
-        guiNode.attachChild(keyPicture);
     }
 
     private void initDebugText() {
@@ -308,14 +303,13 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         if (cameraRotator.isInterpolationComplete()) {
             playerControl.setEnabled(true);
             updatePlayerAndCameraPosition();
-        }
-        else {
+        } else {
             playerControl.setEnabled(false);
         }
         flashLight.setPosition(playerControl.getPhysicsLocation());
         flashLight.setDirection(playerControl.getViewDirection());
         this.updateRotationGfx();
-        this.updateHUD(false);
+        this.updateHUD(isQEPressed);
     }
 
     @Override
@@ -344,7 +338,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         cam.setLocation(playerControl.getPhysicsLocation());
     }
 
-    
     private void respawn() {
         this.startTime = timer.getTimeInSeconds();
         bulletAppState.getPhysicsSpace().remove(this.playerControl);
@@ -374,12 +367,13 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         } else if (binding.equals("RotateWorld")) {
             if (!isPressed) {
                 this.rotateWorld();
-                this.updateHUD(true); 
+                this.isQEPressed = true;
             }
         } else if (binding.equals("Respawn")) {
             this.respawn();
-            if(guiViewPort.getProcessors().contains(niftyDisplay))
-            guiViewPort.removeProcessor(niftyDisplay);
+            if (guiViewPort.getProcessors().contains(niftyDisplay)) {
+                guiViewPort.removeProcessor(niftyDisplay);
+            }
         }
     }
 
@@ -425,8 +419,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             if (isGravityFlipped) {
                 rotateAngle = -rotateAngle;
             }
-        }
-        else if (playerUpAxis == UpAxisDir.Y) {
+        } else if (playerUpAxis == UpAxisDir.Y) {
             if (isGravityFlipped) {
                 rotateAngle = FastMath.PI;
             }
@@ -528,19 +521,19 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         //soittaa musiikkia tai jotain
         //this.stop();
     }
-    
-    private void playCollisionSound(){
+
+    private void playCollisionSound() {
         this.collisionSound.play();
     }
-    
-    private void playYouWinSound(){
+
+    private void playYouWinSound() {
         this.youWinSound.play();
     }
 
-    private void playRotationSound(){
+    private void playRotationSound() {
         this.rotationSound.play();
     }
-        
+
     public void updateRotationGfx() {
         Vector3f location = cam.getLocation().clone();
         location.addLocal(0f, -0.5f, 0f);
@@ -550,25 +543,39 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     }
 
     public void updateHUD(boolean showqe) {
-        this.updateRotationGfx();
-        float currentTime = timer.getTimeInSeconds() - this.startTime;
-        int currentMinutes = (int) currentTime / 60;
-        DecimalFormat df = new DecimalFormat("00.0");
-        DecimalFormat hf = new DecimalFormat("00");
-        timeText.setText(hf.format(currentMinutes) + ":" + df.format(currentTime % 60));
+        if (!guiViewPort.getProcessors().contains(niftyDisplay)) {
+            this.updateRotationGfx();
+            float currentTime = timer.getTimeInSeconds() - this.startTime;
+            int currentMinutes = (int) currentTime / 60;
+            DecimalFormat df = new DecimalFormat("00.0");
+            DecimalFormat hf = new DecimalFormat("00");
+            timeText.setText(hf.format(currentMinutes) + ":" + df.format(currentTime % 60));
 
-        String debugText = String.format("Player up axis: %s\nLook vector: %s",
-                UpAxisDir.string(playerControl.getUpAxis()),
-                this.lookDirection().toString());
-        ((BitmapText) guiNode.getChild("DEBUG_TEXT")).setText(debugText);
-        if(showqe){
-            keyPicture.removeFromParent();
-               keyPicture = new Picture("QA-picture");
-        keyPicture.setImage(assetManager, "Textures/keys.png", true);
-        keyPicture.setHeight(80f);
-        keyPicture.setWidth(152f);
-        keyPicture.setPosition(settings.getWidth() / 2 - 76f, settings.getHeight() - 80f);
-        guiNode.attachChild(keyPicture);
+            String debugText = String.format("Player up axis: %s\nLook vector: %s",
+                    UpAxisDir.string(playerControl.getUpAxis()),
+                    this.lookDirection().toString());
+            ((BitmapText) guiNode.getChild("DEBUG_TEXT")).setText(debugText);
+            if (showqe) {
+                System.out.println("Pitäisi poistua");
+                keyPicture.removeFromParent();
+                keyPicture = new Picture("QA-picture");
+                keyPicture.setImage(assetManager, "Textures/keys.png", true);
+                keyPicture.setHeight(80f);
+                keyPicture.setWidth(152f);
+                keyPicture.setPosition(settings.getWidth() / 2 - 76f, settings.getHeight() - 80f);
+                guiNode.attachChild(keyPicture);
+            } else {
+                System.out.println("Täälläkin käydään");
+                if(keyPicture != null){
+                keyPicture.removeFromParent();
+                }
+                keyPicture = new Picture("QA-picture");
+                keyPicture.setImage(assetManager, "Textures/allkeys.png", true);
+                keyPicture.setHeight(150f);
+                keyPicture.setWidth(150f);
+                keyPicture.setPosition(settings.getWidth() / 2 - 75f, settings.getHeight() - 150f);
+                guiNode.attachChild(keyPicture);
+            }
         }
     }
 
