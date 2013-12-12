@@ -498,9 +498,10 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             this.nextLevel();
         } else if (objectName.equals(GROUND)) {
             this.soundSystem.playCollisionSound();
+            this.respawn();
             nifty.fromXml("Interface/screen.xml", "lose");
             guiViewPort.addProcessor(niftyDisplay);
-            this.respawn();
+            timerOn=false;
         }
     }
 
@@ -520,6 +521,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         guiViewPort.addProcessor(niftyDisplay);
         //this.respawn();
         playerControl.setEnabled(false);
+        timerOn = false;
         //soittaa musiikkia tai jotain
         //this.stop();
     }
