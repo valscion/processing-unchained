@@ -274,18 +274,18 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         // Rotate the player up axis on Z-Y axis
         int currentUp = playerControl.getUpAxis();
         int newUp = currentUp;
-        Vector3f upVector;
+
         Vector3f dirVector = this.lookDirection();
         if (currentUp == UpAxisDir.Y) {
             newUp = UpAxisDir.X;
-            upVector = UpAxisDir.unitVector(newUp);
             playerControl.setGravity(-playerControl.getGravity());
         } else if (currentUp == UpAxisDir.X) {
             newUp = UpAxisDir.Y;
-            upVector = UpAxisDir.unitVector(newUp);
         } else {
             throw new RuntimeException("Incorrect up axis, can't rotate!");
         }
+
+        Vector3f upVector = UpAxisDir.unitVector(newUp);
         boolean isGravityFlipped = playerControl.getGravity() < 0;
         if (isGravityFlipped) {
             upVector = upVector.mult(-1f);
