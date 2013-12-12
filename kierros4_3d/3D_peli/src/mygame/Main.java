@@ -190,7 +190,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
 
     private void initGoal() {
         goalNode = new Node(GOAL);
-        Spatial goalSpatial = assetManager.loadModel("Scenes/nyyppataso.j3o");
+        Spatial goalSpatial = assetManager.loadModel("Models/companioncube.j3o");
         goalSpatial.scale(1.0f);
         
         CollisionShape goalShape =
@@ -198,7 +198,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         RigidBodyControl goalControl = new RigidBodyControl(goalShape, 0);
         goalNode.addControl(goalControl);
         bulletAppState.getPhysicsSpace().add(goalControl);
-        goalControl.setPhysicsLocation(new Vector3f(50, 120, -50));
+        Vector3f goalPosition = new Vector3f(40, 90, -40);
+        goalControl.setPhysicsLocation(goalPosition);
         goalNode.attachChild(goalSpatial);
         rootNode.attachChild(goalNode);
     }
