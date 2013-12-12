@@ -121,7 +121,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         nifty = niftyDisplay.getNifty();
         nifty.fromXml("Interface/screen.xml", "startscreen");
         guiViewPort.addProcessor(niftyDisplay);
-        this.cameraRotator = new CameraRotator(this.cam, this.playerControl);
+        this.cameraRotator = new CameraRotator(this.cam);
     }
 
     private void initPhysics() {
@@ -213,7 +213,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     }
 
     private void initGround() {
+        //maan päänode nimetty
         groundNode = new Node(GROUND);
+        //alas
         Box box = new Box(Vector3f.ZERO, 10f, 0.001f, 10f);
         Spatial groundSpatial = new Geometry("Box", box);
         groundSpatial.scale(100.0f);
@@ -221,6 +223,53 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         RigidBodyControl groundControl = new RigidBodyControl(groundShape, 0);
         groundNode.addControl(groundControl);
         bulletAppState.getPhysicsSpace().add(groundControl);
+        groundControl.setPhysicsLocation(new Vector3f(0, -100, 0));//menee tason alle tarpeeksi kauas
+        //ylös
+        Box box2 = new Box(Vector3f.ZERO, 10f, 0.001f, 10f);
+        Spatial groundSpatial2 = new Geometry("Box", box2);
+        groundSpatial2.scale(100.0f);
+        CollisionShape groundShape2 = CollisionShapeFactory.createBoxShape(groundSpatial2);
+        RigidBodyControl groundControl2 = new RigidBodyControl(groundShape2, 0);
+        groundNode.addControl(groundControl2);
+        bulletAppState.getPhysicsSpace().add(groundControl2);
+        groundControl2.setPhysicsLocation(new Vector3f(0, 200, 0));//menee tason alle tarpeeksi kauas
+        //x+
+        Box box3 = new Box(Vector3f.ZERO, 0.001f, 10f, 10f);
+        Spatial groundSpatial3 = new Geometry("Box", box3);
+        groundSpatial3.scale(100.0f);
+        CollisionShape groundShape3 = CollisionShapeFactory.createBoxShape(groundSpatial3);
+        RigidBodyControl groundControl3 = new RigidBodyControl(groundShape3, 0);
+        groundNode.addControl(groundControl3);
+        bulletAppState.getPhysicsSpace().add(groundControl3);
+        groundControl3.setPhysicsLocation(new Vector3f(200, 0, 0));//menee tason alle tarpeeksi kauas
+        //x-
+        Box box4 = new Box(Vector3f.ZERO, 0.001f,10f, 10f);
+        Spatial groundSpatial4 = new Geometry("Box", box4);
+        groundSpatial4.scale(100.0f);
+        CollisionShape groundShape4 = CollisionShapeFactory.createBoxShape(groundSpatial4);
+        RigidBodyControl groundControl4 = new RigidBodyControl(groundShape4, 0);
+        groundNode.addControl(groundControl4);
+        bulletAppState.getPhysicsSpace().add(groundControl4);
+        groundControl4.setPhysicsLocation(new Vector3f(-200, 0, 0));//menee tason alle tarpeeksi kauas
+        //y+
+        Box box5 = new Box(Vector3f.ZERO, 10f, 10f, 0.001f);
+        Spatial groundSpatial5 = new Geometry("Box", box5);
+        groundSpatial5.scale(100.0f);
+        CollisionShape groundShape5 = CollisionShapeFactory.createBoxShape(groundSpatial5);
+        RigidBodyControl groundControl5 = new RigidBodyControl(groundShape5, 0);
+        groundNode.addControl(groundControl5);
+        bulletAppState.getPhysicsSpace().add(groundControl5);
+        groundControl5.setPhysicsLocation(new Vector3f(0, 0, -200));//menee tason alle tarpeeksi kauas
+        //y-
+        Box box6 = new Box(Vector3f.ZERO, 10f, 10f, 0.001f);
+        Spatial groundSpatial6 = new Geometry("Box", box6);
+        groundSpatial6.scale(100.0f);
+        CollisionShape groundShape6 = CollisionShapeFactory.createBoxShape(groundSpatial6);
+        RigidBodyControl groundControl6 = new RigidBodyControl(groundShape6, 0);
+        groundNode.addControl(groundControl6);
+        bulletAppState.getPhysicsSpace().add(groundControl6);
+        groundControl6.setPhysicsLocation(new Vector3f(0, 0, 200));//menee tason alle tarpeeksi kauas
+        //asettaminen oikein
         groundControl.setPhysicsLocation(new Vector3f(0, -100, 0));//menee tason alle tarpeeksi kauas
         rootNode.attachChild(groundNode);
     }
@@ -287,11 +336,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         cameraRotator.update(tpf);
         if (cameraRotator.isInterpolationComplete()) {
             playerControl.setEnabled(true);
-            flyCam.setEnabled(true);
             updatePlayerAndCameraPosition();
         } else {
             playerControl.setEnabled(false);
-            flyCam.setEnabled(false);
         }
         flashLight.setPosition(playerControl.getPhysicsLocation());
         flashLight.setDirection(playerControl.getViewDirection());
@@ -405,30 +452,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      * Pyöräytä kamera sopimaan käännettyyn maailmaan
      */
     private void rotateCamera() {
-        Vector3f dirVector = this.lookDirection();
-        float rotateAngle = getAngleToRotateTo();
-        // Rotate camera based on up axis and look direction
-        //cam.lookAtDirection(dirVector, cam.getUp());
-        Quaternion targetRotation = new Quaternion();
-        targetRotation.fromAngleAxis(rotateAngle, dirVector);
-        cameraRotator.rotateTo(targetRotation);
-    }
-
-    private float getAngleToRotateTo() {
-        float rotateAngle = 0.0f;
-        int playerUpAxis = playerControl.getUpAxis();
-        boolean isGravityFlipped = playerControl.getGravity() < 0;
-        if (playerUpAxis == UpAxisDir.X) {
-            rotateAngle = -FastMath.HALF_PI;
-            if (isGravityFlipped) {
-                rotateAngle = -rotateAngle;
-            }
-        } else if (playerUpAxis == UpAxisDir.Y) {
-            if (isGravityFlipped) {
-                rotateAngle = FastMath.PI;
-            }
-        }
-        return rotateAngle;
+        this.cameraRotator.rotateToReflectNewPlayerUpAxis(playerControl);
     }
 
     /**
@@ -440,45 +464,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      * @return
      */
     private Vector3f lookDirection() {
-        Vector3f direction;
-        int upAxis = playerControl.getUpAxis();
-        Vector3f playerDir = playerControl.getViewDirection().clone();
-        //boolean isGravityFlipped = playerControl.getGravity() < 0;
-        switch (upAxis) {
-            case UpAxisDir.X:
-                playerDir.x = 0;
-                if (Math.abs(playerDir.z) > Math.abs(playerDir.y)) {
-                    // Katsoo enempi z-akselin suuntaisesti
-                    playerDir.y = 0;
-                } else {
-                    // Katsoo enempi y-akselin suuntaisesti
-                    playerDir.z = 0;
-                }
-                break;
-            case UpAxisDir.Y:
-                playerDir.y = 0;
-                if (Math.abs(playerDir.x) > Math.abs(playerDir.z)) {
-                    // Katsoo enempi x-akselin suuntaisesti
-                    playerDir.z = 0;
-                } else {
-                    // Katsoo enempi z-akselin suuntaisesti
-                    playerDir.x = 0;
-                }
-                break;
-            case UpAxisDir.Z:
-                playerDir.z = 0;
-                if (Math.abs(playerDir.x) > Math.abs(playerDir.y)) {
-                    // Katsoo enempi x-akselin suuntaisesti
-                    playerDir.y = 0;
-                } else {
-                    // Katsoo enempi y-akselin suuntaisesti
-                    playerDir.x = 0;
-                }
-                break;
-            default:
-                throw new RuntimeException("Weird up direction!");
-        }
-        direction = playerDir.normalize();
+        Vector3f direction = cameraRotator.lookDirection(playerControl);
         return direction;
     }
 
