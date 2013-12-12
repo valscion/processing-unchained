@@ -438,19 +438,48 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      * Pyöräyttää pelaajan ylöspäin suuntautuvaa akselia, vaihtaen sen suuntaa
      */
     private void rotatePlayerUpAxis(boolean clockWise) {
-        // Rotate the player up axis on Z-Y axis
+        Vector3f lookDir = this.lookDirection();
         int currentUp = playerControl.getUpAxis();
         int newUp = currentUp;
+        boolean isGravityFlipped = playerControl.getGravity() < 0;
+        boolean flipGravity = false;
+        float eps = 0.0001f;
 
         if (currentUp == UpAxisDir.Y) {
-            newUp = UpAxisDir.X;
-            playerControl.setGravity(-playerControl.getGravity());
-        } else if (currentUp == UpAxisDir.X) {
-            newUp = UpAxisDir.Y;
-        } else {
-            throw new RuntimeException("Incorrect up axis, can't rotate!");
+            if (!isZero(lookDir.z)) {
+                newUp = UpAxisDir.X;
+                if (lookDir.z < -eps) { // Z+ points to us
+                    if (clockWise) {
+                        flipGravity = true;
+                    }
+                }
+                else { // Z- points to us
+                    if (!clockWise) {
+                        flipGravity = true;
+                    }
+                }
+            }
+            else if (!isZero(lookDir.x)) {
+                newUp = UpAxisDir.Z;
+                if (lookDir.x < -eps) { // X+ points to us
+                    if (!clockWise) {
+                        flipGravity = true;
+                    }
+                }
+                else { // X- points to us
+                    if (clockWise) {
+                        flipGravity = true;
+                    }
+                }
+            }
+            else {
+                throw new RuntimeException("Dude, check your axis and up direction!");
+            }
         }
 
+        if (flipGravity) {
+            playerControl.setGravity(-playerControl.getGravity());
+        }
         playerControl.setUpAxis(newUp);
     }
 
