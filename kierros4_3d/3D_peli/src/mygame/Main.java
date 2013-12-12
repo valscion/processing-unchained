@@ -455,6 +455,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      */
     private void rotateCamera() {
         this.cameraRotator.rotateToReflectNewPlayerUpAxis(playerControl);
+        Vector3f newUpVector = UpAxisDir.unitVector(playerControl.getUpAxis());
+        flyCam.setUpVector(newUpVector);
     }
 
     /**
