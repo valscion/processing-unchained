@@ -535,6 +535,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
 
     private void playerWon() {
         System.out.println("Pelaaja voittaa pelin!");
+        nifty.fromXml("Interface/screen.xml", "win");
+        guiViewPort.addProcessor(niftyDisplay);
+        this.respawn();
         //soittaa musiikkia tai jotain
         //this.stop();
     }
@@ -545,9 +548,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
 
     private void playYouWinSound(){
         this.youWinSound.play();
-        nifty.fromXml("Interface/screen.xml", "win");
-        guiViewPort.addProcessor(niftyDisplay);
-        this.respawn();
     }
 
     private void playRotationSound(){
