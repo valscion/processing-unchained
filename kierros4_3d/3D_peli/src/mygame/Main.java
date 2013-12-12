@@ -167,17 +167,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         rootNode.attachChild(playerNode);
     }
 
-    private void setDebugText(String text) {
-        guiNode.detachChildNamed("DEBUG_TEXT");
-        BitmapText hudText = new BitmapText(guiFont, false);
-        hudText.setName("DEBUG_TEXT");
-        hudText.setSize(guiFont.getCharSet().getRenderedSize());
-        hudText.setColor(ColorRGBA.Black);
-        hudText.setText(text);
-        hudText.setLocalTranslation(300, hudText.getLineHeight(), 0);
-        guiNode.attachChild(hudText);
-    }
-
     /**
      * We over-write some navigational key mappings here, so we can add
      * physics-controlled walking and jumping:
@@ -280,11 +269,57 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         cam.lookAtDirection(dirVector, upVector);
 
         playerControl.setUpAxis(newUp);
-        this.setDebugText("Player up axis: " + UpAxisDir.string(playerControl.getUpAxis()));
     }
 
+    /**
+     * Hae katsomissuunta siten, että se on nykyisen pinnan mukainen ja tasan
+     * jonkun tietyn akselin suuntainen (eli aina 90 asteen pätkissä).
+     *
+     * Tämän avulla voi tietää, miten pelimaailmaa tulee kääntää.
+     *
+     * @return
+     */
     private Vector3f lookDirection() {
-        return new Vector3f(0f, 0f, -1f); // Away from me
+        Vector3f direction;
+        int upAxis = playerControl.getUpAxis();
+        Vector3f playerDir = playerControl.getViewDirection().clone();
+        //boolean isGravityFlipped = playerControl.getGravity() < 0;
+        switch (upAxis) {
+            case UpAxisDir.X:
+                playerDir.x = 0;
+                if (Math.abs(playerDir.z) > Math.abs(playerDir.y)) {
+                    // Katsoo enempi z-akselin suuntaisesti
+                    playerDir.y = 0;
+                } else {
+                    // Katsoo enempi y-akselin suuntaisesti
+                    playerDir.z = 0;
+                }
+                break;
+            case UpAxisDir.Y:
+                playerDir.y = 0;
+                if (Math.abs(playerDir.x) > Math.abs(playerDir.z)) {
+                    // Katsoo enempi x-akselin suuntaisesti
+                    playerDir.z = 0;
+                } else {
+                    // Katsoo enempi z-akselin suuntaisesti
+                    playerDir.x = 0;
+                }
+                break;
+            case UpAxisDir.Z:
+                playerDir.z = 0;
+                if (Math.abs(playerDir.x) > Math.abs(playerDir.y)) {
+                    // Katsoo enempi x-akselin suuntaisesti
+                    playerDir.y = 0;
+                } else {
+                    // Katsoo enempi y-akselin suuntaisesti
+                    playerDir.x = 0;
+                }
+                break;
+            default:
+                throw new RuntimeException("Weird up direction!");
+        }
+        direction = playerDir.normalize();
+        return direction;
     }
 
     public void collision(PhysicsCollisionEvent event) {
@@ -381,7 +416,16 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         timeText.setColor(ColorRGBA.White);
         timeText.setLocalTranslation(0, settings.getHeight(), 0); // position
         guiNode.attachChild(timeText);
+        this.initDebugText();
+    }
 
+    private void initDebugText() {
+        BitmapText hudText = new BitmapText(guiFont, false);
+        hudText.setName("DEBUG_TEXT");
+        hudText.setSize(guiFont.getCharSet().getRenderedSize());
+        hudText.setColor(ColorRGBA.Black);
+        hudText.setLocalTranslation(300, hudText.getLineHeight() * 2, 0);
+        guiNode.attachChild(hudText);
     }
 
     public void updateHUD() {
@@ -391,5 +435,10 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         DecimalFormat df = new DecimalFormat("00.0");
         DecimalFormat hf = new DecimalFormat("00");
         timeText.setText(hf.format(currentMinutes) + ":" + df.format(currentTime % 60));
+
+        String debugText = String.format("Player up axis: %s\nLook vector: %s",
+                UpAxisDir.string(playerControl.getUpAxis()),
+                this.lookDirection().toString());
+        ((BitmapText) guiNode.getChild("DEBUG_TEXT")).setText(debugText);
     }
 }
