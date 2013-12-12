@@ -13,12 +13,13 @@ application.*/
 # Sublime crud
 *.sublime-workspace
 tmp
-/kierros4_3d/BasicGame/nbproject/private/
-/kierros4_3d/BasicGame/build/
-/kierros4_3d/3D_peli/nbproject/private/
 
 #Skethcup ololol
 *~.skp
 # Blender...
 *.blend*
 /kierros4_3d/3D_peli/dist/
+
+# jMonkey
+build/
+nbproject/private/
