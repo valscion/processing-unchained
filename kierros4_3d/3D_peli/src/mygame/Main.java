@@ -27,6 +27,12 @@ import com.jme3.util.SkyFactory;
 import java.text.DecimalFormat;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
+import com.jme3.niftygui.NiftyJmeDisplay;
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.elements.Element;
+import de.lessvoid.nifty.elements.render.TextRenderer;
+import de.lessvoid.nifty.screen.Screen;
+import de.lessvoid.nifty.screen.ScreenController;
 import com.jme3.math.Quaternion;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.shape.Box;
@@ -74,6 +80,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private Node goalNode;
     private Node groundNode;
     private int currentLevel;
+    public Nifty nifty;
+    private NiftyJmeDisplay niftyDisplay;
     private CameraRotator cameraRotator;
 
     public static void main(String[] args) {
@@ -104,7 +112,11 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         // We re-use the flyby camera for rotation, while positioning is handled by physics
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
         flyCam.setMoveSpeed(100);
-        
+        this.niftyDisplay = new NiftyJmeDisplay(
+                assetManager, inputManager, audioRenderer, guiViewPort);
+        nifty = niftyDisplay.getNifty();
+        nifty.fromXml("Interface/screen.xml", "start");
+        guiViewPort.addProcessor(niftyDisplay);
         this.cameraRotator = new CameraRotator(this.cam, this.playerControl);
     }
 
@@ -359,6 +371,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             }
         } else if (binding.equals("Respawn")) {
             this.respawn();
+            if(guiViewPort.getProcessors().contains(niftyDisplay))
+            guiViewPort.removeProcessor(niftyDisplay);
         }
     }
 
