@@ -522,7 +522,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         System.out.println("Pelaaja voittaa pelin!");
         nifty.fromXml("Interface/screen.xml", "win");
         guiViewPort.addProcessor(niftyDisplay);
-        //this.respawn();
+        this.respawn();
         playerControl.setEnabled(false);
         timerOn = false;
         //soittaa musiikkia tai jotain
