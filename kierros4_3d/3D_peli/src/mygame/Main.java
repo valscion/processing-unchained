@@ -320,8 +320,10 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         inputManager.addListener(this, "Up");
         inputManager.addListener(this, "Down");
         inputManager.addListener(this, "Jump");
-        inputManager.addMapping("RotateWorld", new KeyTrigger(KeyInput.KEY_E));
-        inputManager.addListener(this, "RotateWorld");
+        inputManager.addMapping("RotateWorldPositive", new KeyTrigger(KeyInput.KEY_E));
+        inputManager.addListener(this, "RotateWorldPositive");
+        inputManager.addMapping("RotateWorldNegative", new KeyTrigger(KeyInput.KEY_Q));
+        inputManager.addListener(this, "RotateWorldNegative");
         inputManager.addMapping("Respawn", new KeyTrigger(KeyInput.KEY_R));
         inputManager.addListener(this, "Respawn");
     }
@@ -401,7 +403,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             if (isPressed) {
                 playerControl.jump();
             }
-        } else if (binding.equals("RotateWorld")) {
+        } else if (binding.equals("RotateWorldPositive") || binding.equals("RotateWorldNegative")) {
             if (!isPressed) {
                 this.rotateWorld();
                 this.isQEPressed = true;
