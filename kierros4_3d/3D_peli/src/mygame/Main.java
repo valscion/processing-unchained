@@ -21,6 +21,7 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
 import com.jme3.util.SkyFactory;
 import java.text.DecimalFormat;
@@ -30,9 +31,13 @@ import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.shape.Box;
 
 /**
- * test
- *
- * @author normenhansen ja Django unchained
+ * Pohjana on käytetty "collisionTest" valmista testiluokkaa, jonka author:normenhansen
+ * http://hub.jmonkeyengine.org/wiki/doku.php/jme3:beginner:hello_collision 
+ * Käytetyt materiaalit: Taso(t) olemme itse luoneet sketchUpilla, skyboxia on vähän muokattu, lähde author:Hipshot
+ * 
+ * Peliin on otettu vaikutteita Portalista, AntiChamberista, Alan Wakesta, ilomilosta. 
+ * Pelimekaniikkaan kuuluu painovoiman muuttaminen pelaajan toimesta. 
+ * @author Django unchained (Aarne Leinonen, Emmi Linkola, Vesa Laakso, Pauli Putkonen)
  */
 public class Main extends SimpleApplication implements ActionListener, PhysicsCollisionListener {
 
@@ -53,14 +58,20 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private SpotLight flashLight;
     private BitmapText timeText;
     private AudioNode music;
+    private AudioNode wind;
     private float startTime;
     private static final String PLAYER = "pelaaja";
     private static final String GOAL = "maali";
+    private static final String GROUND = "maa";
     private Node goalNode;
+    private Node groundNode;
     private int currentLevel;
     
     public static void main(String[] args) {
         Main app = new Main();
+        AppSettings settings = new AppSettings(true);
+        settings.setSettingsDialogImage("Textures/startscreen.png");
+        app.setSettings(settings);
         app.start();
     }
     
@@ -76,6 +87,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.initSounds();
         this.initRotationGfx();
         this.initGoal();
+        this.initGround();
         // We re-use the flyby camera for rotation, while positioning is handled by physics
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
         flyCam.setMoveSpeed(100);
@@ -190,7 +202,20 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         goalNode.attachChild(goalSpatial);
         rootNode.attachChild(goalNode);
     }
-
+    
+    private void initGround() {
+        groundNode = new Node(GROUND);
+        Box box = new Box(Vector3f.ZERO, 10f,0.001f,10f);
+        Spatial groundSpatial = new Geometry("Box", box );
+        groundSpatial.scale(100.0f);
+        CollisionShape groundShape = CollisionShapeFactory.createBoxShape(groundSpatial);
+        RigidBodyControl groundControl = new RigidBodyControl(groundShape, 0);
+        groundNode.addControl(groundControl);
+        bulletAppState.getPhysicsSpace().add(groundControl);
+        groundControl.setPhysicsLocation(new Vector3f(0, -100, 0));//menee tason alle tarpeeksi kauas
+        rootNode.attachChild(groundNode);
+    }
+    
     /**
      * We over-write some navigational key mappings here, so we can add
      * physics-controlled walking and jumping:
@@ -366,10 +391,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             //Pelaaja voittaa pelin
             System.out.println("Pelaaja paasee maaliin!");
             this.nextLevel();
-        } 
-        /*else if (objectName.equals(ICE)) {
-         this.kaveleJaalla();
-         }*/
+        } else if (objectName.equals(GROUND)) {
+            this.respawn();
+        }
     }
 
     private void nextLevel(){
@@ -451,6 +475,10 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         music.setLooping(true);
         music.setVolume(0.1f);
         music.play();
+        /*wind = new AudioNode(assetManager, "Sound/wind.wav", false);
+        wind.setDirectional(false);
+        wind.setPositional(false);
+        wind.play();*/
     }
 
     public void updateSounds() {
