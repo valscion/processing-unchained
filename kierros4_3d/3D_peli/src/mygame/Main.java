@@ -31,13 +31,18 @@ import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.shape.Box;
 
 /**
- * Pohjana on käytetty "collisionTest" valmista testiluokkaa, jonka author:normenhansen
+ * Pohjana on käytetty "collisionTest" valmista testiluokkaa, jonka
+ * author:normenhansen
  * http://hub.jmonkeyengine.org/wiki/doku.php/jme3:beginner:hello_collision
- * Käytetyt materiaalit: Taso(t) olemme itse luoneet sketchUpilla, skyboxia on vähän muokattu, lähde author:Hipshot
+ * Käytetyt materiaalit: Taso(t) olemme itse luoneet sketchUpilla, skyboxia on
+ * vähän muokattu, lähde author:Hipshot
  *
- * Peliin on otettu vaikutteita Portalista, AntiChamberista, Alan Wakesta, ilomilosta.
- * Pelimekaniikkaan kuuluu painovoiman muuttaminen pelaajan toimesta.
- * @author Django unchained (Aarne Leinonen, Emmi Linkola, Vesa Laakso, Pauli Putkonen)
+ * Peliin on otettu vaikutteita Portalista, AntiChamberista, Alan Wakesta,
+ * ilomilosta. Pelimekaniikkaan kuuluu painovoiman muuttaminen pelaajan
+ * toimesta.
+ *
+ * @author Django unchained (Aarne Leinonen, Emmi Linkola, Vesa Laakso, Pauli
+ * Putkonen)
  */
 public class Main extends SimpleApplication implements ActionListener, PhysicsCollisionListener {
 
@@ -74,7 +79,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         app.setSettings(settings);
         app.start();
     }
-
 
     // -------------------------------------------------------------------------
     // INITIALIZE GAME
@@ -173,9 +177,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         music.setVolume(0.1f);
         music.play();
         /*wind = new AudioNode(assetManager, "Sound/wind.wav", false);
-        wind.setDirectional(false);
-        wind.setPositional(false);
-        wind.play();*/
+         wind.setDirectional(false);
+         wind.setPositional(false);
+         wind.play();*/
     }
 
     private void initGoal() {
@@ -196,8 +200,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
 
     private void initGround() {
         groundNode = new Node(GROUND);
-        Box box = new Box(Vector3f.ZERO, 10f,0.001f,10f);
-        Spatial groundSpatial = new Geometry("Box", box );
+        Box box = new Box(Vector3f.ZERO, 10f, 0.001f, 10f);
+        Spatial groundSpatial = new Geometry("Box", box);
         groundSpatial.scale(100.0f);
         CollisionShape groundShape = CollisionShapeFactory.createBoxShape(groundSpatial);
         RigidBodyControl groundControl = new RigidBodyControl(groundShape, 0);
@@ -259,9 +263,11 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         inputManager.addListener(this, "Respawn");
     }
 
+    //
     // -------------------------------------------------------------------------
     // END GAME INITIALIZE
-
+    // -------------------------------------------------------------------------
+    //
     private void respawn() {
         this.startTime = timer.getTimeInSeconds();
         bulletAppState.getPhysicsSpace().remove(this.playerControl);
@@ -429,15 +435,15 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         }
     }
 
-    private void nextLevel(){
+    private void nextLevel() {
         this.currentLevel++;
         System.out.println("Pelaaja siirtyy seuraavaan kenttaan");
-        if(currentLevel == 1){
+        if (currentLevel == 1) {
             this.playerWon();
         }
     }
 
-    private void playerWon(){
+    private void playerWon() {
         System.out.println("Pelaaja voittaa pelin!");
         //soittaa musiikkia tai jotain
         //this.stop();
