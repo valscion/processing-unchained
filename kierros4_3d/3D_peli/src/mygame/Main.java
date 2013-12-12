@@ -291,7 +291,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         hudText.setName("DEBUG_TEXT");
         hudText.setSize(guiFont.getCharSet().getRenderedSize());
         hudText.setColor(ColorRGBA.Black);
-        hudText.setLocalTranslation(300, hudText.getLineHeight() * 3, 0);
+        hudText.setLocalTranslation(300, hudText.getLineHeight() * 4, 0);
         guiNode.attachChild(hudText);
     }
 
@@ -329,6 +329,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         inputManager.addListener(this, "RotateWorldCCW");
         inputManager.addMapping("Respawn", new KeyTrigger(KeyInput.KEY_R));
         inputManager.addListener(this, "Respawn");
+        inputManager.addMapping("CameraDebug", new KeyTrigger(KeyInput.KEY_0));
+        inputManager.addListener(this, "CameraDebug");
     }
 
     //
@@ -413,6 +415,14 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
                     this.isQEPressed = true;
                     this.updateHUD(isQEPressed);
                 }
+            } else if (binding.equals("CameraDebug")) {
+                if (!isPressed) {
+                    Quaternion target = new Quaternion();
+                    target.lookAt(Vector3f.UNIT_Y, Vector3f.UNIT_Y);
+                    //target = target.fromAngleNormalAxis(FastMath.TWO_PI, Vector3f.UNIT_X.normalize());
+                    //Quaternion target = cam.getRotation().opposite();
+                    this.cameraRotator.rotateTo(target);
+                }
             }
         }
         if (binding.equals("Respawn")) {
@@ -428,9 +438,10 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      */
     private void rotateWorld(boolean clockWise) {
         if (this.cameraRotator.isInterpolationComplete()) {
+            Vector3f lookDir = this.lookDirection();
             this.soundSystem.playRotationSound();
             this.rotatePlayerUpAxis(clockWise);
-            this.rotateCamera();
+            this.rotateCamera(clockWise, lookDir);
         }
     }
 
@@ -476,6 +487,71 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
                 throw new RuntimeException("Dude, check your axis and up direction!");
             }
         }
+        else if (currentUp == UpAxisDir.X) {
+            if (!isZero(lookDir.y)) {
+                newUp = UpAxisDir.Z;
+                if (lookDir.y < -eps) { // Y+ points to us
+                    if (clockWise) {
+                        flipGravity = true;
+                    }
+                }
+                else { // Y- points to us
+                    if (!clockWise) {
+                        flipGravity = true;
+                    }
+                }
+            }
+            else if (!isZero(lookDir.z)) {
+                newUp = UpAxisDir.Y;
+                if (lookDir.z < -eps) { // Z+ points to us
+                    if (!clockWise) {
+                        flipGravity = true;
+                    }
+                }
+                else { // Z- points to us
+                    if (clockWise) {
+                        flipGravity = true;
+                    }
+                }
+            }
+            else {
+                throw new RuntimeException("Dude, check your axis and up direction!");
+            }
+        }
+        else if (currentUp == UpAxisDir.Z) {
+            if (!isZero(lookDir.x)) {
+                newUp = UpAxisDir.Y;
+                if (lookDir.x < -eps) { // X+ points to us
+                    if (clockWise) {
+                        flipGravity = true;
+                    }
+                }
+                else { // X- points to us
+                    if (!clockWise) {
+                        flipGravity = true;
+                    }
+                }
+            }
+            else if (!isZero(lookDir.y)) {
+                newUp = UpAxisDir.X;
+                if (lookDir.y < -eps) { // Y+ points to us
+                    if (!clockWise) {
+                        flipGravity = true;
+                    }
+                }
+                else { // Y- points to us
+                    if (clockWise) {
+                        flipGravity = true;
+                    }
+                }
+            }
+            else {
+                throw new RuntimeException("Dude, check your axis and up direction!");
+            }
+        }
+        else {
+            throw new RuntimeException("Jumalauta. Ei helvetti.");
+        }
 
         if (flipGravity) {
             playerControl.setGravity(-playerControl.getGravity());
@@ -486,8 +562,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     /**
      * Pyöräytä kamera sopimaan käännettyyn maailmaan
      */
-    private void rotateCamera() {
-        this.cameraRotator.rotateToReflectNewPlayerUpAxis(playerControl);
+    private void rotateCamera(boolean clockWise, Vector3f lookDir) {
+        this.cameraRotator.rotateToReflectNewPlayerUpAxis(playerControl, lookDir, clockWise);
         int playerUpAxis = playerControl.getUpAxis();
         Vector3f newUpVector = UpAxisDir.unitVector(playerUpAxis);
         boolean isGravityFlipped = (playerControl.getGravity() < 0);
@@ -583,9 +659,14 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
                 DecimalFormat hf = new DecimalFormat("00");
                 timeText.setText(hf.format(currentMinutes) + ":" + df.format(currentTime % 60));
             }
-            String debugText = String.format("Player up axis: %s\nPlayer up vector: %s\nGravity: %.2f",
+            Vector3f plrViewVec = playerControl.getViewDirection();
+            String debugText = String.format("Player up axis: %s\n" +
+                    "Player look vector: (%.1f, %.1f, %.1f)\n " +
+                    "Look vector: %s\n" +
+                    "Gravity: %.2f",
                     UpAxisDir.string(playerControl.getUpAxis()),
-                    UpAxisDir.unitVector(playerControl.getUpAxis()).toString(),
+                    plrViewVec.x, plrViewVec.y, plrViewVec.z,
+                    this.lookDirection().toString(),
                     this.playerControl.getGravity());
             ((BitmapText) guiNode.getChild("DEBUG_TEXT")).setText(debugText);
             if (showqe) {

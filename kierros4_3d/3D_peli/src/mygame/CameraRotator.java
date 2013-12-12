@@ -42,31 +42,15 @@ public class CameraRotator {
         }
     }
 
-    public void rotateToReflectNewPlayerUpAxis(CharacterControl playerControl) {
-        Vector3f dirVector = this.lookDirection(playerControl);
-        float rotateAngle = getAngleToRotateTo(playerControl);
-        // Rotate camera based on up axis and look direction
-        //cam.lookAtDirection(dirVector, cam.getUp());
-        Quaternion target = new Quaternion();
-        target.fromAngleAxis(rotateAngle, dirVector);
-        this.rotateTo(target);
-    }
-
-    private float getAngleToRotateTo(CharacterControl playerControl) {
-        float rotateAngle = 0.0f;
-        int playerUpAxis = playerControl.getUpAxis();
+    public void rotateToReflectNewPlayerUpAxis(CharacterControl playerControl, Vector3f lookDir, boolean clockWise) {
+        Vector3f playerUpVec = UpAxisDir.unitVector(playerControl.getUpAxis());
         boolean isGravityFlipped = playerControl.getGravity() < 0;
-        if (playerUpAxis == UpAxisDir.X) {
-            rotateAngle = -FastMath.HALF_PI;
-            if (isGravityFlipped) {
-                rotateAngle = -rotateAngle;
-            }
-        } else if (playerUpAxis == UpAxisDir.Y) {
-            if (isGravityFlipped) {
-                rotateAngle = FastMath.PI;
-            }
+        if (isGravityFlipped) {
+            playerUpVec.multLocal(-1);
         }
-        return rotateAngle;
+        Quaternion target = new Quaternion();
+        target.lookAt(lookDir, playerUpVec);
+        this.rotateTo(target);
     }
 
     /**
