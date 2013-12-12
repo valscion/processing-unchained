@@ -350,6 +350,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
 
 
     private void respawn() {
+        playerControl.setEnabled(true);
         this.startTime = timer.getTimeInSeconds();
         bulletAppState.getPhysicsSpace().remove(this.playerControl);
         //en tiedä onko tarpeellisia, ainakin järkevän oloista poistaa pelaaja
@@ -519,7 +520,10 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             this.nextLevel();
         } else if (objectName.equals(GROUND)) {
             this.playCollisionSound();
+            nifty.fromXml("Interface/screen.xml", "lose");
+            guiViewPort.addProcessor(niftyDisplay);
             this.respawn();
+            
         }
     }
 
@@ -537,7 +541,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         System.out.println("Pelaaja voittaa pelin!");
         nifty.fromXml("Interface/screen.xml", "win");
         guiViewPort.addProcessor(niftyDisplay);
-        this.respawn();
+        //this.respawn();
+        playerControl.setEnabled(false);
         //soittaa musiikkia tai jotain
         //this.stop();
     }
