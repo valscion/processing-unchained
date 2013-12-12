@@ -457,7 +457,12 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      */
     private void rotateCamera() {
         this.cameraRotator.rotateToReflectNewPlayerUpAxis(playerControl);
-        Vector3f newUpVector = UpAxisDir.unitVector(playerControl.getUpAxis());
+        int playerUpAxis = playerControl.getUpAxis();
+        Vector3f newUpVector = UpAxisDir.unitVector(playerUpAxis);
+        boolean isGravityFlipped = playerControl.getGravity() < 0;
+        if (isGravityFlipped && playerUpAxis == UpAxisDir.Y) {
+            newUpVector.multLocal(-1f);
+        }
         flyCam.setUpVector(newUpVector);
     }
 
