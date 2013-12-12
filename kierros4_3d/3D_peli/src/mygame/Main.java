@@ -290,7 +290,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         hudText.setName("DEBUG_TEXT");
         hudText.setSize(guiFont.getCharSet().getRenderedSize());
         hudText.setColor(ColorRGBA.Black);
-        hudText.setLocalTranslation(300, hudText.getLineHeight() * 2, 0);
+        hudText.setLocalTranslation(300, hudText.getLineHeight() * 3, 0);
         guiNode.attachChild(hudText);
     }
 
@@ -545,9 +545,10 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
                 DecimalFormat hf = new DecimalFormat("00");
                 timeText.setText(hf.format(currentMinutes) + ":" + df.format(currentTime % 60));
             }
-            String debugText = String.format("Player up axis: %s\nLook vector: %s",
+            String debugText = String.format("Player up axis: %s\nLook vector: %s\nGravity: %.2f",
                     UpAxisDir.string(playerControl.getUpAxis()),
-                    this.lookDirection().toString());
+                    this.lookDirection().toString(),
+                    this.playerControl.getGravity());
             ((BitmapText) guiNode.getChild("DEBUG_TEXT")).setText(debugText);
             if (showqe) {
                 keyPicture.removeFromParent();
