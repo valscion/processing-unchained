@@ -27,6 +27,12 @@ import com.jme3.util.SkyFactory;
 import java.text.DecimalFormat;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
+import com.jme3.niftygui.NiftyJmeDisplay;
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.elements.Element;
+import de.lessvoid.nifty.elements.render.TextRenderer;
+import de.lessvoid.nifty.screen.Screen;
+import de.lessvoid.nifty.screen.ScreenController;
 import com.jme3.math.Quaternion;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.shape.Box;
@@ -75,6 +81,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private Node goalNode;
     private Node groundNode;
     private int currentLevel;
+    public Nifty nifty;
+    private NiftyJmeDisplay niftyDisplay;
     private CameraRotator cameraRotator;
 
     public static void main(String[] args) {
@@ -105,7 +113,11 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         // We re-use the flyby camera for rotation, while positioning is handled by physics
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
         flyCam.setMoveSpeed(100);
-        
+        this.niftyDisplay = new NiftyJmeDisplay(
+                assetManager, inputManager, audioRenderer, guiViewPort);
+        nifty = niftyDisplay.getNifty();
+        nifty.fromXml("Interface/screen.xml", "start");
+        guiViewPort.addProcessor(niftyDisplay);
         this.cameraRotator = new CameraRotator(this.cam, this.playerControl);
     }
 
@@ -187,7 +199,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         collisionSound.setPositional(false);
         collisionSound.setLooping(false);
         //TODO päivitä vielä oikea
-        youWinSound = new AudioNode(assetManager, "Sound/collision.wav", false);
+        youWinSound = new AudioNode(assetManager, "Sound/you_win.ogg", false);
         youWinSound.setPositional(false);
         youWinSound.setLooping(false);
     }
@@ -361,6 +373,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             }
         } else if (binding.equals("Respawn")) {
             this.respawn();
+            if(guiViewPort.getProcessors().contains(niftyDisplay))
+            guiViewPort.removeProcessor(niftyDisplay);
         }
     }
 
@@ -397,14 +411,25 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      */
     private void rotateCamera() {
         Vector3f dirVector = this.lookDirection();
-        Vector3f axisToRotateAround;
+        float rotateAngle = 0.0f;
         int playerUpAxis = playerControl.getUpAxis();
-        //boolean isGravityFlipped = playerControl.getGravity() < 0;
+        boolean isGravityFlipped = playerControl.getGravity() < 0;
+        if (playerUpAxis == UpAxisDir.X) {
+            rotateAngle = -FastMath.HALF_PI;
+            if (isGravityFlipped) {
+                rotateAngle = -rotateAngle;
+            }
+        }
+        else if (playerUpAxis == UpAxisDir.Y) {
+            if (isGravityFlipped) {
+                rotateAngle = FastMath.PI;
+            }
+        }
 
         // Rotate camera based on up axis and look direction
         //cam.lookAtDirection(dirVector, cam.getUp());
         Quaternion targetRotation = new Quaternion();
-        targetRotation.fromAngleAxis(FastMath.HALF_PI, dirVector);
+        targetRotation.fromAngleAxis(rotateAngle, dirVector);
         cameraRotator.rotateTo(targetRotation);
     }
 
@@ -485,7 +510,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private void nextLevel() {
         this.currentLevel++;
         System.out.println("Pelaaja siirtyy seuraavaan kenttaan");
-        this.playCollisionSound();
+        this.playYouWinSound();
         //this.playYouWinSound();
         if (currentLevel == 1) {
             this.playerWon();
