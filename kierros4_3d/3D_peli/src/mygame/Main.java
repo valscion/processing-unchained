@@ -121,7 +121,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         nifty = niftyDisplay.getNifty();
         nifty.fromXml("Interface/screen.xml", "startscreen");
         guiViewPort.addProcessor(niftyDisplay);
-        this.cameraRotator = new CameraRotator(this.cam, this.playerControl);
+        this.cameraRotator = new CameraRotator(this.cam);
     }
 
     private void initPhysics() {
@@ -452,30 +452,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      * Pyöräytä kamera sopimaan käännettyyn maailmaan
      */
     private void rotateCamera() {
-        Vector3f dirVector = this.lookDirection();
-        float rotateAngle = getAngleToRotateTo();
-        // Rotate camera based on up axis and look direction
-        //cam.lookAtDirection(dirVector, cam.getUp());
-        Quaternion targetRotation = new Quaternion();
-        targetRotation.fromAngleAxis(rotateAngle, dirVector);
-        cameraRotator.rotateTo(targetRotation);
-    }
-
-    private float getAngleToRotateTo() {
-        float rotateAngle = 0.0f;
-        int playerUpAxis = playerControl.getUpAxis();
-        boolean isGravityFlipped = playerControl.getGravity() < 0;
-        if (playerUpAxis == UpAxisDir.X) {
-            rotateAngle = -FastMath.HALF_PI;
-            if (isGravityFlipped) {
-                rotateAngle = -rotateAngle;
-            }
-        } else if (playerUpAxis == UpAxisDir.Y) {
-            if (isGravityFlipped) {
-                rotateAngle = FastMath.PI;
-            }
-        }
-        return rotateAngle;
+        this.cameraRotator.rotateToReflectNewPlayerUpAxis(playerControl);
     }
 
     /**
@@ -487,45 +464,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      * @return
      */
     private Vector3f lookDirection() {
-        Vector3f direction;
-        int upAxis = playerControl.getUpAxis();
-        Vector3f playerDir = playerControl.getViewDirection().clone();
-        //boolean isGravityFlipped = playerControl.getGravity() < 0;
-        switch (upAxis) {
-            case UpAxisDir.X:
-                playerDir.x = 0;
-                if (Math.abs(playerDir.z) > Math.abs(playerDir.y)) {
-                    // Katsoo enempi z-akselin suuntaisesti
-                    playerDir.y = 0;
-                } else {
-                    // Katsoo enempi y-akselin suuntaisesti
-                    playerDir.z = 0;
-                }
-                break;
-            case UpAxisDir.Y:
-                playerDir.y = 0;
-                if (Math.abs(playerDir.x) > Math.abs(playerDir.z)) {
-                    // Katsoo enempi x-akselin suuntaisesti
-                    playerDir.z = 0;
-                } else {
-                    // Katsoo enempi z-akselin suuntaisesti
-                    playerDir.x = 0;
-                }
-                break;
-            case UpAxisDir.Z:
-                playerDir.z = 0;
-                if (Math.abs(playerDir.x) > Math.abs(playerDir.y)) {
-                    // Katsoo enempi x-akselin suuntaisesti
-                    playerDir.y = 0;
-                } else {
-                    // Katsoo enempi y-akselin suuntaisesti
-                    playerDir.x = 0;
-                }
-                break;
-            default:
-                throw new RuntimeException("Weird up direction!");
-        }
-        direction = playerDir.normalize();
+        Vector3f direction = cameraRotator.lookDirection(playerControl);
         return direction;
     }
 
