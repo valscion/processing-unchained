@@ -1,0 +1,15 @@
+Gravity Unchained
+
+Ohjeet:
+
+Pelaajan tehtävänä on selvitä kolmiulotteisesta labyrintistä maaliin//, jolloin hän pääsee toiselle tasolle. Tasoja on 3.
+Pelaaja voi ohjata hahmoaan sekä kahlitsematonta painovoimaa.
+
+Näppäimet:
+W = eteen
+A = vasemmalle (sivuttain)
+S = taakse
+D = oikealle (sivuttain)
+Q = käännä painovoimaa vastapäivään
+E = käännä painovoimaa myötäpäivään
+R = aloita labyrintti alusta
