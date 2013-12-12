@@ -31,13 +31,18 @@ import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.shape.Box;
 
 /**
- * Pohjana on käytetty "collisionTest" valmista testiluokkaa, jonka author:normenhansen
- * http://hub.jmonkeyengine.org/wiki/doku.php/jme3:beginner:hello_collision 
- * Käytetyt materiaalit: Taso(t) olemme itse luoneet sketchUpilla, skyboxia on vähän muokattu, lähde author:Hipshot
- * 
- * Peliin on otettu vaikutteita Portalista, AntiChamberista, Alan Wakesta, ilomilosta. 
- * Pelimekaniikkaan kuuluu painovoiman muuttaminen pelaajan toimesta. 
- * @author Django unchained (Aarne Leinonen, Emmi Linkola, Vesa Laakso, Pauli Putkonen)
+ * Pohjana on käytetty "collisionTest" valmista testiluokkaa, jonka
+ * author:normenhansen
+ * http://hub.jmonkeyengine.org/wiki/doku.php/jme3:beginner:hello_collision
+ * Käytetyt materiaalit: Taso(t) olemme itse luoneet sketchUpilla, skyboxia on
+ * vähän muokattu, lähde author:Hipshot
+ *
+ * Peliin on otettu vaikutteita Portalista, AntiChamberista, Alan Wakesta,
+ * ilomilosta. Pelimekaniikkaan kuuluu painovoiman muuttaminen pelaajan
+ * toimesta.
+ *
+ * @author Django unchained (Aarne Leinonen, Emmi Linkola, Vesa Laakso, Pauli
+ * Putkonen)
  */
 public class Main extends SimpleApplication implements ActionListener, PhysicsCollisionListener {
 
@@ -66,7 +71,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private Node goalNode;
     private Node groundNode;
     private int currentLevel;
-    
+
     public static void main(String[] args) {
         Main app = new Main();
         AppSettings settings = new AppSettings(true);
@@ -74,7 +79,10 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         app.setSettings(settings);
         app.start();
     }
-    
+
+    // -------------------------------------------------------------------------
+    // INITIALIZE GAME
+    // -------------------------------------------------------------------------
     @Override
     public void simpleInitApp() {
         this.currentLevel = 0;
@@ -83,48 +91,21 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.initSkyBox();
         this.initPlayer();
         this.initLights();
-        this.initHUD();
         this.initSounds();
-        this.initRotationGfx();
         this.initGoal();
         this.initGround();
+        this.initHUD();
+        this.initRotationGfx();
+        this.initKeys();
         // We re-use the flyby camera for rotation, while positioning is handled by physics
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
         flyCam.setMoveSpeed(100);
-        setupKeys();
-    }
-
-    private void initLights() {
-        /**
-         * A white ambient light source.
-         */
-        //AmbientLight ambient = new AmbientLight();
-        //ambient.setColor(ColorRGBA.White.mult(0.1f));
-        //rootNode.addLight(ambient);
-/*
-         DirectionalLight dl = new DirectionalLight();
-         dl.setColor(ColorRGBA.White.mult(0.1f));
-         dl.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
-         rootNode.addLight(dl);
-         */
-        flashLight = new SpotLight();
-        flashLight.setColor(ColorRGBA.White);
-        flashLight.setPosition(playerControl.getPhysicsLocation());
-        flashLight.setDirection(playerControl.getViewDirection());
-        flashLight.setSpotOuterAngle(10f);
-        //flashLight.setSpotOuterAngle(20f);
-        rootNode.addLight(flashLight);
     }
 
     private void initPhysics() {
-        /**
-         * Set up Physics
-         */
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
-        //tässä oli kommentit että debugi pois päältä
         //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
-        //kuuntelee tormauksia
         bulletAppState.getPhysicsSpace().addCollisionListener(this);
     }
 
@@ -148,15 +129,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         Spatial skybox = SkyFactory.createSky(
                 assetManager, west, east, north, south, sky, floor);
         rootNode.attachChild(skybox);
-    }
-
-    private void respawn() {
-        this.startTime = timer.getTimeInSeconds();
-        bulletAppState.getPhysicsSpace().remove(this.playerControl);
-        //en tiedä onko tarpeellisia, ainakin järkevän oloista poistaa pelaaja
-        rootNode.removeControl(playerControl);
-        rootNode.detachChild(playerNode);
-        this.initPlayer();
     }
 
     private void initPlayer() {
@@ -188,11 +160,33 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         rootNode.attachChild(playerNode);
     }
 
+    private void initLights() {
+        flashLight = new SpotLight();
+        flashLight.setColor(ColorRGBA.White);
+        flashLight.setPosition(playerControl.getPhysicsLocation());
+        flashLight.setDirection(playerControl.getViewDirection());
+        flashLight.setSpotOuterAngle(10f);
+        rootNode.addLight(flashLight);
+    }
+
+    public void initSounds() {
+        music = new AudioNode(assetManager, "Sound/ambient1_freesoundYewbic.wav", false);
+        music.setPositional(false);
+        music.setDirectional(false);
+        music.setLooping(true);
+        music.setVolume(0.1f);
+        music.play();
+        /*wind = new AudioNode(assetManager, "Sound/wind.wav", false);
+         wind.setDirectional(false);
+         wind.setPositional(false);
+         wind.play();*/
+    }
+
     private void initGoal() {
         goalNode = new Node(GOAL);
         Spatial goalSpatial = assetManager.loadModel("Models/companioncube.j3o");
         goalSpatial.scale(1.0f);
-        
+
         CollisionShape goalShape =
                 CollisionShapeFactory.createMeshShape(goalSpatial);
         RigidBodyControl goalControl = new RigidBodyControl(goalShape, 0);
@@ -203,11 +197,11 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         goalNode.attachChild(goalSpatial);
         rootNode.attachChild(goalNode);
     }
-    
+
     private void initGround() {
         groundNode = new Node(GROUND);
-        Box box = new Box(Vector3f.ZERO, 10f,0.001f,10f);
-        Spatial groundSpatial = new Geometry("Box", box );
+        Box box = new Box(Vector3f.ZERO, 10f, 0.001f, 10f);
+        Spatial groundSpatial = new Geometry("Box", box);
         groundSpatial.scale(100.0f);
         CollisionShape groundShape = CollisionShapeFactory.createBoxShape(groundSpatial);
         RigidBodyControl groundControl = new RigidBodyControl(groundShape, 0);
@@ -216,12 +210,43 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         groundControl.setPhysicsLocation(new Vector3f(0, -100, 0));//menee tason alle tarpeeksi kauas
         rootNode.attachChild(groundNode);
     }
-    
+
+    public void initHUD() {
+        timeText = new BitmapText(guiFont, false);
+        timeText.setSize(30);      // font size
+        timeText.setColor(ColorRGBA.White);
+        timeText.setLocalTranslation(0, settings.getHeight(), 0); // position
+        guiNode.attachChild(timeText);
+        this.initDebugText();
+    }
+
+    private void initDebugText() {
+        BitmapText hudText = new BitmapText(guiFont, false);
+        hudText.setName("DEBUG_TEXT");
+        hudText.setSize(guiFont.getCharSet().getRenderedSize());
+        hudText.setColor(ColorRGBA.Black);
+        hudText.setLocalTranslation(300, hudText.getLineHeight() * 2, 0);
+        guiNode.attachChild(hudText);
+    }
+
+    public void initRotationGfx() {
+        Box helpBox = new Box(0.1f, 0.1f, -10f);
+        arrow = new Geometry("Box", helpBox);
+        Material mat1 = new Material(assetManager,
+                "Common/MatDefs/Misc/Unshaded.j3md");
+        mat1.setColor("Color", ColorRGBA.Blue);
+        arrow.setMaterial(mat1);
+        arrow.setShadowMode(RenderQueue.ShadowMode.Off);
+        arrow.setCullHint(Spatial.CullHint.Never);
+        arrow.setLocalTranslation(50, 100, -50);
+        rootNode.attachChild(arrow);
+    }
+
     /**
      * We over-write some navigational key mappings here, so we can add
      * physics-controlled walking and jumping:
      */
-    private void setupKeys() {
+    private void initKeys() {
         inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
         inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_D));
         inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_W));
@@ -236,7 +261,20 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         inputManager.addListener(this, "RotateWorld");
         inputManager.addMapping("Respawn", new KeyTrigger(KeyInput.KEY_R));
         inputManager.addListener(this, "Respawn");
+    }
 
+    //
+    // -------------------------------------------------------------------------
+    // END GAME INITIALIZE
+    // -------------------------------------------------------------------------
+    //
+    private void respawn() {
+        this.startTime = timer.getTimeInSeconds();
+        bulletAppState.getPhysicsSpace().remove(this.playerControl);
+        //en tiedä onko tarpeellisia, ainakin järkevän oloista poistaa pelaaja
+        rootNode.removeControl(playerControl);
+        rootNode.detachChild(playerNode);
+        this.initPlayer();
     }
 
     /**
@@ -258,7 +296,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             }
         } else if (binding.equals("RotateWorld")) {
             if (!isPressed) {
-                this.rotatePlayerUpAxis();
+                this.rotateWorld();
             }
         } else if (binding.equals("Respawn")) {
             this.respawn();
@@ -291,6 +329,14 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.updateHUD();
     }
 
+    /**
+     * Pyöräyttää maailmaa
+     */
+    private void rotateWorld() {
+        this.rotatePlayerUpAxis();
+        this.rotateCamera();
+    }
+
     /*
      * Pyöräyttää pelaajan ylöspäin suuntautuvaa akselia, vaihtaen sen suuntaa
      */
@@ -299,7 +345,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         int currentUp = playerControl.getUpAxis();
         int newUp = currentUp;
 
-        Vector3f dirVector = this.lookDirection();
         if (currentUp == UpAxisDir.Y) {
             newUp = UpAxisDir.X;
             playerControl.setGravity(-playerControl.getGravity());
@@ -309,7 +354,15 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             throw new RuntimeException("Incorrect up axis, can't rotate!");
         }
 
-        Vector3f upVector = UpAxisDir.unitVector(newUp);
+        playerControl.setUpAxis(newUp);
+    }
+
+    /**
+     * Pyöräytä kamera sopimaan käännettyyn maailmaan
+     */
+    private void rotateCamera() {
+        Vector3f dirVector = this.lookDirection();
+        Vector3f upVector = UpAxisDir.unitVector(playerControl.getUpAxis());
         boolean isGravityFlipped = playerControl.getGravity() < 0;
         if (isGravityFlipped) {
             upVector.multLocal(-1f);
@@ -319,9 +372,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         // Rotate camera based on up axis and look direction
         cam.lookAtDirection(dirVector, upVector);
         cam.update();
-
-        playerControl.setUpAxis(newUp);
-        cam.getUp();
     }
 
     /**
@@ -397,15 +447,15 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         }
     }
 
-    private void nextLevel(){
+    private void nextLevel() {
         this.currentLevel++;
         System.out.println("Pelaaja siirtyy seuraavaan kenttaan");
-        if(currentLevel == 1){
+        if (currentLevel == 1) {
             this.playerWon();
         }
     }
 
-    private void playerWon(){
+    private void playerWon() {
         System.out.println("Pelaaja voittaa pelin!");
         //soittaa musiikkia tai jotain
         //this.stop();
@@ -416,43 +466,12 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         //TODO: add render code
     }
 
-    public void initRotationGfx() {
-        Box helpBox = new Box(0.1f, 0.1f, -10f);
-        arrow = new Geometry("Box", helpBox);
-        Material mat1 = new Material(assetManager,
-                "Common/MatDefs/Misc/Unshaded.j3md");
-        mat1.setColor("Color", ColorRGBA.Blue);
-        arrow.setMaterial(mat1);
-        arrow.setShadowMode(RenderQueue.ShadowMode.Off);
-        arrow.setCullHint(Spatial.CullHint.Never);
-        arrow.setLocalTranslation(50, 100, -50);
-        rootNode.attachChild(arrow);
-    }
-
     public void updateRotationGfx() {
         Vector3f location = cam.getLocation().clone();
         location.addLocal(0f, -0.5f, 0f);
         Vector3f lookLocation = location.add(this.lookDirection());
         arrow.setLocalTranslation(location);
         arrow.lookAt(lookLocation, UpAxisDir.unitVector(playerControl.getUpAxis()));
-    }
-
-    public void initHUD() {
-        timeText = new BitmapText(guiFont, false);
-        timeText.setSize(30);      // font size
-        timeText.setColor(ColorRGBA.White);
-        timeText.setLocalTranslation(0, settings.getHeight(), 0); // position
-        guiNode.attachChild(timeText);
-        this.initDebugText();
-    }
-
-    private void initDebugText() {
-        BitmapText hudText = new BitmapText(guiFont, false);
-        hudText.setName("DEBUG_TEXT");
-        hudText.setSize(guiFont.getCharSet().getRenderedSize());
-        hudText.setColor(ColorRGBA.Black);
-        hudText.setLocalTranslation(300, hudText.getLineHeight() * 2, 0);
-        guiNode.attachChild(hudText);
     }
 
     public void updateHUD() {
@@ -467,19 +486,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
                 UpAxisDir.string(playerControl.getUpAxis()),
                 this.lookDirection().toString());
         ((BitmapText) guiNode.getChild("DEBUG_TEXT")).setText(debugText);
-    }
-
-    public void initSounds() {
-        music = new AudioNode(assetManager, "Sound/ambient1_freesoundYewbic.wav", false);
-        music.setPositional(false);
-        music.setDirectional(false);
-        music.setLooping(true);
-        music.setVolume(0.1f);
-        music.play();
-        /*wind = new AudioNode(assetManager, "Sound/wind.wav", false);
-        wind.setDirectional(false);
-        wind.setPositional(false);
-        wind.play();*/
     }
 
     public void updateSounds() {
