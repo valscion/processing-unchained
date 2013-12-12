@@ -279,9 +279,28 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     // END GAME INITIALIZE
     // -------------------------------------------------------------------------
     //
-    
     @Override
     public void simpleUpdate(float tpf) {
+        cameraRotator.update(tpf);
+        if (cameraRotator.isInterpolationComplete()) {
+            playerControl.setEnabled(true);
+            updatePlayerAndCameraPosition();
+        }
+        else {
+            playerControl.setEnabled(false);
+        }
+        flashLight.setPosition(playerControl.getPhysicsLocation());
+        flashLight.setDirection(playerControl.getViewDirection());
+        this.updateRotationGfx();
+        this.updateHUD();
+    }
+
+    @Override
+    public void simpleRender(RenderManager rm) {
+        //TODO: add render code
+    }
+
+    private void updatePlayerAndCameraPosition() {
         camDir.set(cam.getDirection()).multLocal(0.6f);
         camLeft.set(cam.getLeft()).multLocal(0.4f);
         walkDirection.set(0, 0, 0);
@@ -300,16 +319,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         playerControl.setWalkDirection(walkDirection);
         playerControl.setViewDirection(camDir);
         cam.setLocation(playerControl.getPhysicsLocation());
-        flashLight.setPosition(playerControl.getPhysicsLocation());
-        flashLight.setDirection(playerControl.getViewDirection());
-        this.updateRotationGfx();
-        this.updateHUD();
-        this.cameraRotator.update(tpf);
-    }
-    
-    @Override
-    public void simpleRender(RenderManager rm) {
-        //TODO: add render code
     }
 
     

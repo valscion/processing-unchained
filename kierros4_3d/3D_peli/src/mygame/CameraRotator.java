@@ -43,7 +43,10 @@ public class CameraRotator {
         }
     }
 
-    private boolean isInterpolationComplete() {
+    public boolean isInterpolationComplete() {
+        if (!isTargetChanged) {
+            return true;
+        }
         float diffs = quatDiff(cam.getRotation(), targetRotation);
         if (diffs < 0.0001f) {
             System.out.println("Interpolation complete!");
@@ -80,7 +83,7 @@ public class CameraRotator {
     }
 
     // Helper for animating change
-    float tweenWeighted(float currentValue, float targetValue, int slowdownFactor) {
+    public float tweenWeighted(float currentValue, float targetValue, int slowdownFactor) {
         return ((currentValue * (slowdownFactor - 1)) + targetValue) / slowdownFactor;
     }
 }
