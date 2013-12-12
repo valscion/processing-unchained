@@ -21,7 +21,6 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.debug.Arrow;
 import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
 import com.jme3.util.SkyFactory;
@@ -34,15 +33,24 @@ import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
+import com.jme3.math.Quaternion;
+import com.jme3.renderer.queue.RenderQueue;
+import com.jme3.scene.shape.Box;
+import com.jme3.ui.Picture;
 
 /**
- * Pohjana on käytetty "collisionTest" valmista testiluokkaa, jonka author:normenhansen
- * http://hub.jmonkeyengine.org/wiki/doku.php/jme3:beginner:hello_collision 
- * Käytetyt materiaalit: Taso(t) olemme itse luoneet sketchUpilla, skyboxia on vähän muokattu, lähde author:Hipshot
- * 
- * Peliin on otettu vaikutteita Portalista, AntiChamberista, Alan Wakesta, ilomilosta. 
- * Pelimekaniikkaan kuuluu painovoiman muuttaminen pelaajan toimesta. 
- * @author Django unchained (Aarne Leinonen, Emmi Linkola, Vesa Laakso, Pauli Putkonen)
+ * Pohjana on käytetty "collisionTest" valmista testiluokkaa, jonka
+ * author:normenhansen
+ * http://hub.jmonkeyengine.org/wiki/doku.php/jme3:beginner:hello_collision
+ * Käytetyt materiaalit: Taso(t) olemme itse luoneet sketchUpilla, skyboxia on
+ * vähän muokattu, lähde author:Hipshot
+ *
+ * Peliin on otettu vaikutteita Portalista, AntiChamberista, Alan Wakesta,
+ * ilomilosta. Pelimekaniikkaan kuuluu painovoiman muuttaminen pelaajan
+ * toimesta.
+ *
+ * @author Django unchained (Aarne Leinonen, Emmi Linkola, Vesa Laakso, Pauli
+ * Putkonen)
  */
 public class Main extends SimpleApplication implements ActionListener, PhysicsCollisionListener {
 
@@ -63,15 +71,19 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private SpotLight flashLight;
     private BitmapText timeText;
     private AudioNode music;
-    private AudioNode wind;
+    private AudioNode collisionSound;
+    private AudioNode youWinSound;
     private float startTime;
     private static final String PLAYER = "pelaaja";
     private static final String GOAL = "maali";
+    private static final String GROUND = "maa";
     private Node goalNode;
+    private Node groundNode;
     private int currentLevel;
     public Nifty nifty;
     private NiftyJmeDisplay niftyDisplay;
-    
+    private CameraRotator cameraRotator;
+
     public static void main(String[] args) {
         Main app = new Main();
         AppSettings settings = new AppSettings(true);
@@ -79,7 +91,10 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         app.setSettings(settings);
         app.start();
     }
-    
+
+    // -------------------------------------------------------------------------
+    // INITIALIZE GAME
+    // -------------------------------------------------------------------------
     @Override
     public void simpleInitApp() {
         this.currentLevel = 0;
@@ -88,52 +103,27 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.initSkyBox();
         this.initPlayer();
         this.initLights();
-        this.initHUD();
         this.initSounds();
-        this.initGravityArrow();
         this.initGoal();
+        this.initGround();
+        this.initHUD();
+        this.initRotationGfx();
+        this.initKeys();
         // We re-use the flyby camera for rotation, while positioning is handled by physics
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
         flyCam.setMoveSpeed(100);
-        setupKeys();
         this.niftyDisplay = new NiftyJmeDisplay(
                 assetManager, inputManager, audioRenderer, guiViewPort);
         nifty = niftyDisplay.getNifty();
         nifty.fromXml("Interface/screen.xml", "start");
         guiViewPort.addProcessor(niftyDisplay);
-    }
-
-    private void initLights() {
-        /**
-         * A white ambient light source.
-         */
-        //AmbientLight ambient = new AmbientLight();
-        //ambient.setColor(ColorRGBA.White.mult(0.1f));
-        //rootNode.addLight(ambient);
-/*
-         DirectionalLight dl = new DirectionalLight();
-         dl.setColor(ColorRGBA.White.mult(0.1f));
-         dl.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
-         rootNode.addLight(dl);
-         */
-        flashLight = new SpotLight();
-        flashLight.setColor(ColorRGBA.White);
-        flashLight.setPosition(playerControl.getPhysicsLocation());
-        flashLight.setDirection(playerControl.getViewDirection());
-        flashLight.setSpotOuterAngle(10f);
-        //flashLight.setSpotOuterAngle(20f);
-        rootNode.addLight(flashLight);
+        this.cameraRotator = new CameraRotator(this.cam, this.playerControl);
     }
 
     private void initPhysics() {
-        /**
-         * Set up Physics
-         */
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
-        //tässä oli kommentit että debugi pois päältä
-        bulletAppState.getPhysicsSpace().enableDebug(assetManager);
-        //kuuntelee tormauksia
+        //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
         bulletAppState.getPhysicsSpace().addCollisionListener(this);
     }
 
@@ -157,15 +147,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         Spatial skybox = SkyFactory.createSky(
                 assetManager, west, east, north, south, sky, floor);
         rootNode.attachChild(skybox);
-    }
-
-    private void respawn() {
-        this.startTime = timer.getTimeInSeconds();
-        bulletAppState.getPhysicsSpace().remove(this.playerControl);
-        //en tiedä onko tarpeellisia, ainakin järkevän oloista poistaa pelaaja
-        rootNode.removeControl(playerControl);
-        rootNode.detachChild(playerNode);
-        this.initPlayer();
     }
 
     private void initPlayer() {
@@ -197,26 +178,103 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         rootNode.attachChild(playerNode);
     }
 
+    private void initLights() {
+        flashLight = new SpotLight();
+        flashLight.setColor(ColorRGBA.White);
+        flashLight.setPosition(playerControl.getPhysicsLocation());
+        flashLight.setDirection(playerControl.getViewDirection());
+        flashLight.setSpotOuterAngle(10f);
+        rootNode.addLight(flashLight);
+    }
+
+    public void initSounds() {
+        music = new AudioNode(assetManager, "Sound/ambient1_freesoundYewbic.wav", false);
+        music.setPositional(false);
+        music.setDirectional(false);
+        music.setLooping(true);
+        music.setVolume(0.1f);
+        music.play();
+        collisionSound = new AudioNode(assetManager, "Sound/collision.wav", false);
+        collisionSound.setPositional(false);
+        collisionSound.setLooping(false);
+        //TODO päivitä vielä oikea
+        youWinSound = new AudioNode(assetManager, "Sound/collision.wav", false);
+        youWinSound.setPositional(false);
+        youWinSound.setLooping(false);
+    }
+
     private void initGoal() {
         goalNode = new Node(GOAL);
-        Spatial goalSpatial = assetManager.loadModel("Scenes/nyyppataso.j3o");
+        Spatial goalSpatial = assetManager.loadModel("Models/companioncube.j3o");
         goalSpatial.scale(1.0f);
-        
+
         CollisionShape goalShape =
                 CollisionShapeFactory.createMeshShape(goalSpatial);
         RigidBodyControl goalControl = new RigidBodyControl(goalShape, 0);
         goalNode.addControl(goalControl);
         bulletAppState.getPhysicsSpace().add(goalControl);
-        goalControl.setPhysicsLocation(new Vector3f(50, 120, -50));
+        Vector3f goalPosition = new Vector3f(40, 90, -40);
+        goalControl.setPhysicsLocation(goalPosition);
         goalNode.attachChild(goalSpatial);
         rootNode.attachChild(goalNode);
+    }
+
+    private void initGround() {
+        groundNode = new Node(GROUND);
+        Box box = new Box(Vector3f.ZERO, 10f, 0.001f, 10f);
+        Spatial groundSpatial = new Geometry("Box", box);
+        groundSpatial.scale(100.0f);
+        CollisionShape groundShape = CollisionShapeFactory.createBoxShape(groundSpatial);
+        RigidBodyControl groundControl = new RigidBodyControl(groundShape, 0);
+        groundNode.addControl(groundControl);
+        bulletAppState.getPhysicsSpace().add(groundControl);
+        groundControl.setPhysicsLocation(new Vector3f(0, -100, 0));//menee tason alle tarpeeksi kauas
+        rootNode.attachChild(groundNode);
+    }
+
+    public void initHUD() {
+        timeText = new BitmapText(guiFont, false);
+        timeText.setSize(30);      // font size
+        timeText.setColor(ColorRGBA.White);
+        timeText.setLocalTranslation(0, settings.getHeight(), 0); // position
+        guiNode.attachChild(timeText);
+        this.initDebugText();
+
+        Picture pic = new Picture("QA-picture");
+        pic.setImage(assetManager, "Textures/keys.png", true);
+        pic.setHeight(80f);
+        pic.setWidth(152f);
+        pic.setPosition(settings.getWidth() / 2 - 76f, settings.getHeight() - 80f);
+        guiNode.attachChild(pic);
+    }
+
+    private void initDebugText() {
+        BitmapText hudText = new BitmapText(guiFont, false);
+        hudText.setName("DEBUG_TEXT");
+        hudText.setSize(guiFont.getCharSet().getRenderedSize());
+        hudText.setColor(ColorRGBA.Black);
+        hudText.setLocalTranslation(300, hudText.getLineHeight() * 2, 0);
+        guiNode.attachChild(hudText);
+    }
+
+    public void initRotationGfx() {
+        Box helpBox = new Box(0.1f, 0.1f, -10f);
+        arrow = new Geometry("Box", helpBox);
+        Material mat1 = new Material(assetManager,
+                "Common/MatDefs/Misc/Unshaded.j3md");
+        mat1.setColor("Color", ColorRGBA.Blue);
+        arrow.setMaterial(mat1);
+        arrow.setShadowMode(RenderQueue.ShadowMode.Off);
+        arrow.setCullHint(Spatial.CullHint.Never);
+        arrow.setLocalTranslation(50, 100, -50);
+        rootNode.attachChild(arrow);
     }
 
     /**
      * We over-write some navigational key mappings here, so we can add
      * physics-controlled walking and jumping:
      */
-    private void setupKeys() {
+    private void initKeys() {
         inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_A));
         inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_D));
         inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_W));
@@ -231,7 +289,63 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         inputManager.addListener(this, "RotateWorld");
         inputManager.addMapping("Respawn", new KeyTrigger(KeyInput.KEY_R));
         inputManager.addListener(this, "Respawn");
+    }
 
+    //
+    // -------------------------------------------------------------------------
+    // END GAME INITIALIZE
+    // -------------------------------------------------------------------------
+    //
+    @Override
+    public void simpleUpdate(float tpf) {
+        cameraRotator.update(tpf);
+        if (cameraRotator.isInterpolationComplete()) {
+            playerControl.setEnabled(true);
+            updatePlayerAndCameraPosition();
+        }
+        else {
+            playerControl.setEnabled(false);
+        }
+        flashLight.setPosition(playerControl.getPhysicsLocation());
+        flashLight.setDirection(playerControl.getViewDirection());
+        this.updateRotationGfx();
+        this.updateHUD();
+    }
+
+    @Override
+    public void simpleRender(RenderManager rm) {
+        //TODO: add render code
+    }
+
+    private void updatePlayerAndCameraPosition() {
+        camDir.set(cam.getDirection()).multLocal(0.6f);
+        camLeft.set(cam.getLeft()).multLocal(0.4f);
+        walkDirection.set(0, 0, 0);
+        if (left) {
+            walkDirection.addLocal(camLeft);
+        }
+        if (right) {
+            walkDirection.addLocal(camLeft.negate());
+        }
+        if (up) {
+            walkDirection.addLocal(camDir);
+        }
+        if (down) {
+            walkDirection.addLocal(camDir.negate());
+        }
+        playerControl.setWalkDirection(walkDirection);
+        playerControl.setViewDirection(camDir);
+        cam.setLocation(playerControl.getPhysicsLocation());
+    }
+
+    
+    private void respawn() {
+        this.startTime = timer.getTimeInSeconds();
+        bulletAppState.getPhysicsSpace().remove(this.playerControl);
+        //en tiedä onko tarpeellisia, ainakin järkevän oloista poistaa pelaaja
+        rootNode.removeControl(playerControl);
+        rootNode.detachChild(playerNode);
+        this.initPlayer();
     }
 
     /**
@@ -253,7 +367,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             }
         } else if (binding.equals("RotateWorld")) {
             if (!isPressed) {
-                this.rotatePlayerUpAxis();
+                this.rotateWorld();
             }
         } else if (binding.equals("Respawn")) {
             this.respawn();
@@ -262,30 +376,12 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         }
     }
 
-    @Override
-    public void simpleUpdate(float tpf) {
-        camDir.set(cam.getDirection()).multLocal(0.6f);
-        camLeft.set(cam.getLeft()).multLocal(0.4f);
-        walkDirection.set(0, 0, 0);
-        if (left) {
-            walkDirection.addLocal(camLeft);
-        }
-        if (right) {
-            walkDirection.addLocal(camLeft.negate());
-        }
-        if (up) {
-            walkDirection.addLocal(camDir);
-        }
-        if (down) {
-            walkDirection.addLocal(camDir.negate());
-        }
-        playerControl.setWalkDirection(walkDirection);
-        playerControl.setViewDirection(camDir);
-        cam.setLocation(playerControl.getPhysicsLocation());
-        flashLight.setPosition(playerControl.getPhysicsLocation());
-        flashLight.setDirection(playerControl.getViewDirection());
-        this.updateGravityArrow();
-        this.updateHUD();
+    /**
+     * Pyöräyttää maailmaa
+     */
+    private void rotateWorld() {
+        this.rotatePlayerUpAxis();
+        this.rotateCamera();
     }
 
     /*
@@ -296,7 +392,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         int currentUp = playerControl.getUpAxis();
         int newUp = currentUp;
 
-        Vector3f dirVector = this.lookDirection();
         if (currentUp == UpAxisDir.Y) {
             newUp = UpAxisDir.X;
             playerControl.setGravity(-playerControl.getGravity());
@@ -306,16 +401,34 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             throw new RuntimeException("Incorrect up axis, can't rotate!");
         }
 
-        Vector3f upVector = UpAxisDir.unitVector(newUp);
+        playerControl.setUpAxis(newUp);
+    }
+
+    /**
+     * Pyöräytä kamera sopimaan käännettyyn maailmaan
+     */
+    private void rotateCamera() {
+        Vector3f dirVector = this.lookDirection();
+        float rotateAngle = 0.0f;
+        int playerUpAxis = playerControl.getUpAxis();
         boolean isGravityFlipped = playerControl.getGravity() < 0;
-        if (isGravityFlipped) {
-            upVector = upVector.mult(-1f);
+        if (playerUpAxis == UpAxisDir.X) {
+            rotateAngle = -FastMath.HALF_PI;
+            if (isGravityFlipped) {
+                rotateAngle = -rotateAngle;
+            }
+        }
+        else if (playerUpAxis == UpAxisDir.Y) {
+            if (isGravityFlipped) {
+                rotateAngle = FastMath.PI;
+            }
         }
 
         // Rotate camera based on up axis and look direction
-        cam.lookAtDirection(dirVector, upVector);
-
-        playerControl.setUpAxis(newUp);
+        //cam.lookAtDirection(dirVector, cam.getUp());
+        Quaternion targetRotation = new Quaternion();
+        targetRotation.fromAngleAxis(rotateAngle, dirVector);
+        cameraRotator.rotateTo(targetRotation);
     }
 
     /**
@@ -386,72 +499,46 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             //Pelaaja voittaa pelin
             System.out.println("Pelaaja paasee maaliin!");
             this.nextLevel();
-        } 
-        /*else if (objectName.equals(ICE)) {
-         this.kaveleJaalla();
-         }*/
+        } else if (objectName.equals(GROUND)) {
+            this.playCollisionSound();
+            this.respawn();
+        }
     }
 
-    private void nextLevel(){
+    private void nextLevel() {
         this.currentLevel++;
         System.out.println("Pelaaja siirtyy seuraavaan kenttaan");
-        if(currentLevel == 1){
+        this.playCollisionSound();
+        //this.playYouWinSound();
+        if (currentLevel == 1) {
             this.playerWon();
         }
     }
 
-    private void playerWon(){
+    private void playerWon() {
         System.out.println("Pelaaja voittaa pelin!");
         //soittaa musiikkia tai jotain
         //this.stop();
     }
-
-    @Override
-    public void simpleRender(RenderManager rm) {
-        //TODO: add render code
+    
+    private void playCollisionSound(){
+        this.collisionSound.play();
+    }
+    
+    private void playYouWinSound(){
+        this.youWinSound.play();
     }
 
-    public void initGravityArrow() {
-        Arrow helpArrow = new Arrow(Vector3f.UNIT_Y);
-        helpArrow.setLineWidth(10);
-        arrow = new Geometry("Box", helpArrow);
-        Material mat1 = new Material(assetManager,
-                "Common/MatDefs/Misc/Unshaded.j3md");
-        mat1.setColor("Color", ColorRGBA.White);
-        arrow.setMaterial(mat1);
-        rootNode.attachChild(arrow);
-    }
-
-    public void updateGravityArrow() {
-        Vector3f vectorDifference = new Vector3f(cam.getLocation().subtract(arrow.getWorldTranslation()));
-        arrow.setLocalTranslation(vectorDifference.addLocal(arrow.getLocalTranslation()));
-        // Move it to the bottom right of the screen
-        arrow.move(cam.getDirection().mult(3));
-        arrow.move(cam.getUp().mult(-0.8f));
-        arrow.move(cam.getLeft().mult(-1f));
-    }
-
-    public void initHUD() {
-        this.initGravityArrow();
-        timeText = new BitmapText(guiFont, false);
-        timeText.setSize(30);      // font size
-        timeText.setColor(ColorRGBA.White);
-        timeText.setLocalTranslation(0, settings.getHeight(), 0); // position
-        guiNode.attachChild(timeText);
-        this.initDebugText();
-    }
-
-    private void initDebugText() {
-        BitmapText hudText = new BitmapText(guiFont, false);
-        hudText.setName("DEBUG_TEXT");
-        hudText.setSize(guiFont.getCharSet().getRenderedSize());
-        hudText.setColor(ColorRGBA.Black);
-        hudText.setLocalTranslation(300, hudText.getLineHeight() * 2, 0);
-        guiNode.attachChild(hudText);
+    public void updateRotationGfx() {
+        Vector3f location = cam.getLocation().clone();
+        location.addLocal(0f, -0.5f, 0f);
+        Vector3f lookLocation = location.add(this.lookDirection());
+        arrow.setLocalTranslation(location);
+        arrow.lookAt(lookLocation, UpAxisDir.unitVector(playerControl.getUpAxis()));
     }
 
     public void updateHUD() {
-        this.updateGravityArrow();
+        this.updateRotationGfx();
         float currentTime = timer.getTimeInSeconds() - this.startTime;
         int currentMinutes = (int) currentTime / 60;
         DecimalFormat df = new DecimalFormat("00.0");
@@ -464,19 +551,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         ((BitmapText) guiNode.getChild("DEBUG_TEXT")).setText(debugText);
     }
 
-    public void initSounds() {
-        music = new AudioNode(assetManager, "Sound/ambient1_freesoundYewbic.wav", false);
-        music.setPositional(false);
-        music.setDirectional(false);
-        music.setLooping(true);
-        music.setVolume(0.1f);
-        music.play();
-        /*wind = new AudioNode(assetManager, "Sound/wind.wav", false);
-        wind.setDirectional(false);
-        wind.setPositional(false);
-        wind.play();*/
-    }
-
     public void updateSounds() {
+        //TODO, jos pelaaja tipahtaa
     }
 }
