@@ -21,12 +21,13 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.debug.Arrow;
 import com.jme3.texture.Texture;
 import com.jme3.util.SkyFactory;
 import java.text.DecimalFormat;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
+import com.jme3.renderer.queue.RenderQueue;
+import com.jme3.scene.shape.Box;
 
 /**
  * test
@@ -73,7 +74,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.initLights();
         this.initHUD();
         this.initSounds();
-        this.initGravityArrow();
+        this.initRotationGfx();
         this.initGoal();
         // We re-use the flyby camera for rotation, while positioning is handled by physics
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
@@ -260,7 +261,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         cam.setLocation(playerControl.getPhysicsLocation());
         flashLight.setPosition(playerControl.getPhysicsLocation());
         flashLight.setDirection(playerControl.getViewDirection());
-        this.updateGravityArrow();
+        this.updateRotationGfx();
         this.updateHUD();
     }
 
@@ -285,13 +286,16 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         Vector3f upVector = UpAxisDir.unitVector(newUp);
         boolean isGravityFlipped = playerControl.getGravity() < 0;
         if (isGravityFlipped) {
-            upVector = upVector.mult(-1f);
+            upVector.multLocal(-1f);
+            dirVector.multLocal(-1f);
         }
 
         // Rotate camera based on up axis and look direction
         cam.lookAtDirection(dirVector, upVector);
+        cam.update();
 
         playerControl.setUpAxis(newUp);
+        cam.getUp();
     }
 
     /**
@@ -387,28 +391,28 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         //TODO: add render code
     }
 
-    public void initGravityArrow() {
-        Arrow helpArrow = new Arrow(Vector3f.UNIT_Y);
-        helpArrow.setLineWidth(10);
-        arrow = new Geometry("Box", helpArrow);
+    public void initRotationGfx() {
+        Box helpBox = new Box(0.1f, 0.1f, -10f);
+        arrow = new Geometry("Box", helpBox);
         Material mat1 = new Material(assetManager,
                 "Common/MatDefs/Misc/Unshaded.j3md");
-        mat1.setColor("Color", ColorRGBA.White);
+        mat1.setColor("Color", ColorRGBA.Blue);
         arrow.setMaterial(mat1);
+        arrow.setShadowMode(RenderQueue.ShadowMode.Off);
+        arrow.setCullHint(Spatial.CullHint.Never);
+        arrow.setLocalTranslation(50, 100, -50);
         rootNode.attachChild(arrow);
     }
 
-    public void updateGravityArrow() {
-        Vector3f vectorDifference = new Vector3f(cam.getLocation().subtract(arrow.getWorldTranslation()));
-        arrow.setLocalTranslation(vectorDifference.addLocal(arrow.getLocalTranslation()));
-        // Move it to the bottom right of the screen
-        arrow.move(cam.getDirection().mult(3));
-        arrow.move(cam.getUp().mult(-0.8f));
-        arrow.move(cam.getLeft().mult(-1f));
+    public void updateRotationGfx() {
+        Vector3f location = cam.getLocation().clone();
+        location.addLocal(0f, -0.5f, 0f);
+        Vector3f lookLocation = location.add(this.lookDirection());
+        arrow.setLocalTranslation(location);
+        arrow.lookAt(lookLocation, UpAxisDir.unitVector(playerControl.getUpAxis()));
     }
 
     public void initHUD() {
-        this.initGravityArrow();
         timeText = new BitmapText(guiFont, false);
         timeText.setSize(30);      // font size
         timeText.setColor(ColorRGBA.White);
@@ -427,7 +431,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     }
 
     public void updateHUD() {
-        this.updateGravityArrow();
+        this.updateRotationGfx();
         float currentTime = timer.getTimeInSeconds() - this.startTime;
         int currentMinutes = (int) currentTime / 60;
         DecimalFormat df = new DecimalFormat("00.0");
