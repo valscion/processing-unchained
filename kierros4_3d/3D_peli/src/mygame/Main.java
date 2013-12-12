@@ -29,9 +29,13 @@ import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
 
 /**
- * test
- *
- * @author normenhansen ja Django unchained
+ * Pohjana on käytetty "collisionTest" valmista testiluokkaa, jonka author:normenhansen
+ * http://hub.jmonkeyengine.org/wiki/doku.php/jme3:beginner:hello_collision 
+ * Käytetyt materiaalit: Taso(t) olemme itse luoneet sketchUpilla, skyboxia on vähän muokattu, lähde author:Hipshot
+ * 
+ * Peliin on otettu vaikutteita Portalista, AntiChamberista, Alan Wakesta, ilomilosta. 
+ * Pelimekaniikkaan kuuluu painovoiman muuttaminen pelaajan toimesta. 
+ * @author Django unchained (Aarne Leinonen, Emmi Linkola, Vesa Laakso, Pauli Putkonen)
  */
 public class Main extends SimpleApplication implements ActionListener, PhysicsCollisionListener {
 
