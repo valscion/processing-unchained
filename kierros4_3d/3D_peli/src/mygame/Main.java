@@ -106,7 +106,7 @@ public class Main extends SimpleApplication implements ActionListener {
         rootNode.attachChild(sceneModel);
         bulletAppState.getPhysicsSpace().add(landscape);
     }
-    
+
     private void initSkyBox() {
         Texture up = assetManager.loadTexture("Textures/skybox/up.png");
         Texture down = assetManager.loadTexture("Textures/skybox/down.png");
@@ -231,20 +231,32 @@ public class Main extends SimpleApplication implements ActionListener {
         // Rotate the player up axis on Z-Y axis
         int currentUp = player.getUpAxis();
         int newUp = currentUp;
+        Vector3f upVector;
+        Vector3f dirVector = this.lookDirection();
         if (currentUp == UpAxisDir.Y) {
-            newUp = UpAxisDir.Z;
-        } else if (currentUp == UpAxisDir.Z) {
-            newUp = UpAxisDir.Y;
+            newUp = UpAxisDir.X;
+            upVector = Vector3f.UNIT_X;
             player.setGravity(-player.getGravity());
+        } else if (currentUp == UpAxisDir.X) {
+            newUp = UpAxisDir.Y;
+            upVector = Vector3f.UNIT_Y;
+        } else {
+            throw new RuntimeException("Incorrect up axis, can't rotate!");
         }
-        // TODO: Rotate camera 90 degrees on the X axis always
-        //Quaternion rotateQ = new Quaternion();
-        //rotateQ.fromAngleAxis(FastMath.HALF_PI, Vector3f.UNIT_X);
-        //Quaternion newCameraRotation = rotateQ.mult(cam.getRotation());
-        //cam.setRotation(newCameraRotation);
+        boolean isGravityFlipped = player.getGravity() < 0;
+        if (isGravityFlipped) {
+            upVector = upVector.mult(-1f);
+        }
+
+        // Rotate camera based on up axis and look direction
+        cam.lookAtDirection(dirVector, upVector);
 
         player.setUpAxis(newUp);
         this.setDebugText("Player up axis: " + player.getUpAxis());
+    }
+
+    private Vector3f lookDirection() {
+        return new Vector3f(0f, 0f, -1f); // Away from me
     }
 
     private class UpAxisDir {
