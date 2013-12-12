@@ -69,7 +69,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     // Flashlight
     private SpotLight flashLight;
     private BitmapText timeText;
-    private AudioNode wind;
+    private AudioNode music;
     private float startTime;
     private static final String PLAYER = "pelaaja";
     private static final String GOAL = "maali";
@@ -386,7 +386,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     }
     
     public void initSounds(){
-      AudioNode music = new AudioNode(assetManager, "Sound/ambient1_freesoundYewbic.wav", false);  
+      music = new AudioNode(assetManager, "Sound/ambient1_freesoundYewbic.wav", false);  
       music.setPositional(false);
       music.setDirectional(false);
       music.setLooping(true);
