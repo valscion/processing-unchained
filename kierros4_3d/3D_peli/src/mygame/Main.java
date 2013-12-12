@@ -395,14 +395,25 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      */
     private void rotateCamera() {
         Vector3f dirVector = this.lookDirection();
-        Vector3f axisToRotateAround;
+        float rotateAngle = 0.0f;
         int playerUpAxis = playerControl.getUpAxis();
-        //boolean isGravityFlipped = playerControl.getGravity() < 0;
+        boolean isGravityFlipped = playerControl.getGravity() < 0;
+        if (playerUpAxis == UpAxisDir.X) {
+            rotateAngle = -FastMath.HALF_PI;
+            if (isGravityFlipped) {
+                rotateAngle = -rotateAngle;
+            }
+        }
+        else if (playerUpAxis == UpAxisDir.Y) {
+            if (isGravityFlipped) {
+                rotateAngle = FastMath.PI;
+            }
+        }
 
         // Rotate camera based on up axis and look direction
         //cam.lookAtDirection(dirVector, cam.getUp());
         Quaternion targetRotation = new Quaternion();
-        targetRotation.fromAngleAxis(FastMath.HALF_PI, dirVector);
+        targetRotation.fromAngleAxis(rotateAngle, dirVector);
         cameraRotator.rotateTo(targetRotation);
     }
 
