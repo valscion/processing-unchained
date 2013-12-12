@@ -51,6 +51,7 @@ public class Main extends SimpleApplication implements ActionListener {
     // Flashlight
     private SpotLight flashLight;
     private BitmapText timeText;
+    private AudioNode wind;
     private float startTime;
 
     public static void main(String[] args) {
@@ -333,10 +334,14 @@ public class Main extends SimpleApplication implements ActionListener {
       music.setLooping(true);
       music.setVolume(0.1f);
       music.play(); 
+      wind = new AudioNode(assetManager, "Sound/wind.wav",false);
+      wind.setDirectional(false);
+      wind.setPositional(false);
+      wind.play();
     }
     
     public void updateSounds(){
-        
+      
     }
    
 }
