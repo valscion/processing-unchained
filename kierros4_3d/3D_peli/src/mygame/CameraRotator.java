@@ -78,7 +78,6 @@ public class CameraRotator {
      * @return
      */
     public Vector3f lookDirection(CharacterControl playerControl) {
-        Vector3f direction;
         int upAxis = playerControl.getUpAxis();
         Vector3f playerDir = playerControl.getViewDirection().clone();
         //boolean isGravityFlipped = playerControl.getGravity() < 0;
@@ -88,9 +87,11 @@ public class CameraRotator {
                 if (Math.abs(playerDir.z) > Math.abs(playerDir.y)) {
                     // Katsoo enempi z-akselin suuntaisesti
                     playerDir.y = 0;
+                    playerDir.z = (playerDir.z < 0) ? -1 : 1;
                 } else {
                     // Katsoo enempi y-akselin suuntaisesti
                     playerDir.z = 0;
+                    playerDir.y = (playerDir.y < 0) ? -1 : 1;
                 }
                 break;
             case UpAxisDir.Y:
@@ -98,9 +99,11 @@ public class CameraRotator {
                 if (Math.abs(playerDir.x) > Math.abs(playerDir.z)) {
                     // Katsoo enempi x-akselin suuntaisesti
                     playerDir.z = 0;
+                    playerDir.x = (playerDir.x < 0) ? -1 : 1;
                 } else {
                     // Katsoo enempi z-akselin suuntaisesti
                     playerDir.x = 0;
+                    playerDir.z = (playerDir.z < 0) ? -1 : 1;
                 }
                 break;
             case UpAxisDir.Z:
@@ -108,16 +111,17 @@ public class CameraRotator {
                 if (Math.abs(playerDir.x) > Math.abs(playerDir.y)) {
                     // Katsoo enempi x-akselin suuntaisesti
                     playerDir.y = 0;
+                    playerDir.x = (playerDir.x < 0) ? -1 : 1;
                 } else {
                     // Katsoo enempi y-akselin suuntaisesti
                     playerDir.x = 0;
+                    playerDir.y = (playerDir.y < 0) ? -1 : 1;
                 }
                 break;
             default:
                 throw new RuntimeException("Weird up direction!");
         }
-        direction = playerDir.normalize();
-        return direction;
+        return playerDir;
     }
 
     public boolean isInterpolationComplete() {
