@@ -30,6 +30,9 @@ import com.jme3.scene.debug.Arrow;
 import com.jme3.texture.Texture;
 import com.jme3.util.SkyFactory;
 import java.text.DecimalFormat;
+import com.jme3.bullet.PhysicsSpace;
+import com.jme3.bullet.collision.PhysicsCollisionEvent;
+import com.jme3.bullet.collision.PhysicsCollisionListener;
 
 /**
  * test
@@ -58,14 +61,17 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private float startTime;
     private static final String PLAYER = "pelaaja";
     private static final String GOAL = "maali";
-
+    private Node goalNode;
+    private int currentLevel;
+    
     public static void main(String[] args) {
         Main app = new Main();
         app.start();
     }
-
+    
     @Override
     public void simpleInitApp() {
+        this.currentLevel = 0;
         this.initPhysics();
         this.initMaze();
         this.initSkyBox();
@@ -74,6 +80,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.initHUD();
         this.initSounds();
         this.initGravityArrow();
+        this.initGoal();
         // We re-use the flyby camera for rotation, while positioning is handled by physics
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
         flyCam.setMoveSpeed(100);
@@ -109,7 +116,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
         //tässä oli kommentit että debugi pois päältä
-        //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+        bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+        //kuuntelee tormauksia
+        bulletAppState.getPhysicsSpace().addCollisionListener(this);
     }
 
     private void initMaze() {
@@ -170,6 +179,21 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         playerNode.addControl(playerControl);
         //pelaajan node maailmaan
         rootNode.attachChild(playerNode);
+    }
+
+    private void initGoal() {
+        goalNode = new Node(GOAL);
+        Spatial goalSpatial = assetManager.loadModel("Scenes/nyyppataso.j3o");
+        goalSpatial.scale(1.0f);
+        
+        CollisionShape goalShape =
+                CollisionShapeFactory.createMeshShape(goalSpatial);
+        RigidBodyControl goalControl = new RigidBodyControl(goalShape, 0);
+        goalNode.addControl(goalControl);
+        bulletAppState.getPhysicsSpace().add(goalControl);
+        goalControl.setPhysicsLocation(new Vector3f(50, 120, -50));
+        goalNode.attachChild(goalSpatial);
+        rootNode.attachChild(goalNode);
     }
 
     /**
@@ -328,7 +352,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     }
 
     public void collision(PhysicsCollisionEvent event) {
-
+        //System.out.println("TÖRMÄYS");
+        //vähentää syntyvää laskentaa kolmasosaan, ei suurta vaikutusta toteutukseen
         if (FastMath.nextRandomFloat() < 0.3f) {
             if (event.getNodeA().getName().equals(PLAYER)) {
                 handlePlayerCollision(event.getNodeB().getName(), event);
@@ -340,11 +365,27 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
 
     private void handlePlayerCollision(String objectName, PhysicsCollisionEvent event) {
         if (objectName.equals(GOAL)) {
-            this.stop();
-        }
+            //Pelaaja voittaa pelin
+            System.out.println("Pelaaja paasee maaliin!");
+            this.nextLevel();
+        } 
         /*else if (objectName.equals(ICE)) {
          this.kaveleJaalla();
          }*/
+    }
+
+    private void nextLevel(){
+        this.currentLevel++;
+        System.out.println("Pelaaja siirtyy seuraavaan kenttaan");
+        if(currentLevel == 1){
+            this.playerWon();
+        }
+    }
+
+    private void playerWon(){
+        System.out.println("Pelaaja voittaa pelin!");
+        //soittaa musiikkia tai jotain
+        //this.stop();
     }
 
     @Override
