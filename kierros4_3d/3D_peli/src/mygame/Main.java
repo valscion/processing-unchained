@@ -70,6 +70,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     // Flashlight
     private SpotLight flashLight;
     private BitmapText timeText;
+    private Picture keyPicture;
     private AudioNode music;
     private AudioNode collisionSound;
     private AudioNode youWinSound;
@@ -245,12 +246,12 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         guiNode.attachChild(timeText);
         this.initDebugText();
 
-        Picture pic = new Picture("QA-picture");
-        pic.setImage(assetManager, "Textures/keys.png", true);
-        pic.setHeight(80f);
-        pic.setWidth(152f);
-        pic.setPosition(settings.getWidth() / 2 - 76f, settings.getHeight() - 80f);
-        guiNode.attachChild(pic);
+        keyPicture = new Picture("QA-picture");
+        keyPicture.setImage(assetManager, "Textures/allkeys.png", true);
+        keyPicture.setHeight(150f);
+        keyPicture.setWidth(150f);
+        keyPicture.setPosition(settings.getWidth() / 2 - 75f, settings.getHeight() - 150f);
+        guiNode.attachChild(keyPicture);
     }
 
     private void initDebugText() {
@@ -314,7 +315,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         flashLight.setPosition(playerControl.getPhysicsLocation());
         flashLight.setDirection(playerControl.getViewDirection());
         this.updateRotationGfx();
-        this.updateHUD();
+        this.updateHUD(false);
     }
 
     @Override
@@ -373,6 +374,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         } else if (binding.equals("RotateWorld")) {
             if (!isPressed) {
                 this.rotateWorld();
+                this.updateHUD(true); 
             }
         } else if (binding.equals("Respawn")) {
             this.respawn();
@@ -547,7 +549,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         arrow.lookAt(lookLocation, UpAxisDir.unitVector(playerControl.getUpAxis()));
     }
 
-    public void updateHUD() {
+    public void updateHUD(boolean showqe) {
         this.updateRotationGfx();
         float currentTime = timer.getTimeInSeconds() - this.startTime;
         int currentMinutes = (int) currentTime / 60;
@@ -559,6 +561,15 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
                 UpAxisDir.string(playerControl.getUpAxis()),
                 this.lookDirection().toString());
         ((BitmapText) guiNode.getChild("DEBUG_TEXT")).setText(debugText);
+        if(showqe){
+            keyPicture.removeFromParent();
+               keyPicture = new Picture("QA-picture");
+        keyPicture.setImage(assetManager, "Textures/keys.png", true);
+        keyPicture.setHeight(80f);
+        keyPicture.setWidth(152f);
+        keyPicture.setPosition(settings.getWidth() / 2 - 76f, settings.getHeight() - 80f);
+        guiNode.attachChild(keyPicture);
+        }
     }
 
     public void updateSounds() {
