@@ -17,11 +17,7 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
-import com.jme3.scene.shape.Box;
 import com.jme3.app.SimpleApplication;
-import com.jme3.asset.plugins.ZipLocator;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
@@ -34,19 +30,18 @@ import com.jme3.font.BitmapText;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
-import com.jme3.light.AmbientLight;
-import com.jme3.light.DirectionalLight;
 import com.jme3.light.SpotLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
-import com.jme3.math.Matrix3f;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Mesh;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.debug.Arrow;
+import com.jme3.texture.Texture;
+import com.jme3.util.SkyFactory;
+import java.text.DecimalFormat;
 
 /**
  * test
@@ -70,6 +65,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private Spatial arrow;
     // Flashlight
     private SpotLight flashLight;
+    private BitmapText timeText;
+    private float startTime;
     private static final String PLAYER = "pelaaja";
     private static final String GOAL = "maali";
 
@@ -82,8 +79,10 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     public void simpleInitApp() {
         this.initPhysics();
         this.initMaze();
+        this.initSkyBox();
         this.initPlayer();
         this.initLights();
+        this.initHUD();
         this.initGravityArrow();
         // We re-use the flyby camera for rotation, while positioning is handled by physics
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
@@ -133,7 +132,20 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         bulletAppState.getPhysicsSpace().add(landscape);
     }
 
+    private void initSkyBox() {
+        Texture sky = assetManager.loadTexture("Textures/skybox/up.png");
+        Texture floor = assetManager.loadTexture("Textures/skybox/down.png");
+        Texture west = assetManager.loadTexture("Textures/skybox/west.png");
+        Texture east = assetManager.loadTexture("Textures/skybox/east.png");
+        Texture north = assetManager.loadTexture("Textures/skybox/north.png");
+        Texture south = assetManager.loadTexture("Textures/skybox/south.png");
+        Spatial skybox = SkyFactory.createSky(
+                assetManager, west, east, north, south, sky, floor);
+        rootNode.attachChild(skybox);
+    }
+
     private void respawn() {
+        this.startTime = timer.getTimeInSeconds();
         bulletAppState.getPhysicsSpace().remove(this.playerControl);
         //en tiedä onko tarpeellisia, ainakin järkevän oloista poistaa pelaaja
         rootNode.removeControl(playerControl);
@@ -252,6 +264,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         flashLight.setPosition(playerControl.getPhysicsLocation());
         flashLight.setDirection(playerControl.getViewDirection());
         this.updateGravityArrow();
+        this.updateHUD();
     }
 
     /*
@@ -261,20 +274,32 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         // Rotate the player up axis on Z-Y axis
         int currentUp = playerControl.getUpAxis();
         int newUp = currentUp;
+        Vector3f upVector;
+        Vector3f dirVector = this.lookDirection();
         if (currentUp == UpAxisDir.Y) {
-            newUp = UpAxisDir.Z;
-        } else if (currentUp == UpAxisDir.Z) {
-            newUp = UpAxisDir.Y;
+            newUp = UpAxisDir.X;
+            upVector = Vector3f.UNIT_X;
             playerControl.setGravity(-playerControl.getGravity());
+        } else if (currentUp == UpAxisDir.X) {
+            newUp = UpAxisDir.Y;
+            upVector = Vector3f.UNIT_Y;
+        } else {
+            throw new RuntimeException("Incorrect up axis, can't rotate!");
         }
-        // TODO: Rotate camera 90 degrees on the X axis always
-        //Quaternion rotateQ = new Quaternion();
-        //rotateQ.fromAngleAxis(FastMath.HALF_PI, Vector3f.UNIT_X);
-        //Quaternion newCameraRotation = rotateQ.mult(cam.getRotation());
-        //cam.setRotation(newCameraRotation);
+        boolean isGravityFlipped = playerControl.getGravity() < 0;
+        if (isGravityFlipped) {
+            upVector = upVector.mult(-1f);
+        }
+
+        // Rotate camera based on up axis and look direction
+        cam.lookAtDirection(dirVector, upVector);
 
         playerControl.setUpAxis(newUp);
         this.setDebugText("Player up axis: " + playerControl.getUpAxis());
+    }
+
+    private Vector3f lookDirection() {
+        return new Vector3f(0f, 0f, -1f); // Away from me
     }
 
    public void collision(PhysicsCollisionEvent event) {
@@ -336,5 +361,22 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         arrow.move(cam.getDirection().mult(3));
         arrow.move(cam.getUp().mult(-0.8f));
         arrow.move(cam.getLeft().mult(-1f));
+    }
+    public void initHUD(){
+    this.initGravityArrow();
+    timeText = new BitmapText(guiFont, false); 
+    timeText.setSize(30);      // font size
+    timeText.setColor(ColorRGBA.White);
+    timeText.setLocalTranslation(0, settings.getHeight(), 0); // position
+    guiNode.attachChild(timeText);
+    
+    }
+    public void updateHUD(){
+    this.updateGravityArrow();
+    float currentTime = timer.getTimeInSeconds()-this.startTime;
+    int currentMinutes = (int)currentTime/60;
+    DecimalFormat df = new DecimalFormat("00.0");
+    DecimalFormat hf = new DecimalFormat("00");
+    timeText.setText(hf.format(currentMinutes)+":"+df.format(currentTime%60));
     }
 }
