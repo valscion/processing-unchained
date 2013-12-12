@@ -22,6 +22,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.debug.Arrow;
+import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
 import com.jme3.util.SkyFactory;
 import java.text.DecimalFormat;
@@ -68,6 +69,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     
     public static void main(String[] args) {
         Main app = new Main();
+        AppSettings settings = new AppSettings(true);
+        settings.setSettingsDialogImage("Textures/startscreen.png");
+        app.setSettings(settings);
         app.start();
     }
     
