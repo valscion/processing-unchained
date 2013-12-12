@@ -73,6 +73,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private AudioNode music;
     private AudioNode collisionSound;
     private AudioNode youWinSound;
+    private AudioNode rotationSound;
     private float startTime;
     private static final String PLAYER = "pelaaja";
     private static final String GOAL = "maali";
@@ -201,6 +202,10 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         youWinSound = new AudioNode(assetManager, "Sound/you_win.ogg", false);
         youWinSound.setPositional(false);
         youWinSound.setLooping(false);
+        //kääntymisen ääni rotationSound
+        rotationSound = new AudioNode(assetManager, "Sound/suih.ogg", false);
+        rotationSound.setPositional(false);
+        rotationSound.setLooping(false);    
     }
 
     private void initGoal() {
@@ -380,6 +385,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      * Pyöräyttää maailmaa
      */
     private void rotateWorld() {
+        this.playRotationSound();
         this.rotatePlayerUpAxis();
         this.rotateCamera();
     }
@@ -529,6 +535,10 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.youWinSound.play();
     }
 
+    private void playRotationSound(){
+        this.rotationSound.play();
+    }
+        
     public void updateRotationGfx() {
         Vector3f location = cam.getLocation().clone();
         location.addLocal(0f, -0.5f, 0f);
