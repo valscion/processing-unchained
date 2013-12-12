@@ -3,12 +3,16 @@ package mygame;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
 import com.jme3.app.SimpleApplication;
+import com.jme3.audio.AudioNode;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.CharacterControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
+import com.jme3.collision.CollisionResult;
+import com.jme3.collision.CollisionResults;
 import com.jme3.font.BitmapText;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -62,6 +66,7 @@ public class Main extends SimpleApplication implements ActionListener {
         this.initPlayer();
         this.initLights();
         this.initHUD();
+        this.initSounds();
         // We re-use the flyby camera for rotation, while positioning is handled by physics
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
         flyCam.setMoveSpeed(100);
@@ -320,4 +325,18 @@ public class Main extends SimpleApplication implements ActionListener {
     DecimalFormat hf = new DecimalFormat("00");
     timeText.setText(hf.format(currentMinutes)+":"+df.format(currentTime%60));
     }
+    
+    public void initSounds(){
+      AudioNode music = new AudioNode(assetManager, "Sound/ambient1_freesoundYewbic.wav", false);  
+      music.setPositional(false);
+      music.setDirectional(false);
+      music.setLooping(true);
+      music.setVolume(0.1f);
+      music.play(); 
+    }
+    
+    public void updateSounds(){
+        
+    }
+   
 }
