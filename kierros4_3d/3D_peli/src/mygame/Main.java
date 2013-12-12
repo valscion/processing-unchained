@@ -341,6 +341,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      * yet, we just keep track of the direction the user pressed.
      */
     public void onAction(String binding, boolean isPressed, float tpf) {
+        if(!guiViewPort.getProcessors().contains(niftyDisplay)){
         if (binding.equals("Left")) {
             left = isPressed;
         } else if (binding.equals("Right")) {
@@ -359,7 +360,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
                 this.isQEPressed = true;
                 this.updateHUD(isQEPressed);
             }
-        } else if (binding.equals("Respawn")) {
+        }
+    }
+        if (binding.equals("Respawn")) {
             this.respawn();
             if (guiViewPort.getProcessors().contains(niftyDisplay)) {
                 guiViewPort.removeProcessor(niftyDisplay);
