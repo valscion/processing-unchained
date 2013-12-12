@@ -69,7 +69,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private float startTime;
     private static final String PLAYER = "pelaaja";
     private static final String GOAL = "maali";
-
+    private Node goalNode;
+    
     public static void main(String[] args) {
         Main app = new Main();
         app.start();
@@ -84,6 +85,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.initLights();
         this.initHUD();
         this.initGravityArrow();
+        this.initGoal();
         // We re-use the flyby camera for rotation, while positioning is handled by physics
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
         flyCam.setMoveSpeed(100);
@@ -181,7 +183,21 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         //pelaajan node maailmaan
         rootNode.attachChild(playerNode);
     }
+    private void initGoal() {
+        goalNode = new Node(GOAL);
+        Spatial goalSpatial = assetManager.loadModel("Scenes/nyyppataso.j3o");
+        goalSpatial.scale(1.0f);
 
+        CollisionShape goalShape =
+                CollisionShapeFactory.createMeshShape((Node) goalSpatial);
+        RigidBodyControl goalControl = new RigidBodyControl(goalShape, 0);
+        goalNode.addControl(goalControl);
+        bulletAppState.getPhysicsSpace().add(goalControl);
+        goalControl.setPhysicsLocation(new Vector3f(50, 120, -50));
+        goalNode.attachChild(goalSpatial);
+        rootNode.attachChild(goalNode);
+    }
+    
     private void setDebugText(String text) {
         guiNode.detachChildNamed("DEBUG_TEXT");
         BitmapText hudText = new BitmapText(guiFont, false);
