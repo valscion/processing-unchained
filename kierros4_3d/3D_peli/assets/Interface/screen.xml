@@ -13,4 +13,9 @@
     		<image filename="Interface/winscreen.png"></image>
     	</layer>
     </screen>
+    <screen id="lose">
+    	<layer id="foreground" childLayout="center">
+    		<image filename="Interface/deadscreen.png"></image>
+    	</layer>
+    </screen>
    </nifty>

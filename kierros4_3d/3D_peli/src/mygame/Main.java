@@ -73,11 +73,10 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private SpotLight flashLight;
     private BitmapText timeText;
     private Picture keyPicture;
-    private AudioNode music;
-    private AudioNode collisionSound;
-    private AudioNode youWinSound;
-    private AudioNode rotationSound;
+    private SoundSystem soundSystem;
     private float startTime;
+    private boolean timerOn;
+    private boolean isQEPressed;
     private static final String PLAYER = "pelaaja";
     private static final String GOAL = "maali";
     private static final String GROUND = "maa";
@@ -102,6 +101,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     @Override
     public void simpleInitApp() {
         this.currentLevel = 0;
+        this.isQEPressed = false;
         this.initPhysics();
         this.initMaze();
         this.initSkyBox();
@@ -192,23 +192,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     }
 
     public void initSounds() {
-        music = new AudioNode(assetManager, "Sound/ambient1_freesoundYewbic.wav", false);
-        music.setPositional(false);
-        music.setDirectional(false);
-        music.setLooping(true);
-        music.setVolume(0.1f);
-        music.play();
-        collisionSound = new AudioNode(assetManager, "Sound/collision.wav", false);
-        collisionSound.setPositional(false);
-        collisionSound.setLooping(false);
-        //TODO päivitä vielä oikea
-        youWinSound = new AudioNode(assetManager, "Sound/you_win.ogg", false);
-        youWinSound.setPositional(false);
-        youWinSound.setLooping(false);
-        //kääntymisen ääni rotationSound
-        rotationSound = new AudioNode(assetManager, "Sound/suih.ogg", false);
-        rotationSound.setPositional(false);
-        rotationSound.setLooping(false);
+        soundSystem = new SoundSystem(assetManager);
+        soundSystem.initSounds();
     }
 
     private void initGoal() {
@@ -296,13 +281,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         timeText.setLocalTranslation(0, settings.getHeight(), 0); // position
         guiNode.attachChild(timeText);
         this.initDebugText();
-
-        keyPicture = new Picture("QA-picture");
-        keyPicture.setImage(assetManager, "Textures/allkeys.png", true);
-        keyPicture.setHeight(150f);
-        keyPicture.setWidth(150f);
-        keyPicture.setPosition(settings.getWidth() / 2 - 75f, settings.getHeight() - 150f);
-        guiNode.attachChild(keyPicture);
     }
 
     private void initDebugText() {
@@ -359,14 +337,13 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         if (cameraRotator.isInterpolationComplete()) {
             playerControl.setEnabled(true);
             updatePlayerAndCameraPosition();
-        }
-        else {
+        } else {
             playerControl.setEnabled(false);
         }
         flashLight.setPosition(playerControl.getPhysicsLocation());
         flashLight.setDirection(playerControl.getViewDirection());
         this.updateRotationGfx();
-        this.updateHUD(false);
+        this.updateHUD(isQEPressed);
     }
 
     @Override
@@ -395,13 +372,14 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         cam.setLocation(playerControl.getPhysicsLocation());
     }
 
-
     private void respawn() {
+        playerControl.setEnabled(true);
         this.startTime = timer.getTimeInSeconds();
         bulletAppState.getPhysicsSpace().remove(this.playerControl);
         //en tiedä onko tarpeellisia, ainakin järkevän oloista poistaa pelaaja
         rootNode.removeControl(playerControl);
         rootNode.detachChild(playerNode);
+        this.timerOn = true;
         this.initPlayer();
     }
 
@@ -410,6 +388,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      * yet, we just keep track of the direction the user pressed.
      */
     public void onAction(String binding, boolean isPressed, float tpf) {
+        if(!guiViewPort.getProcessors().contains(niftyDisplay)){
         if (binding.equals("Left")) {
             left = isPressed;
         } else if (binding.equals("Right")) {
@@ -425,12 +404,16 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         } else if (binding.equals("RotateWorld")) {
             if (!isPressed) {
                 this.rotateWorld();
-                this.updateHUD(true);
+                this.isQEPressed = true;
+                this.updateHUD(isQEPressed);
             }
-        } else if (binding.equals("Respawn")) {
+        }
+    }
+        if (binding.equals("Respawn")) {
             this.respawn();
-            if(guiViewPort.getProcessors().contains(niftyDisplay))
-            guiViewPort.removeProcessor(niftyDisplay);
+            if (guiViewPort.getProcessors().contains(niftyDisplay)) {
+                guiViewPort.removeProcessor(niftyDisplay);
+            }
         }
     }
 
@@ -439,7 +422,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      */
     private void rotateWorld() {
         if (this.cameraRotator.isInterpolationComplete()) {
-            this.playRotationSound();
+            this.soundSystem.playRotationSound();
             this.rotatePlayerUpAxis();
             this.rotateCamera();
         }
@@ -487,8 +470,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             if (isGravityFlipped) {
                 rotateAngle = -rotateAngle;
             }
-        }
-        else if (playerUpAxis == UpAxisDir.Y) {
+        } else if (playerUpAxis == UpAxisDir.Y) {
             if (isGravityFlipped) {
                 rotateAngle = FastMath.PI;
             }
@@ -565,15 +547,18 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             System.out.println("Pelaaja paasee maaliin!");
             this.nextLevel();
         } else if (objectName.equals(GROUND)) {
-            this.playCollisionSound();
+            this.soundSystem.playCollisionSound();
             this.respawn();
+            nifty.fromXml("Interface/screen.xml", "lose");
+            guiViewPort.addProcessor(niftyDisplay);
+            timerOn=false;
         }
     }
 
     private void nextLevel() {
         this.currentLevel++;
         System.out.println("Pelaaja siirtyy seuraavaan kenttaan");
-        this.playYouWinSound();
+        this.soundSystem.playYouWinSound();
         //this.playYouWinSound();
         if (currentLevel == 1) {
             this.playerWon();
@@ -584,21 +569,11 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         System.out.println("Pelaaja voittaa pelin!");
         nifty.fromXml("Interface/screen.xml", "win");
         guiViewPort.addProcessor(niftyDisplay);
-        this.respawn();
+        //this.respawn();
+        playerControl.setEnabled(false);
+        timerOn = false;
         //soittaa musiikkia tai jotain
         //this.stop();
-    }
-
-    private void playCollisionSound(){
-        this.collisionSound.play();
-    }
-
-    private void playYouWinSound(){
-        this.youWinSound.play();
-    }
-
-    private void playRotationSound(){
-        this.rotationSound.play();
     }
 
     public void updateRotationGfx() {
@@ -610,25 +585,39 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     }
 
     public void updateHUD(boolean showqe) {
-        this.updateRotationGfx();
-        float currentTime = timer.getTimeInSeconds() - this.startTime;
-        int currentMinutes = (int) currentTime / 60;
-        DecimalFormat df = new DecimalFormat("00.0");
-        DecimalFormat hf = new DecimalFormat("00");
-        timeText.setText(hf.format(currentMinutes) + ":" + df.format(currentTime % 60));
-
-        String debugText = String.format("Player up axis: %s\nLook vector: %s",
-                UpAxisDir.string(playerControl.getUpAxis()),
-                this.lookDirection().toString());
-        ((BitmapText) guiNode.getChild("DEBUG_TEXT")).setText(debugText);
-        if(showqe){
-            keyPicture.removeFromParent();
-               keyPicture = new Picture("QA-picture");
-        keyPicture.setImage(assetManager, "Textures/keys.png", true);
-        keyPicture.setHeight(80f);
-        keyPicture.setWidth(152f);
-        keyPicture.setPosition(settings.getWidth() / 2 - 76f, settings.getHeight() - 80f);
-        guiNode.attachChild(keyPicture);
+        if (!guiViewPort.getProcessors().contains(niftyDisplay)) {
+            
+                this.updateRotationGfx();
+                if (timerOn) {
+                float currentTime = timer.getTimeInSeconds() - this.startTime;
+                int currentMinutes = (int) currentTime / 60;
+                DecimalFormat df = new DecimalFormat("00.0");
+                DecimalFormat hf = new DecimalFormat("00");
+                timeText.setText(hf.format(currentMinutes) + ":" + df.format(currentTime % 60));
+            }
+            String debugText = String.format("Player up axis: %s\nLook vector: %s",
+                    UpAxisDir.string(playerControl.getUpAxis()),
+                    this.lookDirection().toString());
+            ((BitmapText) guiNode.getChild("DEBUG_TEXT")).setText(debugText);
+            if (showqe) {
+                keyPicture.removeFromParent();
+                keyPicture = new Picture("QA-picture");
+                keyPicture.setImage(assetManager, "Textures/keys.png", true);
+                keyPicture.setHeight(80f);
+                keyPicture.setWidth(152f);
+                keyPicture.setPosition(settings.getWidth() / 2 - 76f, settings.getHeight() - 80f);
+                guiNode.attachChild(keyPicture);
+            } else {
+                if (keyPicture != null) {
+                    keyPicture.removeFromParent();
+                }
+                keyPicture = new Picture("QA-picture");
+                keyPicture.setImage(assetManager, "Textures/allkeys.png", true);
+                keyPicture.setHeight(150f);
+                keyPicture.setWidth(150f);
+                keyPicture.setPosition(settings.getWidth() / 2 - 75f, settings.getHeight() - 150f);
+                guiNode.attachChild(keyPicture);
+            }
         }
     }
 
