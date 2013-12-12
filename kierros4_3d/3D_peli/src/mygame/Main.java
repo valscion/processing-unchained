@@ -28,6 +28,7 @@ import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.CharacterControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
+import com.jme3.font.BitmapText;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
@@ -58,7 +59,6 @@ public class Main extends SimpleApplication implements ActionListener {
     //näppäimille
     private boolean left = false, right = false, up = false, down = false, keyE = false;
     private CharacterControl player;
-    private float xRotation = 0f;
     //Temporary vectors used on each frame.
     //They here to avoid instanciating new vectors on each frame
     private Vector3f camDir = new Vector3f();
@@ -142,12 +142,23 @@ public class Main extends SimpleApplication implements ActionListener {
         // We also put the player in its starting position.
         CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 6f, 1);
         player = new CharacterControl(capsuleShape, 0.05f);
-        player.setJumpSpeed(20);
-        player.setFallSpeed(30);
+        //player.setJumpSpeed(20);
+        //player.setFallSpeed(30);
         player.setGravity(10);
         player.setPhysicsLocation(new Vector3f(50, 100, -50));
         //pelaaja vielä siihen maaailmaankin...
         bulletAppState.getPhysicsSpace().add(player);
+    }
+
+    private void setDebugText(String text) {
+        guiNode.detachChildNamed("DEBUG_TEXT");
+        BitmapText hudText = new BitmapText(guiFont, false);
+        hudText.setName("DEBUG_TEXT");
+        hudText.setSize(guiFont.getCharSet().getRenderedSize());
+        hudText.setColor(ColorRGBA.Black);
+        hudText.setText("Player up axis: " + player.getUpAxis());
+        hudText.setLocalTranslation(300, hudText.getLineHeight(), 0);
+        guiNode.attachChild(hudText);
     }
 
     /**
@@ -190,7 +201,9 @@ public class Main extends SimpleApplication implements ActionListener {
                 player.jump();
             }
         } else if (binding.equals("RotateWorld")) {
-            this.rotateWorld(1f);
+            if (!isPressed) {
+                this.rotatePlayerUpAxis();
+            }
         } else if (binding.equals("Respawn")) {
             this.respawn();
         }
@@ -221,19 +234,34 @@ public class Main extends SimpleApplication implements ActionListener {
         this.updateGravityArrow();
     }
 
-    /*Pyöräyttää landscapea
-     * 
+    /*
+     * Pyöräyttää pelaajan ylöspäin suuntautuvaa akselia, vaihtaen sen suuntaa
      */
-    private void rotateWorld(float rotationFloat) {
-
-        xRotation += rotationFloat;
-        if (xRotation > 10) {
-            xRotation = 1;
+    private void rotatePlayerUpAxis() {
+        // Rotate the player up axis on Z-Y axis
+        int currentUp = player.getUpAxis();
+        int newUp = currentUp;
+        if (currentUp == UpAxisDir.Y) {
+            newUp = UpAxisDir.Z;
+        } else if (currentUp == UpAxisDir.Z) {
+            newUp = UpAxisDir.Y;
+            player.setGravity(-player.getGravity());
         }
-        //TODO
-        //Quaternion tempQ = this.giveQFromDegree(90, 88, 65);
-        //landscape.setPhysicsRotation(tempQ);
-        landscape.setPhysicsRotation(new Quaternion(3f, -xRotation, 3f, 3f));
+        // TODO: Rotate camera 90 degrees on the X axis always
+        //Quaternion rotateQ = new Quaternion();
+        //rotateQ.fromAngleAxis(FastMath.HALF_PI, Vector3f.UNIT_X);
+        //Quaternion newCameraRotation = rotateQ.mult(cam.getRotation());
+        //cam.setRotation(newCameraRotation);
+
+        player.setUpAxis(newUp);
+        this.setDebugText("Player up axis: " + player.getUpAxis());
+    }
+
+    private class UpAxisDir {
+
+        public final static int X = 0;
+        public final static int Y = 1;
+        public final static int Z = 2;
     }
 
     /*Täytyy tehdä tällänen jolla saadaan helposti oikeenlainen Quaternion
