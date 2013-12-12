@@ -560,7 +560,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         System.out.println("Pelaaja siirtyy seuraavaan kenttaan");
         this.soundSystem.playYouWinSound();
         //this.playYouWinSound();
-        if (currentLevel == 1) {
+        if (currentLevel >= 1) {
             this.playerWon();
         }
     }
