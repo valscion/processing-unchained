@@ -163,9 +163,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         Vector3f playerStartPosition = new Vector3f(50, 100, -50);
         //pelaajaan vaikuttavat voimat
         flyCam.setMoveSpeed(PLAYERSPEED);
-        playerControl.setJumpSpeed(20);
-        playerControl.setFallSpeed(60);
-        playerControl.setGravity(30);
+        playerControl.setJumpSpeed(PLAYERSPEED / 2);
+        playerControl.setFallSpeed(PLAYERSPEED * 2);
+        playerControl.setGravity(PLAYERSPEED);
         //pelaajan aloitussijainti
         playerControl.setPhysicsLocation(playerStartPosition);
         //pelaaja vielä siihen maaailmaankin...
@@ -246,7 +246,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         bulletAppState.getPhysicsSpace().add(groundControl3);
         groundControl3.setPhysicsLocation(new Vector3f(200, 0, 0));//menee tason alle tarpeeksi kauas
         //x-
-        Box box4 = new Box(Vector3f.ZERO, 0.001f,10f, 10f);
+        Box box4 = new Box(Vector3f.ZERO, 0.001f, 10f, 10f);
         Spatial groundSpatial4 = new Geometry("Box", box4);
         groundSpatial4.scale(100.0f);
         CollisionShape groundShape4 = CollisionShapeFactory.createBoxShape(groundSpatial4);
@@ -393,27 +393,27 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      * yet, we just keep track of the direction the user pressed.
      */
     public void onAction(String binding, boolean isPressed, float tpf) {
-        if(!guiViewPort.getProcessors().contains(niftyDisplay)){
-        if (binding.equals("Left")) {
-            left = isPressed;
-        } else if (binding.equals("Right")) {
-            right = isPressed;
-        } else if (binding.equals("Up")) {
-            up = isPressed;
-        } else if (binding.equals("Down")) {
-            down = isPressed;
-        } else if (binding.equals("Jump")) {
-            if (isPressed) {
-                playerControl.jump();
-            }
-        } else if (binding.equals("RotateWorldPositive") || binding.equals("RotateWorldNegative")) {
-            if (!isPressed) {
-                this.rotateWorld();
-                this.isQEPressed = true;
-                this.updateHUD(isQEPressed);
+        if (!guiViewPort.getProcessors().contains(niftyDisplay)) {
+            if (binding.equals("Left")) {
+                left = isPressed;
+            } else if (binding.equals("Right")) {
+                right = isPressed;
+            } else if (binding.equals("Up")) {
+                up = isPressed;
+            } else if (binding.equals("Down")) {
+                down = isPressed;
+            } else if (binding.equals("Jump")) {
+                if (isPressed) {
+                    playerControl.jump();
+                }
+            } else if (binding.equals("RotateWorldPositive") || binding.equals("RotateWorldNegative")) {
+                if (!isPressed) {
+                    this.rotateWorld();
+                    this.isQEPressed = true;
+                    this.updateHUD(isQEPressed);
+                }
             }
         }
-    }
         if (binding.equals("Respawn")) {
             this.respawn();
             if (guiViewPort.getProcessors().contains(niftyDisplay)) {
@@ -510,7 +510,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             this.respawn();
             nifty.fromXml("Interface/screen.xml", "lose");
             guiViewPort.addProcessor(niftyDisplay);
-            timerOn=false;
+            timerOn = false;
         }
     }
 
@@ -544,18 +544,18 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
 
     public void updateHUD(boolean showqe) {
         if (!guiViewPort.getProcessors().contains(niftyDisplay)) {
-            
-                this.updateRotationGfx();
-                if (timerOn) {
+
+            this.updateRotationGfx();
+            if (timerOn) {
                 float currentTime = timer.getTimeInSeconds() - this.startTime;
                 int currentMinutes = (int) currentTime / 60;
                 DecimalFormat df = new DecimalFormat("00.0");
                 DecimalFormat hf = new DecimalFormat("00");
                 timeText.setText(hf.format(currentMinutes) + ":" + df.format(currentTime % 60));
             }
-            String debugText = String.format("Player up axis: %s\nLook vector: %s\nGravity: %.2f",
+            String debugText = String.format("Player up axis: %s\nPlayer up vector: %s\nGravity: %.2f",
                     UpAxisDir.string(playerControl.getUpAxis()),
-                    this.lookDirection().toString(),
+                    UpAxisDir.unitVector(playerControl.getUpAxis()).toString(),
                     this.playerControl.getGravity());
             ((BitmapText) guiNode.getChild("DEBUG_TEXT")).setText(debugText);
             if (showqe) {
