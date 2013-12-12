@@ -27,6 +27,8 @@ import com.jme3.util.SkyFactory;
 import java.text.DecimalFormat;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
+import com.jme3.effect.ParticleEmitter;
+import com.jme3.effect.ParticleMesh;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.elements.Element;
@@ -119,7 +121,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.niftyDisplay = new NiftyJmeDisplay(
                 assetManager, inputManager, audioRenderer, guiViewPort);
         nifty = niftyDisplay.getNifty();
-        nifty.fromXml("Interface/screen.xml", "start");
+        nifty.fromXml("Interface/screen.xml", "startscreen");
         guiViewPort.addProcessor(niftyDisplay);
         this.cameraRotator = new CameraRotator(this.cam, this.playerControl);
     }
@@ -302,9 +304,11 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         cameraRotator.update(tpf);
         if (cameraRotator.isInterpolationComplete()) {
             playerControl.setEnabled(true);
+            flyCam.setEnabled(true);
             updatePlayerAndCameraPosition();
         } else {
             playerControl.setEnabled(false);
+            flyCam.setEnabled(false);
         }
         flashLight.setPosition(playerControl.getPhysicsLocation());
         flashLight.setDirection(playerControl.getViewDirection());
@@ -368,6 +372,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             if (!isPressed) {
                 this.rotateWorld();
                 this.isQEPressed = true;
+                this.updateHUD(isQEPressed);
             }
         } else if (binding.equals("Respawn")) {
             this.respawn();
@@ -381,9 +386,11 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      * Pyöräyttää maailmaa
      */
     private void rotateWorld() {
-        this.playRotationSound();
-        this.rotatePlayerUpAxis();
-        this.rotateCamera();
+        if (this.cameraRotator.isInterpolationComplete()) {
+            this.playRotationSound();
+            this.rotatePlayerUpAxis();
+            this.rotateCamera();
+        }
     }
 
     /*
@@ -411,6 +418,15 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      */
     private void rotateCamera() {
         Vector3f dirVector = this.lookDirection();
+        float rotateAngle = getAngleToRotateTo();
+        // Rotate camera based on up axis and look direction
+        //cam.lookAtDirection(dirVector, cam.getUp());
+        Quaternion targetRotation = new Quaternion();
+        targetRotation.fromAngleAxis(rotateAngle, dirVector);
+        cameraRotator.rotateTo(targetRotation);
+    }
+
+    private float getAngleToRotateTo() {
         float rotateAngle = 0.0f;
         int playerUpAxis = playerControl.getUpAxis();
         boolean isGravityFlipped = playerControl.getGravity() < 0;
@@ -424,12 +440,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
                 rotateAngle = FastMath.PI;
             }
         }
-
-        // Rotate camera based on up axis and look direction
-        //cam.lookAtDirection(dirVector, cam.getUp());
-        Quaternion targetRotation = new Quaternion();
-        targetRotation.fromAngleAxis(rotateAngle, dirVector);
-        cameraRotator.rotateTo(targetRotation);
+        return rotateAngle;
     }
 
     /**
@@ -518,15 +529,17 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
 
     private void playerWon() {
         System.out.println("Pelaaja voittaa pelin!");
+        nifty.fromXml("Interface/screen.xml", "win");
+        guiViewPort.addProcessor(niftyDisplay);
+        this.respawn();
         //soittaa musiikkia tai jotain
         //this.stop();
     }
 
-    private void playCollisionSound() {
+   private void playCollisionSound() {
         this.collisionSound.play();
     }
-
-    private void playYouWinSound() {
+    private void playYouWinSound(){
         this.youWinSound.play();
     }
 
