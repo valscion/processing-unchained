@@ -27,6 +27,8 @@ import com.jme3.util.SkyFactory;
 import java.text.DecimalFormat;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
+import com.jme3.effect.ParticleEmitter;
+import com.jme3.effect.ParticleMesh;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.elements.Element;
@@ -206,7 +208,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         //kääntymisen ääni rotationSound
         rotationSound = new AudioNode(assetManager, "Sound/suih.ogg", false);
         rotationSound.setPositional(false);
-        rotationSound.setLooping(false);    
+        rotationSound.setLooping(false);
     }
 
     private void initGoal() {
@@ -344,7 +346,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         cam.setLocation(playerControl.getPhysicsLocation());
     }
 
-    
+
     private void respawn() {
         this.startTime = timer.getTimeInSeconds();
         bulletAppState.getPhysicsSpace().remove(this.playerControl);
@@ -374,7 +376,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         } else if (binding.equals("RotateWorld")) {
             if (!isPressed) {
                 this.rotateWorld();
-                this.updateHUD(true); 
+                this.updateHUD(true);
             }
         } else if (binding.equals("Respawn")) {
             this.respawn();
@@ -387,9 +389,11 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      * Pyöräyttää maailmaa
      */
     private void rotateWorld() {
-        this.playRotationSound();
-        this.rotatePlayerUpAxis();
-        this.rotateCamera();
+        if (this.cameraRotator.isInterpolationComplete()) {
+            this.playRotationSound();
+            this.rotatePlayerUpAxis();
+            this.rotateCamera();
+        }
     }
 
     /*
@@ -417,6 +421,15 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      */
     private void rotateCamera() {
         Vector3f dirVector = this.lookDirection();
+        float rotateAngle = getAngleToRotateTo();
+        // Rotate camera based on up axis and look direction
+        //cam.lookAtDirection(dirVector, cam.getUp());
+        Quaternion targetRotation = new Quaternion();
+        targetRotation.fromAngleAxis(rotateAngle, dirVector);
+        cameraRotator.rotateTo(targetRotation);
+    }
+
+    private float getAngleToRotateTo() {
         float rotateAngle = 0.0f;
         int playerUpAxis = playerControl.getUpAxis();
         boolean isGravityFlipped = playerControl.getGravity() < 0;
@@ -431,12 +444,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
                 rotateAngle = FastMath.PI;
             }
         }
-
-        // Rotate camera based on up axis and look direction
-        //cam.lookAtDirection(dirVector, cam.getUp());
-        Quaternion targetRotation = new Quaternion();
-        targetRotation.fromAngleAxis(rotateAngle, dirVector);
-        cameraRotator.rotateTo(targetRotation);
+        return rotateAngle;
     }
 
     /**
@@ -528,11 +536,11 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         //soittaa musiikkia tai jotain
         //this.stop();
     }
-    
+
     private void playCollisionSound(){
         this.collisionSound.play();
     }
-    
+
     private void playYouWinSound(){
         this.youWinSound.play();
     }
@@ -540,7 +548,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private void playRotationSound(){
         this.rotationSound.play();
     }
-        
+
     public void updateRotationGfx() {
         Vector3f location = cam.getLocation().clone();
         location.addLocal(0f, -0.5f, 0f);
