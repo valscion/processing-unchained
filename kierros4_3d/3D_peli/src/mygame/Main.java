@@ -116,7 +116,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.niftyDisplay = new NiftyJmeDisplay(
                 assetManager, inputManager, audioRenderer, guiViewPort);
         nifty = niftyDisplay.getNifty();
-        nifty.fromXml("Interface/screen.xml", "start");
+        nifty.fromXml("Interface/screen.xml", "startscreen");
         guiViewPort.addProcessor(niftyDisplay);
         this.cameraRotator = new CameraRotator(this.cam, this.playerControl);
     }
@@ -529,6 +529,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     
     private void playYouWinSound(){
         this.youWinSound.play();
+        nifty.fromXml("Interface/screen.xml", "win");
+        guiViewPort.addProcessor(niftyDisplay);
+        this.respawn();
     }
 
     public void updateRotationGfx() {

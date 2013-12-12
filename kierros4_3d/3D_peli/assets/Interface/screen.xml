@@ -3,9 +3,14 @@
 
     <useControls filename="nifty-default-controls.xml" />
     <useStyles filename="nifty-default-styles.xml" />
-    <screen id="start">
+    <screen id="startscreen">
         <layer id="foreground" childLayout="center">
             <image filename="Interface/start.png"></image>
            </layer>
-       </screen>
+    </screen>
+    <screen id="win">
+    	<layer id="foreground" childLayout="center">
+    		<image filename="Interface/winscreen.png"></image>
+    	</layer>
+    </screen>
    </nifty>
