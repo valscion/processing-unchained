@@ -284,9 +284,28 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     // END GAME INITIALIZE
     // -------------------------------------------------------------------------
     //
-    
     @Override
     public void simpleUpdate(float tpf) {
+        cameraRotator.update(tpf);
+        if (cameraRotator.isInterpolationComplete()) {
+            playerControl.setEnabled(true);
+            updatePlayerAndCameraPosition();
+        }
+        else {
+            playerControl.setEnabled(false);
+        }
+        flashLight.setPosition(playerControl.getPhysicsLocation());
+        flashLight.setDirection(playerControl.getViewDirection());
+        this.updateRotationGfx();
+        this.updateHUD();
+    }
+
+    @Override
+    public void simpleRender(RenderManager rm) {
+        //TODO: add render code
+    }
+
+    private void updatePlayerAndCameraPosition() {
         camDir.set(cam.getDirection()).multLocal(0.6f);
         camLeft.set(cam.getLeft()).multLocal(0.4f);
         walkDirection.set(0, 0, 0);
@@ -305,16 +324,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         playerControl.setWalkDirection(walkDirection);
         playerControl.setViewDirection(camDir);
         cam.setLocation(playerControl.getPhysicsLocation());
-        flashLight.setPosition(playerControl.getPhysicsLocation());
-        flashLight.setDirection(playerControl.getViewDirection());
-        this.updateRotationGfx();
-        this.updateHUD();
-        this.cameraRotator.update(tpf);
-    }
-    
-    @Override
-    public void simpleRender(RenderManager rm) {
-        //TODO: add render code
     }
 
     
@@ -386,16 +395,14 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      */
     private void rotateCamera() {
         Vector3f dirVector = this.lookDirection();
-        Vector3f upVector = UpAxisDir.unitVector(playerControl.getUpAxis());
-        boolean isGravityFlipped = playerControl.getGravity() < 0;
-        if (isGravityFlipped) {
-            upVector.multLocal(-1f);
-            dirVector.multLocal(-1f);
-        }
+        Vector3f axisToRotateAround;
+        int playerUpAxis = playerControl.getUpAxis();
+        //boolean isGravityFlipped = playerControl.getGravity() < 0;
 
         // Rotate camera based on up axis and look direction
+        //cam.lookAtDirection(dirVector, cam.getUp());
         Quaternion targetRotation = new Quaternion();
-        targetRotation.fromAngleAxis(FastMath.HALF_PI, upVector);
+        targetRotation.fromAngleAxis(FastMath.HALF_PI, dirVector);
         cameraRotator.rotateTo(targetRotation);
     }
 
