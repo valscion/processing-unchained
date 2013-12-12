@@ -448,10 +448,10 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         music.setLooping(true);
         music.setVolume(0.1f);
         music.play();
-        wind = new AudioNode(assetManager, "Sound/wind.wav", false);
+        /*wind = new AudioNode(assetManager, "Sound/wind.wav", false);
         wind.setDirectional(false);
         wind.setPositional(false);
-        wind.play();
+        wind.play();*/
     }
 
     public void updateSounds() {
