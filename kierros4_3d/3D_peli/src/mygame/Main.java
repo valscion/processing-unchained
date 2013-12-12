@@ -45,6 +45,8 @@ import com.jme3.scene.Mesh;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.debug.Arrow;
+import com.jme3.texture.Texture;
+import com.jme3.util.SkyFactory;
 
 /**
  * test
@@ -77,6 +79,7 @@ public class Main extends SimpleApplication implements ActionListener {
     public void simpleInitApp() {
         this.initPhysics();
         this.initMaze();
+        this.initSkyBox();
         this.initPlayer();
         this.initLights();
         this.initGravityArrow();
@@ -126,6 +129,18 @@ public class Main extends SimpleApplication implements ActionListener {
         sceneModel.addControl(landscape);
         rootNode.attachChild(sceneModel);
         bulletAppState.getPhysicsSpace().add(landscape);
+    }
+    
+    private void initSkyBox() {
+        Texture up = assetManager.loadTexture("Textures/skybox/up.png");
+        Texture down = assetManager.loadTexture("Textures/skybox/down.png");
+        Texture west = assetManager.loadTexture("Textures/skybox/west.png");
+        Texture east = assetManager.loadTexture("Textures/skybox/east.png");
+        Texture north = assetManager.loadTexture("Textures/skybox/north.png");
+        Texture south = assetManager.loadTexture("Textures/skybox/south.png");
+        Spatial skybox = SkyFactory.createSky(
+                assetManager, west, east, north, south, up, down);
+        rootNode.attachChild(skybox);
     }
 
     private void respawn() {
