@@ -323,10 +323,10 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         inputManager.addListener(this, "Up");
         inputManager.addListener(this, "Down");
         inputManager.addListener(this, "Jump");
-        inputManager.addMapping("RotateWorldPositive", new KeyTrigger(KeyInput.KEY_E));
-        inputManager.addListener(this, "RotateWorldPositive");
-        inputManager.addMapping("RotateWorldNegative", new KeyTrigger(KeyInput.KEY_Q));
-        inputManager.addListener(this, "RotateWorldNegative");
+        inputManager.addMapping("RotateWorldCW", new KeyTrigger(KeyInput.KEY_E));
+        inputManager.addListener(this, "RotateWorldCW");
+        inputManager.addMapping("RotateWorldCCW", new KeyTrigger(KeyInput.KEY_Q));
+        inputManager.addListener(this, "RotateWorldCCW");
         inputManager.addMapping("Respawn", new KeyTrigger(KeyInput.KEY_R));
         inputManager.addListener(this, "Respawn");
     }
@@ -406,9 +406,10 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
                 if (isPressed) {
                     playerControl.jump();
                 }
-            } else if (binding.equals("RotateWorldPositive") || binding.equals("RotateWorldNegative")) {
+            } else if (binding.equals("RotateWorldCW") || binding.equals("RotateWorldCCW")) {
                 if (!isPressed) {
-                    this.rotateWorld();
+                    boolean clockWise = binding.equals("RotateWorldCW");
+                    this.rotateWorld(clockWise);
                     this.isQEPressed = true;
                     this.updateHUD(isQEPressed);
                 }
@@ -425,10 +426,10 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     /**
      * Pyöräyttää maailmaa
      */
-    private void rotateWorld() {
+    private void rotateWorld(boolean clockWise) {
         if (this.cameraRotator.isInterpolationComplete()) {
             this.soundSystem.playRotationSound();
-            this.rotatePlayerUpAxis();
+            this.rotatePlayerUpAxis(clockWise);
             this.rotateCamera();
         }
     }
@@ -436,7 +437,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     /*
      * Pyöräyttää pelaajan ylöspäin suuntautuvaa akselia, vaihtaen sen suuntaa
      */
-    private void rotatePlayerUpAxis() {
+    private void rotatePlayerUpAxis(boolean clockWise) {
         // Rotate the player up axis on Z-Y axis
         int currentUp = playerControl.getUpAxis();
         int newUp = currentUp;
