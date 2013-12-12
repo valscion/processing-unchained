@@ -122,6 +122,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         nifty.fromXml("Interface/screen.xml", "startscreen");
         guiViewPort.addProcessor(niftyDisplay);
         this.cameraRotator = new CameraRotator(this.cam);
+        setDisplayFps(false);       // to hide the FPS
+        setDisplayStatView(false);  // to hide the statistics 
     }
 
     private void initPhysics() {
