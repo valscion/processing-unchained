@@ -23,6 +23,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.debug.Arrow;
 import com.jme3.texture.Texture;
 import com.jme3.util.SkyFactory;
+import java.text.DecimalFormat;
 
 /**
  * test
@@ -45,6 +46,8 @@ public class Main extends SimpleApplication implements ActionListener {
     private Spatial arrow;
     // Flashlight
     private SpotLight flashLight;
+    private BitmapText timeText;
+    private float startTime;
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -58,7 +61,7 @@ public class Main extends SimpleApplication implements ActionListener {
         this.initSkyBox();
         this.initPlayer();
         this.initLights();
-        this.initGravityArrow();
+        this.initHUD();
         // We re-use the flyby camera for rotation, while positioning is handled by physics
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
         flyCam.setMoveSpeed(100);
@@ -120,6 +123,7 @@ public class Main extends SimpleApplication implements ActionListener {
     }
 
     private void respawn() {
+        this.startTime = timer.getTimeInSeconds();
         bulletAppState.getPhysicsSpace().remove(this.player);
         this.initPlayer();
     }
@@ -221,7 +225,7 @@ public class Main extends SimpleApplication implements ActionListener {
         cam.setLocation(player.getPhysicsLocation());
         flashLight.setPosition(player.getPhysicsLocation());
         flashLight.setDirection(player.getViewDirection());
-        this.updateGravityArrow();
+        this.updateHUD();
     }
 
     /*
@@ -298,5 +302,22 @@ public class Main extends SimpleApplication implements ActionListener {
         arrow.move(cam.getDirection().mult(3));
         arrow.move(cam.getUp().mult(-0.8f));
         arrow.move(cam.getLeft().mult(-1f));
+    }
+    public void initHUD(){
+    this.initGravityArrow();
+    timeText = new BitmapText(guiFont, false); 
+    timeText.setSize(30);      // font size
+    timeText.setColor(ColorRGBA.White);
+    timeText.setLocalTranslation(0, settings.getHeight(), 0); // position
+    guiNode.attachChild(timeText);
+    
+    }
+    public void updateHUD(){
+    this.updateGravityArrow();
+    float currentTime = timer.getTimeInSeconds()-this.startTime;
+    int currentMinutes = (int)currentTime/60;
+    DecimalFormat df = new DecimalFormat("00.0");
+    DecimalFormat hf = new DecimalFormat("00");
+    timeText.setText(hf.format(currentMinutes)+":"+df.format(currentTime%60));
     }
 }
