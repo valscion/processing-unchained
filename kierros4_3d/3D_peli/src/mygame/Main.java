@@ -64,8 +64,7 @@ public class Main extends SimpleApplication implements ActionListener {
     private Vector3f camDir = new Vector3f();
     private Vector3f camLeft = new Vector3f();
     private Vector3f walkDirection = new Vector3f();
-      private Spatial arrow;
-    
+    private Spatial arrow;
     // Flashlight
     private SpotLight flashLight;
 
@@ -95,11 +94,11 @@ public class Main extends SimpleApplication implements ActionListener {
         //ambient.setColor(ColorRGBA.White.mult(0.1f));
         //rootNode.addLight(ambient);
 /*
-        DirectionalLight dl = new DirectionalLight();
-        dl.setColor(ColorRGBA.White.mult(0.1f));
-        dl.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
-        rootNode.addLight(dl);
-       */ 
+         DirectionalLight dl = new DirectionalLight();
+         dl.setColor(ColorRGBA.White.mult(0.1f));
+         dl.setDirection(new Vector3f(2.8f, -2.8f, -2.8f).normalizeLocal());
+         rootNode.addLight(dl);
+         */
         flashLight = new SpotLight();
         flashLight.setColor(ColorRGBA.White);
         flashLight.setPosition(player.getPhysicsLocation());
@@ -277,24 +276,24 @@ public class Main extends SimpleApplication implements ActionListener {
     public void simpleRender(RenderManager rm) {
         //TODO: add render code
     }
-    
-    public void initGravityArrow(){
+
+    public void initGravityArrow() {
         Arrow helpArrow = new Arrow(Vector3f.UNIT_Y);
-         helpArrow.setLineWidth(10);
+        helpArrow.setLineWidth(10);
         arrow = new Geometry("Box", helpArrow);
-          Material mat1 = new Material(assetManager, 
+        Material mat1 = new Material(assetManager,
                 "Common/MatDefs/Misc/Unshaded.j3md");
         mat1.setColor("Color", ColorRGBA.White);
         arrow.setMaterial(mat1);
         rootNode.attachChild(arrow);
-        
     }
-     public void updateGravityArrow(){     
+
+    public void updateGravityArrow() {
         Vector3f vectorDifference = new Vector3f(cam.getLocation().subtract(arrow.getWorldTranslation()));
         arrow.setLocalTranslation(vectorDifference.addLocal(arrow.getLocalTranslation()));
         // Move it to the bottom right of the screen
         arrow.move(cam.getDirection().mult(3));
         arrow.move(cam.getUp().mult(-0.8f));
         arrow.move(cam.getLeft().mult(-1f));
-     }
+    }
 }
