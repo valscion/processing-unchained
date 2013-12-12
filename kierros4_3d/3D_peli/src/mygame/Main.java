@@ -528,7 +528,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
 
     public void updateRotationGfx() {
         Vector3f location = cam.getLocation().clone();
-        location.addLocal(0f, -0.5f, 0f);
         Vector3f lookLocation = location.add(this.lookDirection());
         arrow.setLocalTranslation(location);
         arrow.lookAt(lookLocation, UpAxisDir.unitVector(playerControl.getUpAxis()));
