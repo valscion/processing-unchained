@@ -27,6 +27,7 @@ import com.jme3.util.SkyFactory;
 import java.text.DecimalFormat;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
+import com.jme3.scene.shape.Box;
 
 /**
  * Pohjana on käytetty "collisionTest" valmista testiluokkaa, jonka author:normenhansen
@@ -60,7 +61,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private float startTime;
     private static final String PLAYER = "pelaaja";
     private static final String GOAL = "maali";
+    private static final String GROUND = "maa";
     private Node goalNode;
+    private Node groundNode;
     private int currentLevel;
     
     public static void main(String[] args) {
@@ -80,6 +83,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.initSounds();
         this.initGravityArrow();
         this.initGoal();
+        this.initGround();
         // We re-use the flyby camera for rotation, while positioning is handled by physics
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
         flyCam.setMoveSpeed(100);
@@ -194,7 +198,20 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         goalNode.attachChild(goalSpatial);
         rootNode.attachChild(goalNode);
     }
-
+    
+    private void initGround() {
+        groundNode = new Node(GROUND);
+        Box box = new Box(Vector3f.ZERO, 10f,0.001f,10f);
+        Spatial groundSpatial = new Geometry("Box", box );
+        groundSpatial.scale(100.0f);
+        CollisionShape groundShape = CollisionShapeFactory.createBoxShape(groundSpatial);
+        RigidBodyControl groundControl = new RigidBodyControl(groundShape, 0);
+        groundNode.addControl(groundControl);
+        bulletAppState.getPhysicsSpace().add(groundControl);
+        groundControl.setPhysicsLocation(new Vector3f(0, -100, 0));//menee tason alle tarpeeksi kauas
+        rootNode.attachChild(groundNode);
+    }
+    
     /**
      * We over-write some navigational key mappings here, so we can add
      * physics-controlled walking and jumping:
@@ -367,10 +384,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             //Pelaaja voittaa pelin
             System.out.println("Pelaaja paasee maaliin!");
             this.nextLevel();
-        } 
-        /*else if (objectName.equals(ICE)) {
-         this.kaveleJaalla();
-         }*/
+        } else if (objectName.equals(GROUND)) {
+            this.respawn();
+        }
     }
 
     private void nextLevel(){
