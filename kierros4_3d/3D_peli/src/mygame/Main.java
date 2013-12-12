@@ -309,10 +309,12 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         cameraRotator.update(tpf);
         if (cameraRotator.isInterpolationComplete()) {
             playerControl.setEnabled(true);
+            flyCam.setEnabled(true);
             updatePlayerAndCameraPosition();
         }
         else {
             playerControl.setEnabled(false);
+            flyCam.setEnabled(false);
         }
         flashLight.setPosition(playerControl.getPhysicsLocation());
         flashLight.setDirection(playerControl.getViewDirection());
