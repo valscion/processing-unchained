@@ -123,7 +123,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
         //tässä oli kommentit että debugi pois päältä
-        bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+        //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
         //kuuntelee tormauksia
         bulletAppState.getPhysicsSpace().addCollisionListener(this);
     }
