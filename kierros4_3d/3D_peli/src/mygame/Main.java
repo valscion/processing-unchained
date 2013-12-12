@@ -66,6 +66,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private BitmapText timeText;
     private AudioNode music;
     private AudioNode collisionSound;
+    private AudioNode youWinSound;
     private float startTime;
     private static final String PLAYER = "pelaaja";
     private static final String GOAL = "maali";
@@ -183,7 +184,11 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         music.play();
         collisionSound = new AudioNode(assetManager, "Sound/collision.wav", false);
         collisionSound.setPositional(false);
-        music.setLooping(false);
+        collisionSound.setLooping(false);
+        //TODO päivitä vielä oikea
+        youWinSound = new AudioNode(assetManager, "Sound/collision.wav", false);
+        youWinSound.setPositional(false);
+        youWinSound.setLooping(false);
     }
 
     private void initGoal() {
@@ -472,6 +477,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.currentLevel++;
         System.out.println("Pelaaja siirtyy seuraavaan kenttaan");
         this.playCollisionSound();
+        //this.playYouWinSound();
         if (currentLevel == 1) {
             this.playerWon();
         }
@@ -485,6 +491,10 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     
     private void playCollisionSound(){
         this.collisionSound.play();
+    }
+    
+    private void playYouWinSound(){
+        this.youWinSound.play();
     }
 
     public void updateRotationGfx() {
