@@ -73,10 +73,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private SpotLight flashLight;
     private BitmapText timeText;
     private Picture keyPicture;
-    private AudioNode music;
-    private AudioNode collisionSound;
-    private AudioNode youWinSound;
-    private AudioNode rotationSound;
+    private SoundSystem soundSystem;
     private float startTime;
     private boolean timerOn;
     private boolean isQEPressed;
@@ -195,23 +192,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     }
 
     public void initSounds() {
-        music = new AudioNode(assetManager, "Sound/ambient1_freesoundYewbic.wav", false);
-        music.setPositional(false);
-        music.setDirectional(false);
-        music.setLooping(true);
-        music.setVolume(0.1f);
-        music.play();
-        collisionSound = new AudioNode(assetManager, "Sound/collision.wav", false);
-        collisionSound.setPositional(false);
-        collisionSound.setLooping(false);
-        //TODO päivitä vielä oikea
-        youWinSound = new AudioNode(assetManager, "Sound/you_win.ogg", false);
-        youWinSound.setPositional(false);
-        youWinSound.setLooping(false);
-        //kääntymisen ääni rotationSound
-        rotationSound = new AudioNode(assetManager, "Sound/suih.ogg", false);
-        rotationSound.setPositional(false);
-        rotationSound.setLooping(false);
+        soundSystem = new SoundSystem(assetManager);
+        soundSystem.initSounds();
     }
 
     private void initGoal() {
@@ -344,6 +326,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     }
 
     private void respawn() {
+        playerControl.setEnabled(true);
         this.startTime = timer.getTimeInSeconds();
         bulletAppState.getPhysicsSpace().remove(this.playerControl);
         //en tiedä onko tarpeellisia, ainakin järkevän oloista poistaa pelaaja
@@ -389,7 +372,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      */
     private void rotateWorld() {
         if (this.cameraRotator.isInterpolationComplete()) {
-            this.playRotationSound();
+            this.soundSystem.playRotationSound();
             this.rotatePlayerUpAxis();
             this.rotateCamera();
         }
@@ -514,7 +497,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             System.out.println("Pelaaja paasee maaliin!");
             this.nextLevel();
         } else if (objectName.equals(GROUND)) {
-            this.playCollisionSound();
+            this.soundSystem.playCollisionSound();
+            nifty.fromXml("Interface/screen.xml", "lose");
+            guiViewPort.addProcessor(niftyDisplay);
             this.respawn();
         }
     }
@@ -522,7 +507,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private void nextLevel() {
         this.currentLevel++;
         System.out.println("Pelaaja siirtyy seuraavaan kenttaan");
-        this.playYouWinSound();
+        this.soundSystem.playYouWinSound();
         //this.playYouWinSound();
         if (currentLevel == 1) {
             this.playerWon();
@@ -533,21 +518,10 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         System.out.println("Pelaaja voittaa pelin!");
         nifty.fromXml("Interface/screen.xml", "win");
         guiViewPort.addProcessor(niftyDisplay);
-        this.respawn();
+        //this.respawn();
+        playerControl.setEnabled(false);
         //soittaa musiikkia tai jotain
         //this.stop();
-    }
-
-    private void playCollisionSound() {
-        this.collisionSound.play();
-    }
-
-    private void playYouWinSound() {
-        this.youWinSound.play();
-    }
-
-    private void playRotationSound() {
-        this.rotationSound.play();
     }
 
     public void updateRotationGfx() {
@@ -572,7 +546,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             String debugText = String.format("Player up axis: %s\nLook vector: %s",
                     UpAxisDir.string(playerControl.getUpAxis()),
                     this.lookDirection().toString());
-
             ((BitmapText) guiNode.getChild("DEBUG_TEXT")).setText(debugText);
             if (showqe) {
                 System.out.println("Pitäisi poistua");
