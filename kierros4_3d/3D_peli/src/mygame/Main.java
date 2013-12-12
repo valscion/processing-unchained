@@ -228,7 +228,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     }
 
     private void initGround() {
+        //maan päänode nimetty
         groundNode = new Node(GROUND);
+        //alas
         Box box = new Box(Vector3f.ZERO, 10f, 0.001f, 10f);
         Spatial groundSpatial = new Geometry("Box", box);
         groundSpatial.scale(100.0f);
@@ -236,6 +238,53 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         RigidBodyControl groundControl = new RigidBodyControl(groundShape, 0);
         groundNode.addControl(groundControl);
         bulletAppState.getPhysicsSpace().add(groundControl);
+        groundControl.setPhysicsLocation(new Vector3f(0, -100, 0));//menee tason alle tarpeeksi kauas
+        //ylös
+        Box box2 = new Box(Vector3f.ZERO, 10f, 0.001f, 10f);
+        Spatial groundSpatial2 = new Geometry("Box", box2);
+        groundSpatial2.scale(100.0f);
+        CollisionShape groundShape2 = CollisionShapeFactory.createBoxShape(groundSpatial2);
+        RigidBodyControl groundControl2 = new RigidBodyControl(groundShape2, 0);
+        groundNode.addControl(groundControl2);
+        bulletAppState.getPhysicsSpace().add(groundControl2);
+        groundControl2.setPhysicsLocation(new Vector3f(0, 200, 0));//menee tason alle tarpeeksi kauas
+        //x+
+        Box box3 = new Box(Vector3f.ZERO, 0.001f, 10f, 10f);
+        Spatial groundSpatial3 = new Geometry("Box", box3);
+        groundSpatial3.scale(100.0f);
+        CollisionShape groundShape3 = CollisionShapeFactory.createBoxShape(groundSpatial3);
+        RigidBodyControl groundControl3 = new RigidBodyControl(groundShape3, 0);
+        groundNode.addControl(groundControl3);
+        bulletAppState.getPhysicsSpace().add(groundControl3);
+        groundControl3.setPhysicsLocation(new Vector3f(200, 0, 0));//menee tason alle tarpeeksi kauas
+        //x-
+        Box box4 = new Box(Vector3f.ZERO, 0.001f,10f, 10f);
+        Spatial groundSpatial4 = new Geometry("Box", box4);
+        groundSpatial4.scale(100.0f);
+        CollisionShape groundShape4 = CollisionShapeFactory.createBoxShape(groundSpatial4);
+        RigidBodyControl groundControl4 = new RigidBodyControl(groundShape4, 0);
+        groundNode.addControl(groundControl4);
+        bulletAppState.getPhysicsSpace().add(groundControl4);
+        groundControl4.setPhysicsLocation(new Vector3f(-200, 0, 0));//menee tason alle tarpeeksi kauas
+        //y+
+        Box box5 = new Box(Vector3f.ZERO, 10f, 10f, 0.001f);
+        Spatial groundSpatial5 = new Geometry("Box", box5);
+        groundSpatial5.scale(100.0f);
+        CollisionShape groundShape5 = CollisionShapeFactory.createBoxShape(groundSpatial5);
+        RigidBodyControl groundControl5 = new RigidBodyControl(groundShape5, 0);
+        groundNode.addControl(groundControl5);
+        bulletAppState.getPhysicsSpace().add(groundControl5);
+        groundControl5.setPhysicsLocation(new Vector3f(0, 0, -200));//menee tason alle tarpeeksi kauas
+        //y-
+        Box box6 = new Box(Vector3f.ZERO, 10f, 10f, 0.001f);
+        Spatial groundSpatial6 = new Geometry("Box", box6);
+        groundSpatial6.scale(100.0f);
+        CollisionShape groundShape6 = CollisionShapeFactory.createBoxShape(groundSpatial6);
+        RigidBodyControl groundControl6 = new RigidBodyControl(groundShape6, 0);
+        groundNode.addControl(groundControl6);
+        bulletAppState.getPhysicsSpace().add(groundControl6);
+        groundControl6.setPhysicsLocation(new Vector3f(0, 0, 200));//menee tason alle tarpeeksi kauas
+        //asettaminen oikein
         groundControl.setPhysicsLocation(new Vector3f(0, -100, 0));//menee tason alle tarpeeksi kauas
         rootNode.attachChild(groundNode);
     }
