@@ -80,7 +80,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private static final String PLAYER = "pelaaja";
     private static final String GOAL = "maali";
     private static final String GROUND = "maa";
-    private static final int PLAYERSPEED = 30;
+    private static final float PLAYERSPEED = 5.0f;
+    private static final float GRAVITY = 20.0f;
+    private static final float JUMPSPEED = GRAVITY * 0.5f;
     private Node goalNode;
     private Node groundNode;
     private int currentLevel;
@@ -163,9 +165,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         Vector3f playerStartPosition = new Vector3f(50, 100, -50);
         //pelaajaan vaikuttavat voimat
         flyCam.setMoveSpeed(PLAYERSPEED);
-        playerControl.setJumpSpeed(PLAYERSPEED / 2);
-        playerControl.setFallSpeed(PLAYERSPEED * 2);
-        playerControl.setGravity(PLAYERSPEED);
+        playerControl.setJumpSpeed(JUMPSPEED);
+        playerControl.setGravity(GRAVITY);
         //pelaajan aloitussijainti
         playerControl.setPhysicsLocation(playerStartPosition);
         //pelaaja vielä siihen maaailmaankin...
