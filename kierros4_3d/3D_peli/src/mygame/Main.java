@@ -36,9 +36,9 @@ import com.jme3.ui.Picture;
 
 /**
  * Gravity Unchained by Django Unchained
- * 
+ *
  * Käytetyt materiaalit: Tasot olemme itse luoneet sketchUpilla, skyboxia on
- * vähän muokattu, lähde author:Hipshot, äänet ovat omiamme. 
+ * vähän muokattu, lähde author:Hipshot, äänet ovat omiamme.
  *
  * Peliin on otettu vaikutteita mm. Portalista, AntiChamberista, Alan Wakesta,
  * ilomilosta. Pelimekaniikkaan kuuluu painovoiman muuttaminen pelaajan
@@ -122,38 +122,38 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         setDisplayStatView(false);  // to hide the statistics 
         this.initHelpBox();
     }
-    
+
     private void initHelpBox() {
-        Box help = new Box(4,3,4);
+        Box help = new Box(4, 3, 4);
         helpGeo = new Geometry("ohjelaatikko", help);
         helpGeo.setLocalTranslation(playerStartPosition.add(12, -5, 0));
-        helpMat = new Material(assetManager, 
-        "Common/MatDefs/Misc/Unshaded.j3md");
+        helpMat = new Material(assetManager,
+                "Common/MatDefs/Misc/Unshaded.j3md");
         this.helpBox();
         rootNode.attachChild(helpGeo);
     }
-    
+
     private void helpBox() {
         Texture helpTex = assetManager.loadTexture(
-        "Interface/start.png");
+                "Interface/start.png");
         helpMat.setTexture("ColorMap", helpTex);
         helpGeo.setMaterial(helpMat);
     }
-    
+
     private void winBox() {
         Texture winTex = assetManager.loadTexture(
-        "Interface/winscreen.png");
+                "Interface/winscreen.png");
         helpMat.setTexture("ColorMap", winTex);
         helpGeo.setMaterial(helpMat);
     }
-    
+
     private void loseBox() {
         Texture loseText = assetManager.loadTexture("Interface/deadscreen.png");
         helpMat.setTexture("ColorMap", loseText);
         helpGeo.setMaterial(helpMat);
     }
-    
-      private void nextLevelBox() {
+
+    private void nextLevelBox() {
         Texture nextText = assetManager.loadTexture("Interface/nextlevel.png");
         helpMat.setTexture("ColorMap", nextText);
         helpGeo.setMaterial(helpMat);
@@ -162,47 +162,48 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private void initPhysics() {
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
-        //bulletAppState.getPhysicsSpace().enableDebug(assetManager); //debugi joka näyttää kappaleiden rautalankamallit
+        //debugi joka näyttää kappaleiden rautalankamallit
+        //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
         bulletAppState.getPhysicsSpace().addCollisionListener(this);
     }
-    
+
     private void initMaze() {
         //poistaa edellisen labyrintin
-        if(sceneModel != null){
+        if (sceneModel != null) {
             rootNode.detachChild(sceneModel);
         }
-        if(landscape != null){
+        if (landscape != null) {
             bulletAppState.getPhysicsSpace().remove(landscape);
         }
-        
+
         playerStartPosition = new Vector3f(50, 100, -50);
         sceneModel = assetManager.loadModel("Models/boksi/boksi.j3o");//perustaso @author: Vesa Laakso
-        sceneModel.setLocalScale(100f); // Mallit on 10mm luokassa kun maailma on 1m luokassa.
+        sceneModel.setLocalScale(100f); // Malli on 10mm luokassa kun maailma on 1m luokassa.
         CollisionShape sceneShape = CollisionShapeFactory.createMeshShape((Node) sceneModel);
         landscape = new RigidBodyControl(sceneShape, 0);//massaksi 1000 niin tippuu alas
         sceneModel.addControl(landscape);
         rootNode.attachChild(sceneModel);
         bulletAppState.getPhysicsSpace().add(landscape);
     }
-    
-    private void initMaze2(){
+
+    private void initMaze2() {
         //poistaa edellisen labyrintin
-        if(sceneModel != null){
+        if (sceneModel != null) {
             rootNode.detachChild(sceneModel);
         }
-        if(landscape != null){
+        if (landscape != null) {
             bulletAppState.getPhysicsSpace().remove(landscape);
         }
-        
+
         playerStartPosition = new Vector3f(55, 95, -50);
         sceneModel = assetManager.loadModel("Models/taso1.j3o");//musta taso @author: Aarne Leinonen
-        sceneModel.setLocalScale(0.100f); // Mallit on 10mm luokassa kun maailma on 1m luokassa.
+        sceneModel.setLocalScale(0.100f); // Malli on 10m luokassa kun maailma on 1m luokassa.
         CollisionShape sceneShape = CollisionShapeFactory.createMeshShape((Node) sceneModel);
         landscape = new RigidBodyControl(sceneShape, 0);
         sceneModel.addControl(landscape);
         rootNode.attachChild(sceneModel);
         bulletAppState.getPhysicsSpace().add(landscape);
-        
+
     }
 
     private void initSkyBox() {
@@ -233,13 +234,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         bulletAppState.getPhysicsSpace().add(playerControl);
         playerNode = new Node(PLAYER);
         playerNode.setLocalTranslation(playerStartPosition);
-        /*TODO jos halutaan pelaajalle joku model pelaajalle
-         playerSpatial = assetManager.loadModel("Models/karhu/karhu.mesh.j3o");
-         playerSpatial.scale(8.0f);
-         playerSpatial.setShadowMode(ShadowMode.CastAndReceive);
-         playerSpatial.setLocalTranslation(0.0f, -1.7f, 0.0f);
-         playerNode.attachChild(playerSpatial);
-         */
         //pelaaja ohjaa nodeaan
         playerNode.addControl(playerControl);
         //pelaajan node maailmaan
@@ -397,11 +391,11 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         inputManager.addMapping("CameraDebug", new KeyTrigger(KeyInput.KEY_0));
         inputManager.addListener(this, "CameraDebug");
     }
-    
-    private void initPPFilters(){
+
+    private void initPPFilters() {
         filterPostProcessor = new FilterPostProcessor(assetManager);
         viewPort.addProcessor(filterPostProcessor); // add one FilterPostProcessor to viewPort
-        
+
         //reunaviivat (cell shadingista pelkät viivat)
         CartoonEdgeFilter toon = new CartoonEdgeFilter();
         toon.setEdgeColor(ColorRGBA.Black);
@@ -417,23 +411,24 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         bloom.setExposurePower(2.10f);
         bloom.setExposureCutOff(0.2f);
         bloom.setBloomIntensity(0.5f);
-        filterPostProcessor.addFilter(bloom);      
-        
+        filterPostProcessor.addFilter(bloom);
+
         //synkeät jälkivarjot
-        SSAOFilter ssaoFilter = new SSAOFilter(10.955201f,5.928635f, 0.2f, 0.6059958f);
+        SSAOFilter ssaoFilter = new SSAOFilter(10.955201f, 5.928635f, 0.2f, 0.6059958f);
         filterPostProcessor.addFilter(ssaoFilter);
-        
+
         /*Pois koska on liian raskas
-        //sumennus kaukana, oikeasti tätä käytettäisiin niin että setFocusFistancea muutettaisiin näkökentän keskiosassa olevan kappaleen etäisyydelle, nyt pelaaja on vain likinäköinen
-        DepthOfFieldFilter dofFilter = new DepthOfFieldFilter();
-        dofFilter.setFocusDistance(0);
-        dofFilter.setFocusRange(20);
-        dofFilter.setBlurScale(2.4f);
-        filterPostProcessor.addFilter(dofFilter);
-        viewPort.addProcessor(filterPostProcessor);*/
+         // sumennus kaukana, oikeasti tätä käytettäisiin niin että
+         // setFocusFistancea muutettaisiin näkökentän keskiosassa olevan
+         // kappaleen etäisyydelle, nyt pelaaja on vain likinäköinen
+         DepthOfFieldFilter dofFilter = new DepthOfFieldFilter();
+         dofFilter.setFocusDistance(0);
+         dofFilter.setFocusRange(20);
+         dofFilter.setBlurScale(2.4f);
+         filterPostProcessor.addFilter(dofFilter);
+         viewPort.addProcessor(filterPostProcessor);*/
     }
-    
-    
+
     //
     // -------------------------------------------------------------------------
     // END GAME INITIALIZE
@@ -550,7 +545,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         }
         // }
         if (binding.equals("Respawn")) {
-            
+
             this.respawn();
         }
         if (binding.equals("Huijaus")) {
@@ -590,93 +585,78 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
                     if (!clockWise) {
                         flipGravity = true;
                     }
-                }
-                else { // Z- points to us
+                } else { // Z- points to us
                     if (clockWise) {
                         flipGravity = true;
                     }
                 }
-            }
-            else if (!isZero(lookDir.x)) {
+            } else if (!isZero(lookDir.x)) {
                 newUp = UpAxisDir.Z;
                 if (lookDir.x < -eps) { // X+ points to us
                     if (clockWise) {
                         flipGravity = true;
                     }
-                }
-                else { // X- points to us
+                } else { // X- points to us
                     if (!clockWise) {
                         flipGravity = true;
                     }
                 }
-            }
-            else {
+            } else {
                 throw new RuntimeException("Dude, check your axis and up direction!");
             }
-        }
-        else if (currentUp == UpAxisDir.X) {
+        } else if (currentUp == UpAxisDir.X) {
             if (!isZero(lookDir.y)) {
                 newUp = UpAxisDir.Z;
                 if (lookDir.y < -eps) { // Y+ points to us
                     if (!clockWise) {
                         flipGravity = true;
                     }
-                }
-                else { // Y- points to us
+                } else { // Y- points to us
                     if (clockWise) {
                         flipGravity = true;
                     }
                 }
-            }
-            else if (!isZero(lookDir.z)) {
+            } else if (!isZero(lookDir.z)) {
                 newUp = UpAxisDir.Y;
                 if (lookDir.z < -eps) { // Z+ points to us
                     if (clockWise) {
                         flipGravity = true;
                     }
-                }
-                else { // Z- points to us
+                } else { // Z- points to us
                     if (!clockWise) {
                         flipGravity = true;
                     }
                 }
-            }
-            else {
+            } else {
                 throw new RuntimeException("Dude, check your axis and up direction!");
             }
-        }
-        else if (currentUp == UpAxisDir.Z) {
+        } else if (currentUp == UpAxisDir.Z) {
             if (!isZero(lookDir.x)) {
                 newUp = UpAxisDir.Y;
                 if (lookDir.x < -eps) { // X+ points to us
                     if (!clockWise) {
                         flipGravity = true;
                     }
-                }
-                else { // X- points to us
+                } else { // X- points to us
                     if (clockWise) {
                         flipGravity = true;
                     }
                 }
-            }
-            else if (!isZero(lookDir.y)) {
+            } else if (!isZero(lookDir.y)) {
                 newUp = UpAxisDir.X;
                 if (lookDir.y < -eps) { // Y+ points to us
                     if (clockWise) {
                         flipGravity = true;
                     }
-                }
-                else { // Y- points to us
+                } else { // Y- points to us
                     if (!clockWise) {
                         flipGravity = true;
                     }
                 }
-            }
-            else {
+            } else {
                 throw new RuntimeException("Dude, check your axis and up direction!");
             }
-        }
-        else {
+        } else {
             throw new RuntimeException("Jumalauta. Ei helvetti.");
         }
 
@@ -722,22 +702,18 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     }
 
     public void collision(PhysicsCollisionEvent event) {
-        //System.out.println("TÖRMÄYS");
-        //vähentää syntyvää laskentaa kolmasosaan, ei suurta vaikutusta toteutukseen
-        //if (FastMath.nextRandomFloat() < 1f) {
-            if (event.getNodeA().getName().equals(PLAYER)) {
-                handlePlayerCollision(event.getNodeB().getName(), event);
-            } else if (event.getNodeB().getName().equals(PLAYER)) {
-                handlePlayerCollision(event.getNodeA().getName(), event);
-            }
-        //}
+        if (event.getNodeA().getName().equals(PLAYER)) {
+            handlePlayerCollision(event.getNodeB().getName(), event);
+        } else if (event.getNodeB().getName().equals(PLAYER)) {
+            handlePlayerCollision(event.getNodeA().getName(), event);
+        }
     }
-
     private long prewMillis = 0;
+
     private void handlePlayerCollision(String objectName, PhysicsCollisionEvent event) {
         if (objectName.equals(GOAL)) {
             //vähän harvemmin tätä kutsutaan --> pienin läpipeluu aika määräytyy tällä
-            if((System.currentTimeMillis() - this.prewMillis) > 1000){
+            if ((System.currentTimeMillis() - this.prewMillis) > 1000) {
                 this.playerWon();
                 this.nextLevel();
                 this.prewMillis = System.currentTimeMillis();
@@ -753,16 +729,15 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.loseBox();
         timerOn = false;
     }
-
     private boolean secondLevelIsNext = true;
+
     private void nextLevel() {
         System.out.println(secondLevelIsNext);
-        if(secondLevelIsNext){
+        if (secondLevelIsNext) {
             this.nextLevelBox();
             this.initMaze2();
             secondLevelIsNext = false;
-        }
-        else {
+        } else {
             this.winBox();
             this.initMaze();
             secondLevelIsNext = true;
