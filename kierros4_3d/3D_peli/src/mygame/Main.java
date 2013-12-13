@@ -91,7 +91,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private Node goalNode;
     private Node groundNode;
     private int currentLevel;
-    private boolean levelOn;
    // public Nifty nifty;
     //private NiftyJmeDisplay niftyDisplay;
     private CameraRotator cameraRotator;
@@ -188,7 +187,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     
     private void initMaze() {
         //poistaa edellisen labyrintin
-        this.levelOn = true;
         if(sceneModel != null){
             rootNode.detachChild(sceneModel);
         }
@@ -207,7 +205,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     }
     
     private void initMaze2(){
-          this.levelOn = true;
         //poistaa edellisen labyrintin
         if(sceneModel != null){
             rootNode.detachChild(sceneModel);
@@ -776,17 +773,13 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     }
 
     private void handlePlayerCollision(String objectName, PhysicsCollisionEvent event) {
-          
         if (objectName.equals(GOAL)) {
-         if(this.levelOn){
-            this.levelOn = false;
             //Pelaaja voittaa pelin
             System.out.println("Pelaaja paasee maaliin!");
             this.nextLevel();
         } else if (objectName.equals(GROUND)) {
             this.playerLost();
         }
-    }
     }
     
     private void playerLost() {
