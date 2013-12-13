@@ -715,7 +715,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     public void collision(PhysicsCollisionEvent event) {
         //System.out.println("TÖRMÄYS");
         //vähentää syntyvää laskentaa kolmasosaan, ei suurta vaikutusta toteutukseen
-        if (FastMath.nextRandomFloat() < 0.3f) {
+        if (FastMath.nextRandomFloat() < 1f) {
             if (event.getNodeA().getName().equals(PLAYER)) {
                 handlePlayerCollision(event.getNodeB().getName(), event);
             } else if (event.getNodeB().getName().equals(PLAYER)) {
