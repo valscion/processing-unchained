@@ -5,6 +5,12 @@ Ohjeet:
 Pelaajan tehtävänä on selvitä kolmiulotteisesta labyrintistä maaliin//, jolloin hän pääsee toiselle tasolle. Tasoja on 3.
 Pelaaja voi ohjata hahmoaan sekä kahlitsematonta painovoimaa.
 
+*-----------*
+| Q W E R	|
+| A S D 	|
+|    space 	|
+*-----------*
+
 Näppäimet:
 W = eteen
 A = vasemmalle (sivuttain)
@@ -13,6 +19,8 @@ D = oikealle (sivuttain)
 Q = käännä painovoimaa vastapäivään
 E = käännä painovoimaa myötäpäivään
 R = aloita labyrintti alusta
+SPACE = hyppää
+ESC = sammuta peli
 
 ---
 skp, dae, blenderissä edit mode meshissä ja squads, tallenna blend avaa jmonkey, j3o
