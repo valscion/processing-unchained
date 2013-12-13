@@ -176,11 +176,20 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     }
     
     private void initMaze() {
-        sceneModel = assetManager.loadModel("Models/boksi/boksi.j3o");
-        //this.makeToonish(sceneModel);
+        sceneModel = assetManager.loadModel("Models/boksi/boksi.j3o");//perustaso @author: Vesa Laakso
         sceneModel.setLocalScale(100f); // Mallit on 10mm luokassa kun maailma on 1m luokassa.
         CollisionShape sceneShape = CollisionShapeFactory.createMeshShape((Node) sceneModel);
         landscape = new RigidBodyControl(sceneShape, 0);//massaksi 1000 niin tippuu alas
+        sceneModel.addControl(landscape);
+        rootNode.attachChild(sceneModel);
+        bulletAppState.getPhysicsSpace().add(landscape);
+    }
+    
+    private void initMaze2(){
+        sceneModel = assetManager.loadModel("Models/taso1.j3o");//musta taso @author: Aarne Leinonen
+        sceneModel.setLocalScale(0.100f); // Mallit on 10mm luokassa kun maailma on 1m luokassa.
+        CollisionShape sceneShape = CollisionShapeFactory.createMeshShape((Node) sceneModel);
+        landscape = new RigidBodyControl(sceneShape, 0);
         sceneModel.addControl(landscape);
         rootNode.attachChild(sceneModel);
         bulletAppState.getPhysicsSpace().add(landscape);
