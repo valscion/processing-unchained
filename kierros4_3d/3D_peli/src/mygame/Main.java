@@ -518,7 +518,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      * yet, we just keep track of the direction the user pressed.
      */
     public void onAction(String binding, boolean isPressed, float tpf) {
-        this.bulletAppState.setEnabled(true);
+        //this.bulletAppState.setEnabled(true);
         // if (!guiViewPort.getProcessors().contains(niftyDisplay)) {
         if (binding.equals("Left")) {
             left = isPressed;
@@ -724,23 +724,24 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     public void collision(PhysicsCollisionEvent event) {
         //System.out.println("TÖRMÄYS");
         //vähentää syntyvää laskentaa kolmasosaan, ei suurta vaikutusta toteutukseen
-        if (FastMath.nextRandomFloat() < 1f) {
+        //if (FastMath.nextRandomFloat() < 1f) {
             if (event.getNodeA().getName().equals(PLAYER)) {
                 handlePlayerCollision(event.getNodeB().getName(), event);
             } else if (event.getNodeB().getName().equals(PLAYER)) {
                 handlePlayerCollision(event.getNodeA().getName(), event);
             }
-        }
+        //}
     }
 
+    private long prewMillis = 0;
     private void handlePlayerCollision(String objectName, PhysicsCollisionEvent event) {
         if (objectName.equals(GOAL)) {
-            //this.isLagging = true;
-            //Pelaaja pääsee maaliin
-            //System.out.println("Pelaaja paasee maaliin!");
-            this.bulletAppState.setEnabled(false);
-            this.playerWon();
-            this.nextLevel();
+            //vähän harvemmin tätä kutsutaan --> pienin läpipeluu aika määräytyy tällä
+            if((System.currentTimeMillis() - this.prewMillis) > 1000){
+                this.playerWon();
+                this.nextLevel();
+                this.prewMillis = System.currentTimeMillis();
+            }
         } else if (objectName.equals(GROUND)) {
             this.playerLost();
         }
@@ -755,19 +756,17 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
 
     private boolean secondLevelIsNext = true;
     private void nextLevel() {
-        
+        System.out.println(secondLevelIsNext);
         if(secondLevelIsNext){
             this.nextLevelBox();
             this.initMaze2();
-            System.out.println("tasoksi muuttui 2");
             secondLevelIsNext = false;
         }
         else {
+            this.winBox();
             this.initMaze();
             secondLevelIsNext = true;
         }
-        //this.playerWon(); ei kuulu tulla täällä
-        //System.out.println(secondLevelIsNext);
 
     }
 
