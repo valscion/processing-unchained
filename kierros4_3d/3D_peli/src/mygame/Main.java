@@ -39,6 +39,7 @@ import com.jme3.math.Quaternion;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.BloomFilter;
 import com.jme3.post.filters.CartoonEdgeFilter;
+import com.jme3.post.ssao.SSAOFilter;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.shape.Box;
 import com.jme3.ui.Picture;
@@ -362,7 +363,11 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         bloom.setExposureCutOff(0.2f);
         bloom.setBloomIntensity(2.25f);
         //BloomUI ui=new BloomUI(inputManager, bloom);
-        filterPostProcessor.addFilter(bloom);        
+        filterPostProcessor.addFilter(bloom);      
+        
+        //synkeät jälkivarjot
+        SSAOFilter ssaoFilter = new SSAOFilter(10.9f, 43.9f, 0.5f, 0.605f);
+        filterPostProcessor.addFilter(ssaoFilter);
     }
     
     /**
