@@ -39,6 +39,7 @@ import com.jme3.math.Quaternion;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.BloomFilter;
 import com.jme3.post.filters.CartoonEdgeFilter;
+import com.jme3.post.filters.DepthOfFieldFilter;
 import com.jme3.post.ssao.SSAOFilter;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.shape.Box;
@@ -366,8 +367,16 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         filterPostProcessor.addFilter(bloom);      
         
         //synkeät jälkivarjot
-        SSAOFilter ssaoFilter = new SSAOFilter(10.9f, 43.9f, 0.5f, 0.605f);
+        SSAOFilter ssaoFilter = new SSAOFilter(10.955201f,43.928635f, 0.62999992f, 0.6059958f);//0.49997783f, 42.598858f, 35.999966f, 0.39299846f);//12.940201f, 43.928635f, 0.32999992f, 0.6059958f);
         filterPostProcessor.addFilter(ssaoFilter);
+        
+        //sumennus kaukana, oikeasti tätä käytettäisiin niin että setFocusFistancea muutettaisiin näkökentän keskiosassa olevan kappaleen etäisyydelle, nyt pelaaja on vain likinäköinen
+        DepthOfFieldFilter dofFilter = new DepthOfFieldFilter();
+        dofFilter.setFocusDistance(0);
+        dofFilter.setFocusRange(20);
+        dofFilter.setBlurScale(2.4f);
+        filterPostProcessor.addFilter(dofFilter);
+        viewPort.addProcessor(filterPostProcessor);
     }
     
     /**
