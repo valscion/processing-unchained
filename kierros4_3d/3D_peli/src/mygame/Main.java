@@ -324,6 +324,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     }
 
     public void initHUD() {
+        this.timerOn = true;
+        this.startTime = timer.getTimeInSeconds();
         timeText = new BitmapText(guiFont, false);
         timeText.setSize(30);      // font size
         timeText.setColor(ColorRGBA.White);
