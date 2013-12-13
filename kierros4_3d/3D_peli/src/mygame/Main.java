@@ -392,6 +392,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         inputManager.addListener(this, "RotateWorldCCW");
         inputManager.addMapping("Respawn", new KeyTrigger(KeyInput.KEY_R));
         inputManager.addListener(this, "Respawn");
+        inputManager.addMapping("Huijaus", new KeyTrigger(KeyInput.KEY_H));
+        inputManager.addListener(this, "Huijaus");
         inputManager.addMapping("CameraDebug", new KeyTrigger(KeyInput.KEY_0));
         inputManager.addListener(this, "CameraDebug");
     }
@@ -516,6 +518,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      * yet, we just keep track of the direction the user pressed.
      */
     public void onAction(String binding, boolean isPressed, float tpf) {
+        this.bulletAppState.setEnabled(true);
         // if (!guiViewPort.getProcessors().contains(niftyDisplay)) {
         if (binding.equals("Left")) {
             left = isPressed;
@@ -547,7 +550,13 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         }
         // }
         if (binding.equals("Respawn")) {
+            
             this.respawn();
+        }
+        if (binding.equals("Huijaus")) {
+            if (!isPressed) {
+                this.nextLevel();
+            }
         }
     }
 
@@ -726,8 +735,11 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
 
     private void handlePlayerCollision(String objectName, PhysicsCollisionEvent event) {
         if (objectName.equals(GOAL)) {
+            //this.isLagging = true;
             //Pelaaja pääsee maaliin
             //System.out.println("Pelaaja paasee maaliin!");
+            this.bulletAppState.setEnabled(false);
+            this.respawn();
             this.nextLevel();
         } else if (objectName.equals(GROUND)) {
             this.playerLost();
@@ -741,30 +753,33 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         timerOn = false;
     }
 
+    private boolean secondLevelIsNext = true;
     private void nextLevel() {
-        //vuorottelee karttojen välillä
-        this.currentLevel++;
-        if (currentLevel == 1) {
-            this.initMaze2();
-        } else {
-            this.initMaze();
-            this.currentLevel = 0;
-        }
+        
+        
 
-        //ilmaisee pelaajalle että maaliin on päästy
-        this.soundSystem.playYouWinSound();
-        this.nextLevelBox();
-        if (currentLevel > 1) {//jotta ihan alussa ei tule ilmoitusta
-            System.out.println(this.currentLevel);
-            this.playerWon();
+        if(secondLevelIsNext){
+            this.nextLevelBox();
+            this.initMaze2();
+            System.out.println("tasoksi muuttui 2");
+            secondLevelIsNext = false;
         }
+        else {
+            this.initMaze();
+            secondLevelIsNext = true;
+        }
+        this.playerWon();
+        System.out.println(secondLevelIsNext);
+
     }
 
     private void playerWon() {
-        this.respawn();
         playerControl.setEnabled(false);
         timerOn = false;
+        this.respawn();
         this.winBox();
+        this.soundSystem.playYouWinSound();
+        //isLagging = false;
     }
 
     public void updateRotationGfx() {
