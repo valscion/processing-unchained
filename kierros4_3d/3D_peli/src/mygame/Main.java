@@ -516,36 +516,36 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      * yet, we just keep track of the direction the user pressed.
      */
     public void onAction(String binding, boolean isPressed, float tpf) {
-       // if (!guiViewPort.getProcessors().contains(niftyDisplay)) {
-            if (binding.equals("Left")) {
-                left = isPressed;
-            } else if (binding.equals("Right")) {
-                right = isPressed;
-            } else if (binding.equals("Up")) {
-                up = isPressed;
-            } else if (binding.equals("Down")) {
-                down = isPressed;
-            } else if (binding.equals("Jump")) {
-                if (isPressed) {
-                    playerControl.jump();
-                }
-            } else if (binding.equals("RotateWorldCW") || binding.equals("RotateWorldCCW")) {
-                if (!isPressed) {
-                    boolean clockWise = binding.equals("RotateWorldCW");
-                    this.rotateWorld(clockWise);
-                    this.isQEPressed = true;
-                    this.updateHUD(isQEPressed);
-                }
-            } else if (binding.equals("CameraDebug")) {
-                if (!isPressed) {
-                    Quaternion target = new Quaternion();
-                    target.lookAt(Vector3f.UNIT_Y, Vector3f.UNIT_Y);
-                    //target = target.fromAngleNormalAxis(FastMath.TWO_PI, Vector3f.UNIT_X.normalize());
-                    //Quaternion target = cam.getRotation().opposite();
-                    this.cameraRotator.rotateTo(target);
-                }
+        // if (!guiViewPort.getProcessors().contains(niftyDisplay)) {
+        if (binding.equals("Left")) {
+            left = isPressed;
+        } else if (binding.equals("Right")) {
+            right = isPressed;
+        } else if (binding.equals("Up")) {
+            up = isPressed;
+        } else if (binding.equals("Down")) {
+            down = isPressed;
+        } else if (binding.equals("Jump")) {
+            if (isPressed) {
+                playerControl.jump();
             }
-       // }
+        } else if (binding.equals("RotateWorldCW") || binding.equals("RotateWorldCCW")) {
+            if (!isPressed) {
+                boolean clockWise = binding.equals("RotateWorldCW");
+                this.rotateWorld(clockWise);
+                this.isQEPressed = true;
+                this.updateHUD(isQEPressed);
+            }
+        } else if (binding.equals("CameraDebug")) {
+            if (!isPressed) {
+                Quaternion target = new Quaternion();
+                target.lookAt(Vector3f.UNIT_Y, Vector3f.UNIT_Y);
+                //target = target.fromAngleNormalAxis(FastMath.TWO_PI, Vector3f.UNIT_X.normalize());
+                //Quaternion target = cam.getRotation().opposite();
+                this.cameraRotator.rotateTo(target);
+            }
+        }
+        // }
         if (binding.equals("Respawn")) {
             this.respawn();
         }
@@ -733,37 +733,34 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             this.playerLost();
         }
     }
-    
+
     private void playerLost() {
         this.soundSystem.playCollisionSound();
         this.respawn();
         this.loseBox();
-        //nifty.fromXml("Interface/screen.xml", "lose");
-        //guiViewPort.addProcessor(niftyDisplay);
         timerOn = false;
     }
-    
+
     private void nextLevel() {
-        System.out.println(this.currentLevel);
+        //vuorottelee karttojen välillä
         this.currentLevel++;
-        if(currentLevel == 1){
+        if (currentLevel == 1) {
             this.initMaze2();
-            System.out.println(this.currentLevel);
+        } else {
+            this.initMaze();
+            this.currentLevel = 0;
         }
-        System.out.println("Pelaaja siirtyy seuraavaan kenttaan");
+
+        //ilmaisee pelaajalle että maaliin on päästy
         this.soundSystem.playYouWinSound();
         this.nextLevelBox();
-        //this.playYouWinSound();
-        if (currentLevel > 1) {
+        if (currentLevel > 1) {//jotta ihan alussa ei tule ilmoitusta
             System.out.println(this.currentLevel);
             this.playerWon();
         }
     }
 
     private void playerWon() {
-        System.out.println("Pelaaja voittaa pelin!");
-        //nifty.fromXml("Interface/screen.xml", "win");
-        //guiViewPort.addProcessor(niftyDisplay);
         this.respawn();
         playerControl.setEnabled(false);
         timerOn = false;
@@ -778,49 +775,42 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     }
 
     public void updateHUD(boolean showqe) {
-        //if (!guiViewPort.getProcessors().contains(niftyDisplay)) {
-
-            //this.updateRotationGfx();
-            if (timerOn) {
-                float currentTime = timer.getTimeInSeconds() - this.startTime;
-                int currentMinutes = (int) currentTime / 60;
-                DecimalFormat df = new DecimalFormat("00.0");
-                DecimalFormat hf = new DecimalFormat("00");
-                timeText.setText(hf.format(currentMinutes) + ":" + df.format(currentTime % 60));
-            }
-            Vector3f plrViewVec = playerControl.getViewDirection();
-            String debugText = String.format("Player up axis: %s\n" +
-                    "Player look vector: (%.1f, %.1f, %.1f)\n " +
-                    "Look vector: %s\n" +
-                    "Gravity: %.2f",
-                    UpAxisDir.string(playerControl.getUpAxis()),
-                    plrViewVec.x, plrViewVec.y, plrViewVec.z,
-                    this.lookDirection().toString(),
-                    this.playerControl.getGravity());
-            ((BitmapText) guiNode.getChild("DEBUG_TEXT")).setText(debugText);
-            if (showqe) {
+        if (timerOn) {
+            float currentTime = timer.getTimeInSeconds() - this.startTime;
+            int currentMinutes = (int) currentTime / 60;
+            DecimalFormat df = new DecimalFormat("00.0");
+            DecimalFormat hf = new DecimalFormat("00");
+            timeText.setText(hf.format(currentMinutes) + ":" + df.format(currentTime % 60));
+        }
+        Vector3f plrViewVec = playerControl.getViewDirection();
+        String debugText = String.format("Player up axis: %s\n"
+                + "Player look vector: (%.1f, %.1f, %.1f)\n "
+                + "Look vector: %s\n"
+                + "Gravity: %.2f",
+                UpAxisDir.string(playerControl.getUpAxis()),
+                plrViewVec.x, plrViewVec.y, plrViewVec.z,
+                this.lookDirection().toString(),
+                this.playerControl.getGravity());
+        ((BitmapText) guiNode.getChild("DEBUG_TEXT")).setText(debugText);
+        if (showqe) {
+            keyPicture.removeFromParent();
+            keyPicture = new Picture("QA-picture");
+            keyPicture.setImage(assetManager, "Textures/keys.png", true);
+            keyPicture.setHeight(80f);
+            keyPicture.setWidth(152f);
+            keyPicture.setPosition(settings.getWidth() / 2 - 76f, settings.getHeight() - 80f);
+            guiNode.attachChild(keyPicture);
+        } else {
+            if (keyPicture != null) {
                 keyPicture.removeFromParent();
-                keyPicture = new Picture("QA-picture");
-                keyPicture.setImage(assetManager, "Textures/keys.png", true);
-                keyPicture.setHeight(80f);
-                keyPicture.setWidth(152f);
-                keyPicture.setPosition(settings.getWidth() / 2 - 76f, settings.getHeight() - 80f);
-                guiNode.attachChild(keyPicture);
-            } else {
-                if (keyPicture != null) {
-                    keyPicture.removeFromParent();
-                }
-                keyPicture = new Picture("QA-picture");
-                keyPicture.setImage(assetManager, "Textures/allkeys.png", true);
-                keyPicture.setHeight(150f);
-                keyPicture.setWidth(150f);
-                keyPicture.setPosition(settings.getWidth() / 2 - 75f, settings.getHeight() - 150f);
-                guiNode.attachChild(keyPicture);
             }
-       // }
-    }
+            keyPicture = new Picture("QA-picture");
+            keyPicture.setImage(assetManager, "Textures/allkeys.png", true);
+            keyPicture.setHeight(150f);
+            keyPicture.setWidth(150f);
+            keyPicture.setPosition(settings.getWidth() / 2 - 75f, settings.getHeight() - 150f);
+            guiNode.attachChild(keyPicture);
+        }
 
-    public void updateSounds() {
-        //TODO, jos pelaaja tipahtaa
     }
 }
