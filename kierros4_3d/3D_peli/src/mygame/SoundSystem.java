@@ -23,7 +23,7 @@ public class SoundSystem {
         music.setPositional(false);
         music.setDirectional(false);
         music.setLooping(true);
-        music.setVolume(0.1f);
+        music.setVolume(0.5f);
         music.play();
         collisionSound = new AudioNode(assetManager, "Sound/collision.wav", false);
         collisionSound.setPositional(false);
