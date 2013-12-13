@@ -66,7 +66,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private BulletAppState bulletAppState;
     //näppäimille
     private boolean left = false, right = false, up = false, down = false, keyE = false;
-    private CharacterControl playerControl;
+    private PlayerControl playerControl;
     private Node playerNode;
     //Temporary vectors used on each frame.
     //They here to avoid instanciating new vectors on each frame
@@ -96,7 +96,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private CameraRotator cameraRotator;
     private boolean isCameraRotateToggled = false;
     private FilterPostProcessor filterPostProcessor;
-    private Vector3f playerStartPosition;
+    private Vector3f playerStartPosition;// = new Vector3f(50, 100, -50);
     private Material helpMat;
     private Geometry helpGeo;
 
@@ -125,9 +125,10 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.currentLevel = 0;
         this.isQEPressed = false;
         this.initPhysics();
+        playerStartPosition = new Vector3f(50, 100, -50);
         this.initMaze();
         this.initSkyBox();
-        this.initPlayer();
+        this.initPlayer(playerStartPosition);
         this.initLights();
         this.initSounds();
         this.initGoal();
@@ -135,7 +136,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.initHUD();
         //this.initRotationGfx();
         this.initKeys();
-        this.initPPFilters();
+        //this.initPPFilters();
         setDisplayFps(false);       // to hide the FPS
         setDisplayStatView(false);  // to hide the statistics 
         this.initHelpBox();
@@ -185,6 +186,15 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     }
     
     private void initMaze() {
+        //poistaa edellisen labyrintin
+        if(sceneModel != null){
+            rootNode.detachChild(sceneModel);
+        }
+        if(landscape != null){
+            bulletAppState.getPhysicsSpace().remove(landscape);
+        }
+        
+        playerStartPosition = new Vector3f(50, 100, -50);
         sceneModel = assetManager.loadModel("Models/boksi/boksi.j3o");//perustaso @author: Vesa Laakso
         sceneModel.setLocalScale(100f); // Mallit on 10mm luokassa kun maailma on 1m luokassa.
         CollisionShape sceneShape = CollisionShapeFactory.createMeshShape((Node) sceneModel);
@@ -195,6 +205,15 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     }
     
     private void initMaze2(){
+        //poistaa edellisen labyrintin
+        if(sceneModel != null){
+            rootNode.detachChild(sceneModel);
+        }
+        if(landscape != null){
+            bulletAppState.getPhysicsSpace().remove(landscape);
+        }
+        
+        playerStartPosition = new Vector3f(55, 95, -50);
         sceneModel = assetManager.loadModel("Models/taso1.j3o");//musta taso @author: Aarne Leinonen
         sceneModel.setLocalScale(0.100f); // Mallit on 10mm luokassa kun maailma on 1m luokassa.
         CollisionShape sceneShape = CollisionShapeFactory.createMeshShape((Node) sceneModel);
@@ -202,6 +221,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         sceneModel.addControl(landscape);
         rootNode.attachChild(sceneModel);
         bulletAppState.getPhysicsSpace().add(landscape);
+        
     }
 
     private void initSkyBox() {
@@ -216,12 +236,12 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         rootNode.attachChild(skybox);
     }
 
-    private void initPlayer() {
+    private void initPlayer(Vector3f playerStartVectorForLevel) {
         //pelaajan rankamalli
         CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 6f, 1);
-        playerControl = new CharacterControl(capsuleShape, 0.05f);
+        playerControl = new PlayerControl(capsuleShape, 0.05f);
         //pelaajan alkusijainnin määrittävä vektori
-        playerStartPosition = new Vector3f(50, 100, -50);
+        playerStartPosition = playerStartVectorForLevel;//new Vector3f(50, 100, -50);
         //pelaajaan vaikuttavat voimat
         flyCam.setMoveSpeed(PLAYERSPEED);
         playerControl.setJumpSpeed(JUMPSPEED);
@@ -525,7 +545,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         rootNode.removeControl(playerControl);
         rootNode.detachChild(playerNode);
         this.timerOn = true;
-        this.initPlayer();
+        this.initPlayer(playerStartPosition);
         resetCamera();
         this.helpBox();
     }
