@@ -161,6 +161,12 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         helpMat.setTexture("ColorMap", winTex);
         helpGeo.setMaterial(helpMat);
     }
+    
+    private void loseBox() {
+        Texture loseText = assetManager.loadTexture("Interface/deadscreen.png");
+        helpMat.setTexture("ColorMap", loseText);
+        helpGeo.setMaterial(helpMat);
+    }
 
     private void initPhysics() {
         bulletAppState = new BulletAppState();
@@ -724,12 +730,17 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             System.out.println("Pelaaja paasee maaliin!");
             this.nextLevel();
         } else if (objectName.equals(GROUND)) {
-            this.soundSystem.playCollisionSound();
+            this.playerLost();
+        }
+    }
+    
+    private void playerLost() {
+        this.soundSystem.playCollisionSound();
+            this.loseBox();
             this.respawn();
             //nifty.fromXml("Interface/screen.xml", "lose");
             //guiViewPort.addProcessor(niftyDisplay);
             timerOn = false;
-        }
     }
 
     private void nextLevel() {
