@@ -3,11 +3,9 @@ package mygame;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
 import com.jme3.app.SimpleApplication;
-import com.jme3.audio.AudioNode;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
-import com.jme3.bullet.control.CharacterControl;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.font.BitmapText;
@@ -27,32 +25,22 @@ import com.jme3.util.SkyFactory;
 import java.text.DecimalFormat;
 import com.jme3.bullet.collision.PhysicsCollisionEvent;
 import com.jme3.bullet.collision.PhysicsCollisionListener;
-import com.jme3.effect.ParticleEmitter;
-import com.jme3.effect.ParticleMesh;
-import com.jme3.niftygui.NiftyJmeDisplay;
-import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.elements.Element;
-import de.lessvoid.nifty.elements.render.TextRenderer;
-import de.lessvoid.nifty.screen.Screen;
-import de.lessvoid.nifty.screen.ScreenController;
 import com.jme3.math.Quaternion;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.BloomFilter;
 import com.jme3.post.filters.CartoonEdgeFilter;
-import com.jme3.post.filters.DepthOfFieldFilter;
 import com.jme3.post.ssao.SSAOFilter;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.shape.Box;
 import com.jme3.ui.Picture;
 
 /**
- * Pohjana on käytetty "collisionTest" valmista testiluokkaa, jonka
- * author:normenhansen
- * http://hub.jmonkeyengine.org/wiki/doku.php/jme3:beginner:hello_collision
- * Käytetyt materiaalit: Taso(t) olemme itse luoneet sketchUpilla, skyboxia on
- * vähän muokattu, lähde author:Hipshot
+ * Gravity Unchained by Django Unchained
+ * 
+ * Käytetyt materiaalit: Tasot olemme itse luoneet sketchUpilla, skyboxia on
+ * vähän muokattu, lähde author:Hipshot, äänet ovat omiamme. 
  *
- * Peliin on otettu vaikutteita Portalista, AntiChamberista, Alan Wakesta,
+ * Peliin on otettu vaikutteita mm. Portalista, AntiChamberista, Alan Wakesta,
  * ilomilosta. Pelimekaniikkaan kuuluu painovoiman muuttaminen pelaajan
  * toimesta.
  *
@@ -91,8 +79,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private Node goalNode;
     private Node groundNode;
     private int currentLevel;
-   // public Nifty nifty;
-    //private NiftyJmeDisplay niftyDisplay;
     private CameraRotator cameraRotator;
     private boolean isCameraRotateToggled = false;
     private FilterPostProcessor filterPostProcessor;
@@ -115,11 +101,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     public void simpleInitApp() {
         // We re-use the flyby camera for rotation, while positioning is handled by physics
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
-        //this.niftyDisplay = new NiftyJmeDisplay(
-         //       assetManager, inputManager, audioRenderer, guiViewPort);
-        //nifty = niftyDisplay.getNifty();
-        //nifty.fromXml("Interface/screen.xml", "startscreen");
-        //guiViewPort.addProcessor(niftyDisplay);
         this.cameraRotator = new CameraRotator(this.cam);
         //alustukset taustalla
         this.currentLevel = 0;
@@ -134,7 +115,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.initGoal();
         this.initGround();
         this.initHUD();
-        //this.initRotationGfx();
+        //this.initRotationGfx(); temminokanalla debugaukseen
         this.initKeys();
         this.initPPFilters();
         setDisplayFps(false);       // to hide the FPS
@@ -181,7 +162,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private void initPhysics() {
         bulletAppState = new BulletAppState();
         stateManager.attach(bulletAppState);
-        //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
+        //bulletAppState.getPhysicsSpace().enableDebug(assetManager); //debugi joka näyttää kappaleiden rautalankamallit
         bulletAppState.getPhysicsSpace().addCollisionListener(this);
     }
     
@@ -419,7 +400,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         filterPostProcessor = new FilterPostProcessor(assetManager);
         viewPort.addProcessor(filterPostProcessor); // add one FilterPostProcessor to viewPort
         
-        //reunaviivat
+        //reunaviivat (cell shadingista pelkät viivat)
         CartoonEdgeFilter toon = new CartoonEdgeFilter();
         toon.setEdgeColor(ColorRGBA.Black);
         toon.setEdgeWidth(1f);
@@ -427,20 +408,20 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         toon.setNormalThreshold(0.8f);
         filterPostProcessor.addFilter(toon);
 
-        //valoefekti
+        //valoefekti (koko näytön kirkastuminen kun vahva valonlähde)
         BloomFilter bloom = new BloomFilter();
         bloom.setDownSamplingFactor(2);
         bloom.setBlurScale(1.37f);
-        bloom.setExposurePower(2.10f);//HUOM ENNEN KUN NÄITÄ ARVOJA SÄÄTÄÄ LOPULLISIIN NIIN TÄYTYY KATTOA TEKSTUURIT KARTTAAN
+        bloom.setExposurePower(2.10f);
         bloom.setExposureCutOff(0.2f);
         bloom.setBloomIntensity(0.5f);
-        //BloomUI ui=new BloomUI(inputManager, bloom);
         filterPostProcessor.addFilter(bloom);      
         
         //synkeät jälkivarjot
-        SSAOFilter ssaoFilter = new SSAOFilter(10.955201f,5.928635f, 0.2f, 0.6059958f);//0.49997783f, 42.598858f, 35.999966f, 0.39299846f);//12.940201f, 43.928635f, 0.32999992f, 0.6059958f);
+        SSAOFilter ssaoFilter = new SSAOFilter(10.955201f,5.928635f, 0.2f, 0.6059958f);
         filterPostProcessor.addFilter(ssaoFilter);
-        /*
+        
+        /*Pois koska on liian raskas
         //sumennus kaukana, oikeasti tätä käytettäisiin niin että setFocusFistancea muutettaisiin näkökentän keskiosassa olevan kappaleen etäisyydelle, nyt pelaaja on vain likinäköinen
         DepthOfFieldFilter dofFilter = new DepthOfFieldFilter();
         dofFilter.setFocusDistance(0);
@@ -450,32 +431,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         viewPort.addProcessor(filterPostProcessor);*/
     }
     
-    /**
-     * Tällä saa jollain parametreillä cartoon meininkiä
-     * http://code.google.com/p/jmonkeyengine/source/browse/trunk/engine/src/test/jme3test/post/TestCartoonEdge.java
-     */
-    public void makeToonish(Spatial spatial){
-        if (spatial instanceof Node){
-            Node n = (Node) spatial;
-            for (Spatial child : n.getChildren())
-                makeToonish(child);
-        }else if (spatial instanceof Geometry){
-            Geometry g = (Geometry) spatial;
-            Material m = g.getMaterial();
-            if (//m != null){
-                    m.getMaterialDef().getName().equals("Phong Lighting")){
-                //ainakin tätä materiaalia täytyy vaihtaa
-                Texture t = assetManager.loadTexture("Textures/skybox/north.png");
-//                t.setMinFilter(Texture.MinFilter.NearestNoMipMaps);
-//                t.setMagFilter(Texture.MagFilter.Nearest);
-                m.setTexture("ColorRamp", t);
-                m.setBoolean("UseMaterialColors", true);
-                m.setColor("Specular", ColorRGBA.Black);
-                m.setColor("Diffuse", ColorRGBA.White);
-                m.setBoolean("VertexLighting", true);
-            }
-        }
-    }
     
     //
     // -------------------------------------------------------------------------
@@ -495,7 +450,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
 
     @Override
     public void simpleRender(RenderManager rm) {
-        //TODO: add render code
+        //
     }
 
     private void controlPlayerForces() {
@@ -593,9 +548,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
        // }
         if (binding.equals("Respawn")) {
             this.respawn();
-            /*if (guiViewPort.getProcessors().contains(niftyDisplay)) {
-                guiViewPort.removeProcessor(niftyDisplay);
-            }*/
         }
     }
 
@@ -737,9 +689,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             newUpVector.x = isZero(newUpVector.x) ? 0 : -1;
             newUpVector.y = isZero(newUpVector.y) ? 0 : -1;
             newUpVector.z = isZero(newUpVector.z) ? 0 : -1;
-            System.out.println("Painovoima flipattu!");
+            //System.out.println("Painovoima flipattu!");
         }
-        System.out.println("Kameran akseli kääntyy! " + newUpVector.toString());
+        //System.out.println("Kameran akseli kääntyy! " + newUpVector.toString());
         flyCam.setUpVector(newUpVector);
     }
 
@@ -774,8 +726,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
 
     private void handlePlayerCollision(String objectName, PhysicsCollisionEvent event) {
         if (objectName.equals(GOAL)) {
-            //Pelaaja voittaa pelin
-            System.out.println("Pelaaja paasee maaliin!");
+            //Pelaaja pääsee maaliin
+            //System.out.println("Pelaaja paasee maaliin!");
             this.nextLevel();
         } else if (objectName.equals(GROUND)) {
             this.playerLost();
