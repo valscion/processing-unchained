@@ -385,9 +385,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         BloomFilter bloom = new BloomFilter();
         bloom.setDownSamplingFactor(2);
         bloom.setBlurScale(1.37f);
-        bloom.setExposurePower(3.10f);//HUOM ENNEN KUN NÄITÄ ARVOJA SÄÄTÄÄ LOPULLISIIN NIIN TÄYTYY KATTOA TEKSTUURIT KARTTAAN
+        bloom.setExposurePower(2.10f);//HUOM ENNEN KUN NÄITÄ ARVOJA SÄÄTÄÄ LOPULLISIIN NIIN TÄYTYY KATTOA TEKSTUURIT KARTTAAN
         bloom.setExposureCutOff(0.2f);
-        bloom.setBloomIntensity(1.5f);
+        bloom.setBloomIntensity(0.5f);
         //BloomUI ui=new BloomUI(inputManager, bloom);
         filterPostProcessor.addFilter(bloom);      
         
