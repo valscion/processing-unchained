@@ -73,9 +73,9 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private static final String GOAL = "maali";
     private static final String GROUND = "maa";
     private static final float PLAYERSPEED = 5.0f;
-    private static final float GRAVITY = 20.0f;
+    private static final float GRAVITY = 1.0f;
     private static final float PLAYERMASS = 1.0f;
-    private static final float JUMPSPEED = GRAVITY * 0.5f;
+    private static final float JUMPSPEED = 10.0f;
     private Node goalNode;
     private Node groundNode;
     private CameraRotator cameraRotator;
@@ -164,6 +164,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         //debugi joka näyttää kappaleiden rautalankamallit
         //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
         bulletAppState.getPhysicsSpace().addCollisionListener(this);
+        bulletAppState.getPhysicsSpace().setGravity(Vector3f.UNIT_Y.mult(GRAVITY));
     }
 
     private void initMaze() {
@@ -219,14 +220,14 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
 
     private void initPlayer(Vector3f playerStartVectorForLevel) {
         //pelaajan rankamalli
-        CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 6f, 1);
+        CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(0.5f, 2f, 1);
         playerControl = new PlayerControl(capsuleShape, PLAYERMASS);
         //pelaajan alkusijainnin määrittävä vektori
         playerStartPosition = playerStartVectorForLevel;//new Vector3f(50, 100, -50);
         //pelaajaan vaikuttavat voimat
         flyCam.setMoveSpeed(PLAYERSPEED);
         playerControl.setJumpSpeed(JUMPSPEED);
-        playerControl.setFallSpeed(GRAVITY);
+        //playerControl.setFallSpeed(GRAVITY);
         //pelaajan aloitussijainti
         playerControl.setPhysicsLocation(playerStartPosition);
         //pelaaja vielä siihen maaailmaankin...
