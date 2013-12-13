@@ -15,7 +15,6 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.SpotLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -78,7 +77,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private static final float JUMPSPEED = GRAVITY * 0.5f;
     private Node goalNode;
     private Node groundNode;
-    private int currentLevel;
     private CameraRotator cameraRotator;
     private boolean isCameraRotateToggled = false;
     private FilterPostProcessor filterPostProcessor;
@@ -103,7 +101,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
         this.cameraRotator = new CameraRotator(this.cam);
         //alustukset taustalla
-        this.currentLevel = 0;
         this.isQEPressed = false;
         this.initPhysics();
         playerStartPosition = new Vector3f(50, 100, -50);
