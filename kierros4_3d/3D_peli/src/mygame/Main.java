@@ -89,6 +89,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     public Nifty nifty;
     private NiftyJmeDisplay niftyDisplay;
     private CameraRotator cameraRotator;
+    private boolean isCameraRotateToggled = false;
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -166,7 +167,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         //pelaajaan vaikuttavat voimat
         flyCam.setMoveSpeed(PLAYERSPEED);
         playerControl.setJumpSpeed(JUMPSPEED);
-        playerControl.setGravity(GRAVITY);
+        playerControl.setFallSpeed(GRAVITY);
         //pelaajan aloitussijainti
         playerControl.setPhysicsLocation(playerStartPosition);
         //pelaaja vielä siihen maaailmaankin...
@@ -342,12 +343,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     @Override
     public void simpleUpdate(float tpf) {
         cameraRotator.update(tpf);
-        if (cameraRotator.isInterpolationComplete()) {
-            playerControl.setEnabled(true);
-            updatePlayerAndCameraPosition();
-        } else {
-            playerControl.setEnabled(false);
-        }
+        controlPlayerForces();
+        updatePlayerAndCameraPosition();
         flashLight.setPosition(playerControl.getPhysicsLocation());
         flashLight.setDirection(playerControl.getViewDirection());
         this.updateRotationGfx();
@@ -357,6 +354,24 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     @Override
     public void simpleRender(RenderManager rm) {
         //TODO: add render code
+    }
+
+    private void controlPlayerForces() {
+        if (isCameraRotateToggled) {
+            isCameraRotateToggled = false;
+            playerControl.setFallSpeed(0);
+            playerControl.setJumpSpeed(0);
+            flyCam.setEnabled(false);
+            inputManager.setCursorVisible(false);
+            playerControl.getPhysicsSpace().clearForces();
+        }
+        if (cameraRotator.isInterpolationComplete()) {
+            if (!flyCam.isEnabled()) {
+                playerControl.setFallSpeed(GRAVITY);
+                playerControl.setJumpSpeed(JUMPSPEED);
+                flyCam.setEnabled(true);
+            }
+        }
     }
 
     private void updatePlayerAndCameraPosition() {
@@ -443,6 +458,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             this.soundSystem.playRotationSound();
             this.rotatePlayerUpAxis(clockWise);
             this.rotateCamera(clockWise, lookDir);
+            this.isCameraRotateToggled = true;
         }
     }
 
