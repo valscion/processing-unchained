@@ -128,7 +128,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.initGoal();
         this.initGround();
         this.initHUD();
-        this.initRotationGfx();
+        //this.initRotationGfx();
         this.initKeys();
         this.initPPFilters();
         setDisplayFps(false);       // to hide the FPS
@@ -404,7 +404,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         updatePlayerAndCameraPosition();
         flashLight.setPosition(playerControl.getPhysicsLocation());
         flashLight.setDirection(playerControl.getViewDirection());
-        this.updateRotationGfx();
+        //this.updateRotationGfx();
         this.updateHUD(isQEPressed);
     }
 
@@ -724,7 +724,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     public void updateHUD(boolean showqe) {
         if (!guiViewPort.getProcessors().contains(niftyDisplay)) {
 
-            this.updateRotationGfx();
+            //this.updateRotationGfx();
             if (timerOn) {
                 float currentTime = timer.getTimeInSeconds() - this.startTime;
                 int currentMinutes = (int) currentTime / 60;
