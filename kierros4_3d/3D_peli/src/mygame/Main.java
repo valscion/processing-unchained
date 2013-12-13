@@ -136,7 +136,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.initHUD();
         //this.initRotationGfx();
         this.initKeys();
-        //this.initPPFilters();
+        this.initPPFilters();
         setDisplayFps(false);       // to hide the FPS
         setDisplayStatView(false);  // to hide the statistics 
         this.initHelpBox();
