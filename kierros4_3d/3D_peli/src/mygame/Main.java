@@ -97,6 +97,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private boolean isCameraRotateToggled = false;
     private FilterPostProcessor filterPostProcessor;
     private Vector3f playerStartPosition;
+    private Material helpMat;
+    private Geometry helpGeo;
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -141,16 +143,23 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     
     private void initHelpBox() {
         Box help = new Box(4,3,4);
-        Geometry helpGeo = new Geometry("ohjelaatikko", help);
+        helpGeo = new Geometry("ohjelaatikko", help);
         helpGeo.setLocalTranslation(playerStartPosition.add(12, -5, 0));
         cam.lookAt(helpGeo.getLocalTranslation(), cam.getUp());
-        Material helpMat = new Material(assetManager, 
+        helpMat = new Material(assetManager, 
         "Common/MatDefs/Misc/Unshaded.j3md");
         Texture helpTex = assetManager.loadTexture(
         "Interface/start.png");
         helpMat.setTexture("ColorMap", helpTex);
         helpGeo.setMaterial(helpMat);
         rootNode.attachChild(helpGeo);
+    }
+    
+    private void winBox() {
+        Texture winTex = assetManager.loadTexture(
+        "Interface/winscreen.png");
+        helpMat.setTexture("ColorMap", winTex);
+        helpGeo.setMaterial(helpMat);
     }
 
     private void initPhysics() {
@@ -740,8 +749,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.respawn();
         playerControl.setEnabled(false);
         timerOn = false;
-        //soittaa musiikkia tai jotain
-        //this.stop();
+        this.winBox();
     }
 
     public void updateRotationGfx() {
