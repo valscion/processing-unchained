@@ -469,7 +469,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         Vector3f lookDir = this.lookDirection();
         int currentUp = playerControl.getUpAxis();
         int newUp = currentUp;
-        boolean isGravityFlipped = playerControl.getGravity() < 0;
         boolean flipGravity = false;
         float eps = 0.0001f;
 
