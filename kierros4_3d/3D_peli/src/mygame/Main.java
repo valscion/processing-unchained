@@ -352,8 +352,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         CartoonEdgeFilter toon = new CartoonEdgeFilter();
         toon.setEdgeColor(ColorRGBA.Black);
         toon.setEdgeWidth(1f);
-        toon.setEdgeIntensity(1.0f);
-        toon.setNormalThreshold(0.3f);
+        toon.setEdgeIntensity(1.1f);
+        toon.setNormalThreshold(0.8f);
         filterPostProcessor.addFilter(toon);
 
         //valoefekti
@@ -362,14 +362,14 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         bloom.setBlurScale(1.37f);
         bloom.setExposurePower(3.10f);//HUOM ENNEN KUN NÄITÄ ARVOJA SÄÄTÄÄ LOPULLISIIN NIIN TÄYTYY KATTOA TEKSTUURIT KARTTAAN
         bloom.setExposureCutOff(0.2f);
-        bloom.setBloomIntensity(2.25f);
+        bloom.setBloomIntensity(1.5f);
         //BloomUI ui=new BloomUI(inputManager, bloom);
         filterPostProcessor.addFilter(bloom);      
         
         //synkeät jälkivarjot
-       /* SSAOFilter ssaoFilter = new SSAOFilter(10.955201f,43.928635f, 0.62999992f, 0.6059958f);//0.49997783f, 42.598858f, 35.999966f, 0.39299846f);//12.940201f, 43.928635f, 0.32999992f, 0.6059958f);
+        SSAOFilter ssaoFilter = new SSAOFilter(10.955201f,5.928635f, 0.2f, 0.6059958f);//0.49997783f, 42.598858f, 35.999966f, 0.39299846f);//12.940201f, 43.928635f, 0.32999992f, 0.6059958f);
         filterPostProcessor.addFilter(ssaoFilter);
-        
+        /*
         //sumennus kaukana, oikeasti tätä käytettäisiin niin että setFocusFistancea muutettaisiin näkökentän keskiosassa olevan kappaleen etäisyydelle, nyt pelaaja on vain likinäköinen
         DepthOfFieldFilter dofFilter = new DepthOfFieldFilter();
         dofFilter.setFocusDistance(0);
