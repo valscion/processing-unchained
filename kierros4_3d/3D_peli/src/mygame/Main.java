@@ -170,6 +170,12 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         helpMat.setTexture("ColorMap", loseText);
         helpGeo.setMaterial(helpMat);
     }
+    
+      private void nextLevelBox() {
+        Texture nextText = assetManager.loadTexture("Interface/nextlevel.png");
+        helpMat.setTexture("ColorMap", nextText);
+        helpGeo.setMaterial(helpMat);
+    }
 
     private void initPhysics() {
         bulletAppState = new BulletAppState();
@@ -764,11 +770,12 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         //guiViewPort.addProcessor(niftyDisplay);
         timerOn = false;
     }
-
+    
     private void nextLevel() {
         this.currentLevel++;
         if(currentLevel == 1){
-            initMaze2();
+            this.nextLevelBox();
+            this.initMaze2();
         }
         System.out.println("Pelaaja siirtyy seuraavaan kenttaan");
         this.soundSystem.playYouWinSound();
