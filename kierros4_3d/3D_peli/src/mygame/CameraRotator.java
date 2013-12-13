@@ -53,6 +53,15 @@ public class CameraRotator {
         this.rotateTo(target);
     }
 
+    public void reset() {
+        Vector3f startUp = Vector3f.UNIT_Y;
+        Quaternion target = new Quaternion();
+        target.lookAt(Vector3f.UNIT_Z.mult(-1f), startUp);
+        this.targetRotation.set(target);
+        this.isTargetChanged = false;
+        this.cam.setRotation(target);
+    }
+
     /**
      * Hae katsomissuunta siten, että se on nykyisen pinnan mukainen ja tasan
      * jonkun tietyn akselin suuntainen (eli aina 90 asteen pätkissä).

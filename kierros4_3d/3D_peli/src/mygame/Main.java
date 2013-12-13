@@ -520,7 +520,14 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         rootNode.detachChild(playerNode);
         this.timerOn = true;
         this.initPlayer();
+        resetCamera();
         this.helpBox();
+    }
+
+    private void resetCamera() {
+        this.playerControl.setUpAxis(UpAxisDir.Y);
+        flyCam.setUpVector(Vector3f.UNIT_Y);
+        cameraRotator.reset();
     }
 
     /**
