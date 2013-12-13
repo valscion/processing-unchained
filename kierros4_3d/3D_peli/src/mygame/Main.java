@@ -74,6 +74,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private static final String GROUND = "maa";
     private static final float PLAYERSPEED = 5.0f;
     private static final float GRAVITY = 20.0f;
+    private static final float PLAYERMASS = 1.0f;
     private static final float JUMPSPEED = GRAVITY * 0.5f;
     private Node goalNode;
     private Node groundNode;
@@ -219,7 +220,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private void initPlayer(Vector3f playerStartVectorForLevel) {
         //pelaajan rankamalli
         CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 6f, 1);
-        playerControl = new PlayerControl(capsuleShape, 0.05f);
+        playerControl = new PlayerControl(capsuleShape, PLAYERMASS);
         //pelaajan alkusijainnin määrittävä vektori
         playerStartPosition = playerStartVectorForLevel;//new Vector3f(50, 100, -50);
         //pelaajaan vaikuttavat voimat
