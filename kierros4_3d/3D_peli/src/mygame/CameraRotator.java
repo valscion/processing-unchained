@@ -122,7 +122,7 @@ public class CameraRotator {
             return true;
         }
         float diffs = quatDiff(cam.getRotation(), targetRotation);
-        if (diffs < 0.0001f) {
+        if (diffs < 0.01f) {
             System.out.println("Interpolation complete!");
             return true;
         } else {
@@ -141,7 +141,12 @@ public class CameraRotator {
     private void interpolateRotation(float tpf) {
         Quaternion currentRot = cam.getRotation();
         Quaternion newRot = currentRot.clone();
-        newRot.slerp(targetRotation, tpf * 5);
+        float diff = quatDiff(currentRot, targetRotation);
+        float interpAmount = tpf * 5;
+        if (diff > 0.01f && diff < 1.0f) {
+            interpAmount *= ((1 - diff) * FastMath.PI);
+        }
+        newRot.slerp(targetRotation, interpAmount);
         cam.setRotation(newRot);
     }
 
