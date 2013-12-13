@@ -145,7 +145,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         Box help = new Box(4,3,4);
         helpGeo = new Geometry("ohjelaatikko", help);
         helpGeo.setLocalTranslation(playerStartPosition.add(12, -5, 0));
-        cam.lookAt(helpGeo.getLocalTranslation(), cam.getUp());
         helpMat = new Material(assetManager, 
         "Common/MatDefs/Misc/Unshaded.j3md");
         this.helpBox();
