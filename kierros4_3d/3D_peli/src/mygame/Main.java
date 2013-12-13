@@ -739,7 +739,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             //Pelaaja pääsee maaliin
             //System.out.println("Pelaaja paasee maaliin!");
             this.bulletAppState.setEnabled(false);
-            this.respawn();
+            this.playerWon();
             this.nextLevel();
         } else if (objectName.equals(GROUND)) {
             this.playerLost();
@@ -756,8 +756,6 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private boolean secondLevelIsNext = true;
     private void nextLevel() {
         
-        
-
         if(secondLevelIsNext){
             this.nextLevelBox();
             this.initMaze2();
@@ -768,8 +766,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             this.initMaze();
             secondLevelIsNext = true;
         }
-        this.playerWon();
-        System.out.println(secondLevelIsNext);
+        //this.playerWon(); ei kuulu tulla täällä
+        //System.out.println(secondLevelIsNext);
 
     }
 
