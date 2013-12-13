@@ -80,13 +80,16 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private static final String PLAYER = "pelaaja";
     private static final String GOAL = "maali";
     private static final String GROUND = "maa";
-    private static final int PLAYERSPEED = 30;
+    private static final float PLAYERSPEED = 5.0f;
+    private static final float GRAVITY = 20.0f;
+    private static final float JUMPSPEED = GRAVITY * 0.5f;
     private Node goalNode;
     private Node groundNode;
     private int currentLevel;
     public Nifty nifty;
     private NiftyJmeDisplay niftyDisplay;
     private CameraRotator cameraRotator;
+    private boolean isCameraRotateToggled = false;
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -163,9 +166,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         Vector3f playerStartPosition = new Vector3f(50, 100, -50);
         //pelaajaan vaikuttavat voimat
         flyCam.setMoveSpeed(PLAYERSPEED);
-        playerControl.setJumpSpeed(PLAYERSPEED / 2);
-        playerControl.setFallSpeed(PLAYERSPEED * 2);
-        playerControl.setGravity(PLAYERSPEED);
+        playerControl.setJumpSpeed(JUMPSPEED);
+        playerControl.setFallSpeed(GRAVITY);
         //pelaajan aloitussijainti
         playerControl.setPhysicsLocation(playerStartPosition);
         //pelaaja vielä siihen maaailmaankin...
@@ -209,7 +211,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         RigidBodyControl goalControl = new RigidBodyControl(goalShape, 0);
         goalNode.addControl(goalControl);
         bulletAppState.getPhysicsSpace().add(goalControl);
-        Vector3f goalPosition = new Vector3f(40, 90, -40);
+        Vector3f goalPosition = new Vector3f(76, 2, -24);
         goalControl.setPhysicsLocation(goalPosition);
         goalNode.attachChild(goalSpatial);
         rootNode.attachChild(goalNode);
@@ -291,7 +293,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         hudText.setName("DEBUG_TEXT");
         hudText.setSize(guiFont.getCharSet().getRenderedSize());
         hudText.setColor(ColorRGBA.Black);
-        hudText.setLocalTranslation(300, hudText.getLineHeight() * 3, 0);
+        hudText.setLocalTranslation(300, hudText.getLineHeight() * 4, 0);
         guiNode.attachChild(hudText);
     }
 
@@ -323,12 +325,14 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         inputManager.addListener(this, "Up");
         inputManager.addListener(this, "Down");
         inputManager.addListener(this, "Jump");
-        inputManager.addMapping("RotateWorldPositive", new KeyTrigger(KeyInput.KEY_E));
-        inputManager.addListener(this, "RotateWorldPositive");
-        inputManager.addMapping("RotateWorldNegative", new KeyTrigger(KeyInput.KEY_Q));
-        inputManager.addListener(this, "RotateWorldNegative");
+        inputManager.addMapping("RotateWorldCW", new KeyTrigger(KeyInput.KEY_E));
+        inputManager.addListener(this, "RotateWorldCW");
+        inputManager.addMapping("RotateWorldCCW", new KeyTrigger(KeyInput.KEY_Q));
+        inputManager.addListener(this, "RotateWorldCCW");
         inputManager.addMapping("Respawn", new KeyTrigger(KeyInput.KEY_R));
         inputManager.addListener(this, "Respawn");
+        inputManager.addMapping("CameraDebug", new KeyTrigger(KeyInput.KEY_0));
+        inputManager.addListener(this, "CameraDebug");
     }
 
     //
@@ -339,12 +343,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     @Override
     public void simpleUpdate(float tpf) {
         cameraRotator.update(tpf);
-        if (cameraRotator.isInterpolationComplete()) {
-            playerControl.setEnabled(true);
-            updatePlayerAndCameraPosition();
-        } else {
-            playerControl.setEnabled(false);
-        }
+        controlPlayerForces();
+        updatePlayerAndCameraPosition();
         flashLight.setPosition(playerControl.getPhysicsLocation());
         flashLight.setDirection(playerControl.getViewDirection());
         this.updateRotationGfx();
@@ -354,6 +354,24 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     @Override
     public void simpleRender(RenderManager rm) {
         //TODO: add render code
+    }
+
+    private void controlPlayerForces() {
+        if (isCameraRotateToggled) {
+            isCameraRotateToggled = false;
+            playerControl.setFallSpeed(0);
+            playerControl.setJumpSpeed(0);
+            flyCam.setEnabled(false);
+            inputManager.setCursorVisible(false);
+            playerControl.getPhysicsSpace().clearForces();
+        }
+        if (cameraRotator.isInterpolationComplete()) {
+            if (!flyCam.isEnabled()) {
+                playerControl.setFallSpeed(GRAVITY);
+                playerControl.setJumpSpeed(JUMPSPEED);
+                flyCam.setEnabled(true);
+            }
+        }
     }
 
     private void updatePlayerAndCameraPosition() {
@@ -406,11 +424,20 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
                 if (isPressed) {
                     playerControl.jump();
                 }
-            } else if (binding.equals("RotateWorldPositive") || binding.equals("RotateWorldNegative")) {
+            } else if (binding.equals("RotateWorldCW") || binding.equals("RotateWorldCCW")) {
                 if (!isPressed) {
-                    this.rotateWorld();
+                    boolean clockWise = binding.equals("RotateWorldCW");
+                    this.rotateWorld(clockWise);
                     this.isQEPressed = true;
                     this.updateHUD(isQEPressed);
+                }
+            } else if (binding.equals("CameraDebug")) {
+                if (!isPressed) {
+                    Quaternion target = new Quaternion();
+                    target.lookAt(Vector3f.UNIT_Y, Vector3f.UNIT_Y);
+                    //target = target.fromAngleNormalAxis(FastMath.TWO_PI, Vector3f.UNIT_X.normalize());
+                    //Quaternion target = cam.getRotation().opposite();
+                    this.cameraRotator.rotateTo(target);
                 }
             }
         }
@@ -425,39 +452,134 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     /**
      * Pyöräyttää maailmaa
      */
-    private void rotateWorld() {
+    private void rotateWorld(boolean clockWise) {
         if (this.cameraRotator.isInterpolationComplete()) {
+            Vector3f lookDir = this.lookDirection();
             this.soundSystem.playRotationSound();
-            this.rotatePlayerUpAxis();
-            this.rotateCamera();
+            this.rotatePlayerUpAxis(clockWise);
+            this.rotateCamera(clockWise, lookDir);
+            this.isCameraRotateToggled = true;
         }
     }
 
     /*
      * Pyöräyttää pelaajan ylöspäin suuntautuvaa akselia, vaihtaen sen suuntaa
      */
-    private void rotatePlayerUpAxis() {
-        // Rotate the player up axis on Z-Y axis
+    private void rotatePlayerUpAxis(boolean clockWise) {
+        Vector3f lookDir = this.lookDirection();
         int currentUp = playerControl.getUpAxis();
         int newUp = currentUp;
+        boolean flipGravity = false;
+        float eps = 0.0001f;
 
         if (currentUp == UpAxisDir.Y) {
-            newUp = UpAxisDir.X;
-            playerControl.setGravity(-playerControl.getGravity());
-        } else if (currentUp == UpAxisDir.X) {
-            newUp = UpAxisDir.Y;
-        } else {
-            throw new RuntimeException("Incorrect up axis, can't rotate!");
+            if (!isZero(lookDir.z)) {
+                newUp = UpAxisDir.X;
+                if (lookDir.z < -eps) { // Z+ points to us
+                    if (!clockWise) {
+                        flipGravity = true;
+                    }
+                }
+                else { // Z- points to us
+                    if (clockWise) {
+                        flipGravity = true;
+                    }
+                }
+            }
+            else if (!isZero(lookDir.x)) {
+                newUp = UpAxisDir.Z;
+                if (lookDir.x < -eps) { // X+ points to us
+                    if (clockWise) {
+                        flipGravity = true;
+                    }
+                }
+                else { // X- points to us
+                    if (!clockWise) {
+                        flipGravity = true;
+                    }
+                }
+            }
+            else {
+                throw new RuntimeException("Dude, check your axis and up direction!");
+            }
+        }
+        else if (currentUp == UpAxisDir.X) {
+            if (!isZero(lookDir.y)) {
+                newUp = UpAxisDir.Z;
+                if (lookDir.y < -eps) { // Y+ points to us
+                    if (!clockWise) {
+                        flipGravity = true;
+                    }
+                }
+                else { // Y- points to us
+                    if (clockWise) {
+                        flipGravity = true;
+                    }
+                }
+            }
+            else if (!isZero(lookDir.z)) {
+                newUp = UpAxisDir.Y;
+                if (lookDir.z < -eps) { // Z+ points to us
+                    if (clockWise) {
+                        flipGravity = true;
+                    }
+                }
+                else { // Z- points to us
+                    if (!clockWise) {
+                        flipGravity = true;
+                    }
+                }
+            }
+            else {
+                throw new RuntimeException("Dude, check your axis and up direction!");
+            }
+        }
+        else if (currentUp == UpAxisDir.Z) {
+            if (!isZero(lookDir.x)) {
+                newUp = UpAxisDir.Y;
+                if (lookDir.x < -eps) { // X+ points to us
+                    if (!clockWise) {
+                        flipGravity = true;
+                    }
+                }
+                else { // X- points to us
+                    if (clockWise) {
+                        flipGravity = true;
+                    }
+                }
+            }
+            else if (!isZero(lookDir.y)) {
+                newUp = UpAxisDir.X;
+                if (lookDir.y < -eps) { // Y+ points to us
+                    if (clockWise) {
+                        flipGravity = true;
+                    }
+                }
+                else { // Y- points to us
+                    if (!clockWise) {
+                        flipGravity = true;
+                    }
+                }
+            }
+            else {
+                throw new RuntimeException("Dude, check your axis and up direction!");
+            }
+        }
+        else {
+            throw new RuntimeException("Jumalauta. Ei helvetti.");
         }
 
+        if (flipGravity) {
+            playerControl.setGravity(-playerControl.getGravity());
+        }
         playerControl.setUpAxis(newUp);
     }
 
     /**
      * Pyöräytä kamera sopimaan käännettyyn maailmaan
      */
-    private void rotateCamera() {
-        this.cameraRotator.rotateToReflectNewPlayerUpAxis(playerControl);
+    private void rotateCamera(boolean clockWise, Vector3f lookDir) {
+        this.cameraRotator.rotateToReflectNewPlayerUpAxis(playerControl, lookDir, clockWise);
         int playerUpAxis = playerControl.getUpAxis();
         Vector3f newUpVector = UpAxisDir.unitVector(playerUpAxis);
         boolean isGravityFlipped = (playerControl.getGravity() < 0);
@@ -553,9 +675,14 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
                 DecimalFormat hf = new DecimalFormat("00");
                 timeText.setText(hf.format(currentMinutes) + ":" + df.format(currentTime % 60));
             }
-            String debugText = String.format("Player up axis: %s\nPlayer up vector: %s\nGravity: %.2f",
+            Vector3f plrViewVec = playerControl.getViewDirection();
+            String debugText = String.format("Player up axis: %s\n" +
+                    "Player look vector: (%.1f, %.1f, %.1f)\n " +
+                    "Look vector: %s\n" +
+                    "Gravity: %.2f",
                     UpAxisDir.string(playerControl.getUpAxis()),
-                    UpAxisDir.unitVector(playerControl.getUpAxis()).toString(),
+                    plrViewVec.x, plrViewVec.y, plrViewVec.z,
+                    this.lookDirection().toString(),
                     this.playerControl.getGravity());
             ((BitmapText) guiNode.getChild("DEBUG_TEXT")).setText(debugText);
             if (showqe) {
