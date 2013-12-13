@@ -209,7 +209,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         RigidBodyControl goalControl = new RigidBodyControl(goalShape, 0);
         goalNode.addControl(goalControl);
         bulletAppState.getPhysicsSpace().add(goalControl);
-        Vector3f goalPosition = new Vector3f(40, 90, -40);
+        Vector3f goalPosition = new Vector3f(76, 2, -24);
         goalControl.setPhysicsLocation(goalPosition);
         goalNode.attachChild(goalSpatial);
         rootNode.attachChild(goalNode);
