@@ -346,7 +346,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         timeText.setColor(ColorRGBA.White);
         timeText.setLocalTranslation(0, settings.getHeight(), 0); // position
         guiNode.attachChild(timeText);
-        this.initDebugText();
+        //this.initDebugText();
     }
 
     private void initDebugText() {
@@ -803,7 +803,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
                 plrViewVec.x, plrViewVec.y, plrViewVec.z,
                 this.lookDirection().toString(),
                 this.playerControl.getGravity());
-        ((BitmapText) guiNode.getChild("DEBUG_TEXT")).setText(debugText);
+        //((BitmapText) guiNode.getChild("DEBUG_TEXT")).setText(debugText);
         if (showqe) {
             keyPicture.removeFromParent();
             keyPicture = new Picture("QA-picture");
