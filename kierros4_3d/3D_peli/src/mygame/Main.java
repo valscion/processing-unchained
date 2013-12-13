@@ -351,7 +351,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         //reunaviivat
         CartoonEdgeFilter toon = new CartoonEdgeFilter();
         toon.setEdgeColor(ColorRGBA.Black);
-        toon.setEdgeWidth(3f);
+        toon.setEdgeWidth(1f);
         toon.setEdgeIntensity(1.0f);
         toon.setNormalThreshold(0.3f);
         filterPostProcessor.addFilter(toon);
@@ -367,7 +367,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         filterPostProcessor.addFilter(bloom);      
         
         //synkeät jälkivarjot
-        SSAOFilter ssaoFilter = new SSAOFilter(10.955201f,43.928635f, 0.62999992f, 0.6059958f);//0.49997783f, 42.598858f, 35.999966f, 0.39299846f);//12.940201f, 43.928635f, 0.32999992f, 0.6059958f);
+       /* SSAOFilter ssaoFilter = new SSAOFilter(10.955201f,43.928635f, 0.62999992f, 0.6059958f);//0.49997783f, 42.598858f, 35.999966f, 0.39299846f);//12.940201f, 43.928635f, 0.32999992f, 0.6059958f);
         filterPostProcessor.addFilter(ssaoFilter);
         
         //sumennus kaukana, oikeasti tätä käytettäisiin niin että setFocusFistancea muutettaisiin näkökentän keskiosassa olevan kappaleen etäisyydelle, nyt pelaaja on vain likinäköinen
@@ -376,7 +376,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         dofFilter.setFocusRange(20);
         dofFilter.setBlurScale(2.4f);
         filterPostProcessor.addFilter(dofFilter);
-        viewPort.addProcessor(filterPostProcessor);
+        viewPort.addProcessor(filterPostProcessor);*/
     }
     
     /**
