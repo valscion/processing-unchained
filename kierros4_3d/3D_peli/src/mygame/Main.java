@@ -83,6 +83,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private Vector3f playerStartPosition;// = new Vector3f(50, 100, -50);
     private Material helpMat;
     private Geometry helpGeo;
+    private long lastGoalHitTime = 0;
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -705,15 +706,14 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             handlePlayerCollision(event.getNodeA().getName(), event);
         }
     }
-    private long prewMillis = 0;
 
     private void handlePlayerCollision(String objectName, PhysicsCollisionEvent event) {
         if (objectName.equals(GOAL)) {
             //vähän harvemmin tätä kutsutaan --> pienin läpipeluu aika määräytyy tällä
-            if ((System.currentTimeMillis() - this.prewMillis) > 1000) {
+            if ((System.currentTimeMillis() - this.lastGoalHitTime) > 1000) {
                 this.playerWon();
                 this.nextLevel();
-                this.prewMillis = System.currentTimeMillis();
+                this.lastGoalHitTime = System.currentTimeMillis();
             }
         } else if (objectName.equals(GROUND)) {
             this.playerLost();
