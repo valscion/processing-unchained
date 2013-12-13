@@ -37,6 +37,7 @@ import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import com.jme3.math.Quaternion;
 import com.jme3.post.FilterPostProcessor;
+import com.jme3.post.filters.BloomFilter;
 import com.jme3.post.filters.CartoonEdgeFilter;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.shape.Box;
@@ -344,15 +345,24 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private void initPPFilters(){
         filterPostProcessor = new FilterPostProcessor(assetManager);
         viewPort.addProcessor(filterPostProcessor); // add one FilterPostProcessor to viewPort
+        
+        //reunaviivat
         CartoonEdgeFilter toon = new CartoonEdgeFilter();
         toon.setEdgeColor(ColorRGBA.Black);
         toon.setEdgeWidth(3f);
         toon.setEdgeIntensity(1.0f);
         toon.setNormalThreshold(0.3f);
         filterPostProcessor.addFilter(toon);
-        //viewPort.addProcessor(fpp);
-        //sf = new SomeFilter();
-        //filterPostProcessor.addFilter(sf);  // add one or more Filters to FilterPostProcessor    
+
+        //valoefekti
+        BloomFilter bloom = new BloomFilter();
+        bloom.setDownSamplingFactor(2);
+        bloom.setBlurScale(1.37f);
+        bloom.setExposurePower(3.10f);//HUOM ENNEN KUN NÄITÄ ARVOJA SÄÄTÄÄ LOPULLISIIN NIIN TÄYTYY KATTOA TEKSTUURIT KARTTAAN
+        bloom.setExposureCutOff(0.2f);
+        bloom.setBloomIntensity(2.25f);
+        //BloomUI ui=new BloomUI(inputManager, bloom);
+        filterPostProcessor.addFilter(bloom);        
     }
     
     /**
