@@ -148,11 +148,15 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         cam.lookAt(helpGeo.getLocalTranslation(), cam.getUp());
         helpMat = new Material(assetManager, 
         "Common/MatDefs/Misc/Unshaded.j3md");
+        this.helpBox();
+        rootNode.attachChild(helpGeo);
+    }
+    
+    private void helpBox() {
         Texture helpTex = assetManager.loadTexture(
         "Interface/start.png");
         helpMat.setTexture("ColorMap", helpTex);
         helpGeo.setMaterial(helpMat);
-        rootNode.attachChild(helpGeo);
     }
     
     private void winBox() {
@@ -506,6 +510,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         rootNode.detachChild(playerNode);
         this.timerOn = true;
         this.initPlayer();
+        this.helpBox();
     }
 
     /**
@@ -736,11 +741,11 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     
     private void playerLost() {
         this.soundSystem.playCollisionSound();
-            this.loseBox();
-            this.respawn();
-            //nifty.fromXml("Interface/screen.xml", "lose");
-            //guiViewPort.addProcessor(niftyDisplay);
-            timerOn = false;
+        this.respawn();
+        this.loseBox();
+        //nifty.fromXml("Interface/screen.xml", "lose");
+        //guiViewPort.addProcessor(niftyDisplay);
+        timerOn = false;
     }
 
     private void nextLevel() {
