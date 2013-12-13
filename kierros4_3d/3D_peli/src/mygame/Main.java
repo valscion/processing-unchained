@@ -180,7 +180,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     }
     
     private void initMaze() {
-        //
+        //poistaa edellisen labyrintin
         if(sceneModel != null){
             rootNode.detachChild(sceneModel);
         }
@@ -199,8 +199,13 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     }
     
     private void initMaze2(){
-        rootNode.detachChild(sceneModel);
-        bulletAppState.getPhysicsSpace().remove(landscape);
+        //poistaa edellisen labyrintin
+        if(sceneModel != null){
+            rootNode.detachChild(sceneModel);
+        }
+        if(landscape != null){
+            bulletAppState.getPhysicsSpace().remove(landscape);
+        }
         
         playerStartPosition = new Vector3f(55, 95, -50);
         sceneModel = assetManager.loadModel("Models/taso1.j3o");//musta taso @author: Aarne Leinonen
