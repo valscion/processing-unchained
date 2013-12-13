@@ -91,11 +91,12 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private Node goalNode;
     private Node groundNode;
     private int currentLevel;
-    public Nifty nifty;
-    private NiftyJmeDisplay niftyDisplay;
+   // public Nifty nifty;
+    //private NiftyJmeDisplay niftyDisplay;
     private CameraRotator cameraRotator;
     private boolean isCameraRotateToggled = false;
     private FilterPostProcessor filterPostProcessor;
+    private Vector3f playerStartPosition;
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -112,11 +113,11 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     public void simpleInitApp() {
         // We re-use the flyby camera for rotation, while positioning is handled by physics
         viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
-        this.niftyDisplay = new NiftyJmeDisplay(
-                assetManager, inputManager, audioRenderer, guiViewPort);
-        nifty = niftyDisplay.getNifty();
-        nifty.fromXml("Interface/screen.xml", "startscreen");
-        guiViewPort.addProcessor(niftyDisplay);
+        //this.niftyDisplay = new NiftyJmeDisplay(
+         //       assetManager, inputManager, audioRenderer, guiViewPort);
+        //nifty = niftyDisplay.getNifty();
+        //nifty.fromXml("Interface/screen.xml", "startscreen");
+        //guiViewPort.addProcessor(niftyDisplay);
         this.cameraRotator = new CameraRotator(this.cam);
         //alustukset taustalla
         this.currentLevel = 0;
@@ -135,6 +136,21 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.initPPFilters();
         setDisplayFps(false);       // to hide the FPS
         setDisplayStatView(false);  // to hide the statistics 
+        this.initHelpBox();
+    }
+    
+    private void initHelpBox() {
+        Box help = new Box(4,3,4);
+        Geometry helpGeo = new Geometry("ohjelaatikko", help);
+        helpGeo.setLocalTranslation(playerStartPosition.add(12, -5, 0));
+        cam.lookAt(helpGeo.getLocalTranslation(), cam.getUp());
+        Material helpMat = new Material(assetManager, 
+        "Common/MatDefs/Misc/Unshaded.j3md");
+        Texture helpTex = assetManager.loadTexture(
+        "Interface/start.png");
+        helpMat.setTexture("ColorMap", helpTex);
+        helpGeo.setMaterial(helpMat);
+        rootNode.attachChild(helpGeo);
     }
 
     private void initPhysics() {
@@ -172,7 +188,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 6f, 1);
         playerControl = new CharacterControl(capsuleShape, 0.05f);
         //pelaajan alkusijainnin määrittävä vektori
-        Vector3f playerStartPosition = new Vector3f(50, 100, -50);
+        playerStartPosition = new Vector3f(50, 100, -50);
         //pelaajaan vaikuttavat voimat
         flyCam.setMoveSpeed(PLAYERSPEED);
         playerControl.setJumpSpeed(JUMPSPEED);
@@ -482,7 +498,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
      * yet, we just keep track of the direction the user pressed.
      */
     public void onAction(String binding, boolean isPressed, float tpf) {
-        if (!guiViewPort.getProcessors().contains(niftyDisplay)) {
+       // if (!guiViewPort.getProcessors().contains(niftyDisplay)) {
             if (binding.equals("Left")) {
                 left = isPressed;
             } else if (binding.equals("Right")) {
@@ -511,12 +527,12 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
                     this.cameraRotator.rotateTo(target);
                 }
             }
-        }
+       // }
         if (binding.equals("Respawn")) {
             this.respawn();
-            if (guiViewPort.getProcessors().contains(niftyDisplay)) {
+            /*if (guiViewPort.getProcessors().contains(niftyDisplay)) {
                 guiViewPort.removeProcessor(niftyDisplay);
-            }
+            }*/
         }
     }
 
@@ -701,8 +717,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         } else if (objectName.equals(GROUND)) {
             this.soundSystem.playCollisionSound();
             this.respawn();
-            nifty.fromXml("Interface/screen.xml", "lose");
-            guiViewPort.addProcessor(niftyDisplay);
+            //nifty.fromXml("Interface/screen.xml", "lose");
+            //guiViewPort.addProcessor(niftyDisplay);
             timerOn = false;
         }
     }
@@ -719,8 +735,8 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
 
     private void playerWon() {
         System.out.println("Pelaaja voittaa pelin!");
-        nifty.fromXml("Interface/screen.xml", "win");
-        guiViewPort.addProcessor(niftyDisplay);
+        //nifty.fromXml("Interface/screen.xml", "win");
+        //guiViewPort.addProcessor(niftyDisplay);
         this.respawn();
         playerControl.setEnabled(false);
         timerOn = false;
@@ -736,7 +752,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     }
 
     public void updateHUD(boolean showqe) {
-        if (!guiViewPort.getProcessors().contains(niftyDisplay)) {
+        //if (!guiViewPort.getProcessors().contains(niftyDisplay)) {
 
             //this.updateRotationGfx();
             if (timerOn) {
@@ -775,7 +791,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
                 keyPicture.setPosition(settings.getWidth() / 2 - 75f, settings.getHeight() - 150f);
                 guiNode.attachChild(keyPicture);
             }
-        }
+       // }
     }
 
     public void updateSounds() {
