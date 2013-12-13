@@ -36,6 +36,8 @@ import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import com.jme3.math.Quaternion;
+import com.jme3.post.FilterPostProcessor;
+import com.jme3.post.filters.CartoonEdgeFilter;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.shape.Box;
 import com.jme3.ui.Picture;
@@ -90,6 +92,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private NiftyJmeDisplay niftyDisplay;
     private CameraRotator cameraRotator;
     private boolean isCameraRotateToggled = false;
+    private FilterPostProcessor filterPostProcessor;
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -104,6 +107,15 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     // -------------------------------------------------------------------------
     @Override
     public void simpleInitApp() {
+        // We re-use the flyby camera for rotation, while positioning is handled by physics
+        viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
+        this.niftyDisplay = new NiftyJmeDisplay(
+                assetManager, inputManager, audioRenderer, guiViewPort);
+        nifty = niftyDisplay.getNifty();
+        nifty.fromXml("Interface/screen.xml", "startscreen");
+        guiViewPort.addProcessor(niftyDisplay);
+        this.cameraRotator = new CameraRotator(this.cam);
+        //alustukset taustalla
         this.currentLevel = 0;
         this.isQEPressed = false;
         this.initPhysics();
@@ -117,14 +129,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         this.initHUD();
         this.initRotationGfx();
         this.initKeys();
-        // We re-use the flyby camera for rotation, while positioning is handled by physics
-        viewPort.setBackgroundColor(new ColorRGBA(0.7f, 0.8f, 1f, 1f));
-        this.niftyDisplay = new NiftyJmeDisplay(
-                assetManager, inputManager, audioRenderer, guiViewPort);
-        nifty = niftyDisplay.getNifty();
-        nifty.fromXml("Interface/screen.xml", "startscreen");
-        guiViewPort.addProcessor(niftyDisplay);
-        this.cameraRotator = new CameraRotator(this.cam);
+        this.initPPFilters();
         setDisplayFps(false);       // to hide the FPS
         setDisplayStatView(false);  // to hide the statistics 
     }
@@ -135,9 +140,10 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         //bulletAppState.getPhysicsSpace().enableDebug(assetManager);
         bulletAppState.getPhysicsSpace().addCollisionListener(this);
     }
-
+    
     private void initMaze() {
         sceneModel = assetManager.loadModel("Models/boksi/boksi.j3o");
+        //this.makeToonish(sceneModel);
         sceneModel.setLocalScale(100f); // Mallit on 10mm luokassa kun maailma on 1m luokassa.
         CollisionShape sceneShape = CollisionShapeFactory.createMeshShape((Node) sceneModel);
         landscape = new RigidBodyControl(sceneShape, 0);//massaksi 1000 niin tippuu alas
@@ -334,7 +340,48 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         inputManager.addMapping("CameraDebug", new KeyTrigger(KeyInput.KEY_0));
         inputManager.addListener(this, "CameraDebug");
     }
-
+    
+    private void initPPFilters(){
+        filterPostProcessor = new FilterPostProcessor(assetManager);
+        viewPort.addProcessor(filterPostProcessor); // add one FilterPostProcessor to viewPort
+        CartoonEdgeFilter toon = new CartoonEdgeFilter();
+        toon.setEdgeColor(ColorRGBA.Black);
+        toon.setEdgeWidth(3f);
+        toon.setEdgeIntensity(1.0f);
+        toon.setNormalThreshold(0.3f);
+        filterPostProcessor.addFilter(toon);
+        //viewPort.addProcessor(fpp);
+        //sf = new SomeFilter();
+        //filterPostProcessor.addFilter(sf);  // add one or more Filters to FilterPostProcessor    
+    }
+    
+    /**
+     * Tällä saa jollain parametreillä cartoon meininkiä
+     * http://code.google.com/p/jmonkeyengine/source/browse/trunk/engine/src/test/jme3test/post/TestCartoonEdge.java
+     */
+    public void makeToonish(Spatial spatial){
+        if (spatial instanceof Node){
+            Node n = (Node) spatial;
+            for (Spatial child : n.getChildren())
+                makeToonish(child);
+        }else if (spatial instanceof Geometry){
+            Geometry g = (Geometry) spatial;
+            Material m = g.getMaterial();
+            if (//m != null){
+                    m.getMaterialDef().getName().equals("Phong Lighting")){
+                //ainakin tätä materiaalia täytyy vaihtaa
+                Texture t = assetManager.loadTexture("Textures/skybox/north.png");
+//                t.setMinFilter(Texture.MinFilter.NearestNoMipMaps);
+//                t.setMagFilter(Texture.MagFilter.Nearest);
+                m.setTexture("ColorRamp", t);
+                m.setBoolean("UseMaterialColors", true);
+                m.setColor("Specular", ColorRGBA.Black);
+                m.setColor("Diffuse", ColorRGBA.White);
+                m.setBoolean("VertexLighting", true);
+            }
+        }
+    }
+    
     //
     // -------------------------------------------------------------------------
     // END GAME INITIALIZE
