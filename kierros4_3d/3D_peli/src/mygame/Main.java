@@ -792,15 +792,18 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     }
     
     private void nextLevel() {
+        System.out.println(this.currentLevel);
         this.currentLevel++;
         if(currentLevel == 1){
-            this.nextLevelBox();
             this.initMaze2();
+            System.out.println(this.currentLevel);
         }
         System.out.println("Pelaaja siirtyy seuraavaan kenttaan");
         this.soundSystem.playYouWinSound();
+        this.nextLevelBox();
         //this.playYouWinSound();
         if (currentLevel > 1) {
+            System.out.println(this.currentLevel);
             this.playerWon();
         }
     }
