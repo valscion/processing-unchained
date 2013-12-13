@@ -66,7 +66,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private BulletAppState bulletAppState;
     //näppäimille
     private boolean left = false, right = false, up = false, down = false, keyE = false;
-    private CharacterControl playerControl;
+    private PlayerControl playerControl;
     private Node playerNode;
     //Temporary vectors used on each frame.
     //They here to avoid instanciating new vectors on each frame
@@ -228,7 +228,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private void initPlayer(Vector3f playerStartVectorForLevel) {
         //pelaajan rankamalli
         CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(1.5f, 6f, 1);
-        playerControl = new CharacterControl(capsuleShape, 0.05f);
+        playerControl = new PlayerControl(capsuleShape, 0.05f);
         //pelaajan alkusijainnin määrittävä vektori
         playerStartPosition = playerStartVectorForLevel;//new Vector3f(50, 100, -50);
         //pelaajaan vaikuttavat voimat
