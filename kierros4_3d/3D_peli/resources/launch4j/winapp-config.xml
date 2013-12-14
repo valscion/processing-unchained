@@ -9,12 +9,12 @@ and open the template in the editor.
   <outfile>${dist.dir}/${application.title}.exe</outfile>
   <jar>${dist.jar}</jar>
   <errTitle>${application.title}</errTitle>
-  <icon>resources/launch4j/win-icon.ico</icon>
+  <icon>resources/launch4j/GU.ico</icon>
   <chdir>.</chdir>
   <customProcName>true</customProcName>
   <singleInstance>
     <mutexName>${main.class}</mutexName>
-    <windowTitle>${application.title}</windowTitle>
+    <windowTitle>Gravity Unchained</windowTitle>
   </singleInstance> 
   <jre>
     <!-- Specify one of the following or both -->
