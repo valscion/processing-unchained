@@ -32,6 +32,7 @@ import com.jme3.post.ssao.SSAOFilter;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.shape.Box;
 import com.jme3.ui.Picture;
+import java.util.Iterator;
 
 /**
  * Gravity Unchained by Django Unchained
@@ -72,6 +73,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
     private static final String PLAYER = "pelaaja";
     private static final String GOAL = "maali";
     private static final String GROUND = "maa";
+    private static final String LAND = "lattia";
     private static final float PLAYERSPEED = 5.0f;
     private static final float GRAVITY = 1.0f;
     private static final float PLAYERMASS = 1.0f;
@@ -179,6 +181,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         playerStartPosition = new Vector3f(50, 100, -50);
         sceneModel = assetManager.loadModel("Models/boksi/boksi.j3o");//perustaso @author: Vesa Laakso
         sceneModel.setLocalScale(100f); // Malli on 10mm luokassa kun maailma on 1m luokassa.
+        sceneModel.setName(LAND);
         CollisionShape sceneShape = CollisionShapeFactory.createMeshShape((Node) sceneModel);
         landscape = new RigidBodyControl(sceneShape, 0);//massaksi 1000 niin tippuu alas
         sceneModel.addControl(landscape);
@@ -198,6 +201,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         playerStartPosition = new Vector3f(55, 95, -50);
         sceneModel = assetManager.loadModel("Models/taso1.j3o");//musta taso @author: Aarne Leinonen
         sceneModel.setLocalScale(0.100f); // Malli on 10m luokassa kun maailma on 1m luokassa.
+        sceneModel.setName(LAND);
         CollisionShape sceneShape = CollisionShapeFactory.createMeshShape((Node) sceneModel);
         landscape = new RigidBodyControl(sceneShape, 0);
         sceneModel.addControl(landscape);
@@ -220,14 +224,14 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
 
     private void initPlayer(Vector3f playerStartVectorForLevel) {
         //pelaajan rankamalli
-        CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(0.5f, 2f, 1);
+        CapsuleCollisionShape capsuleShape = new CapsuleCollisionShape(0.5f, 4f, 1);
         playerControl = new PlayerControl(capsuleShape, PLAYERMASS);
         //pelaajan alkusijainnin määrittävä vektori
         playerStartPosition = playerStartVectorForLevel;//new Vector3f(50, 100, -50);
         //pelaajaan vaikuttavat voimat
         flyCam.setMoveSpeed(PLAYERSPEED);
         playerControl.setJumpSpeed(JUMPSPEED);
-        //playerControl.setFallSpeed(GRAVITY);
+        playerControl.setFallSpeed(0);
         //pelaajan aloitussijainti
         playerControl.setPhysicsLocation(playerStartPosition);
         //pelaaja vielä siihen maaailmaankin...
@@ -443,6 +447,7 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
         flashLight.setDirection(playerControl.getViewDirection());
         //this.updateRotationGfx();
         this.updateHUD(isQEPressed);
+        this.checkFloor();
     }
 
     @Override
@@ -798,5 +803,30 @@ public class Main extends SimpleApplication implements ActionListener, PhysicsCo
             guiNode.attachChild(keyPicture);
         }
 
+    }
+    
+    private void checkFloor() {
+        Vector3f currentPos = playerControl.getPhysicsLocation();
+        Vector3f downDir = UpAxisDir.unitVector(playerControl.getUpAxis()).mult(-1);
+        Vector3f downLocation = currentPos;
+        Iterator<Spatial> spatIter = rootNode.getChildren().iterator();
+        while (spatIter.hasNext()) {
+            Spatial spat = spatIter.next();
+            if (spat.getName().equals(LAND)) {
+                if (isLocationInsideSpatial(downLocation, spat)) {
+                    System.out.println("Alla lattia! " + downLocation + spat);
+                }
+            }
+        }
+    }
+    
+    private boolean isLocationInsideSpatial(Vector3f loc, Spatial spat) {
+        Vector3f spatLoc = spat.getWorldTranslation();
+        Vector3f spatSize = spat.getLocalScale();
+        System.out.println("Loc:" + loc + " -- " + spat + " -- Loc: " + spatLoc + " -- size: " + spatSize);
+        if (loc.x < spatLoc.x || loc.x > spatLoc.x + spatSize.x) return false;
+        if (loc.y < spatLoc.y || loc.y > spatLoc.y + spatSize.y) return false;
+        if (loc.z < spatLoc.z || loc.z > spatLoc.z + spatSize.z) return false;
+        return true;
     }
 }
