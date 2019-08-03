@@ -1,11 +1,11 @@
 class RingBuffer {
-  int buffer[];
+  float buffer[];
   int currentIndex = 0;
   RingBuffer(int size) {
-    buffer = new int[size];
+    buffer = new float[size];
   }
 
-  void addValue(int value) {
+  void addValue(float value) {
     buffer[currentIndex] = value;
     currentIndex++;
     if (currentIndex >= buffer.length) {
@@ -14,11 +14,16 @@ class RingBuffer {
   }
 
   float avg() {
+    float sum = sum();
+    float avg = sum / buffer.length;
+    return avg;
+  }
+  
+  float sum() {
     float sum = 0.0;
     for (int i = 0; i < buffer.length; i++) {
       sum += buffer[i];
     }
-    float avg = sum / buffer.length;
-    return avg;
+    return sum;
   }
 }
