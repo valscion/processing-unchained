@@ -22,8 +22,8 @@ class Enemy{
       //setSpeed();
       x = x-speedX;
       if(x<0){
-        x = 1000;
-        y = round(random(500));
+        x = width - 50;
+        y = round(random(height));
       }
       image(pic, x,y,width,height);
       multip ++;

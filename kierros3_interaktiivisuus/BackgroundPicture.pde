@@ -28,12 +28,12 @@ public class Star{
   
   Star(boolean random){
     if(!random){
-    this.x = 1030;
+    this.x = width - 10;
     }
     else{
-      this.x = random(0,1024);
+      this.x = random(0,width);
     }
-    this.y = random(500);
+    this.y = random(height);
     this.speedX = random(0,100);
     this.size = random(0,4);
   }

@@ -10,7 +10,8 @@ import ddf.minim.*;
 Minim minim;
 
 void setup() {
-  size(1024, 500, P3D);
+  fullScreen();
+  //size(1024, 500, P3D);
   try {
     minim = new Minim(this);
 
